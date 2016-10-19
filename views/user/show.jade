@@ -1,0 +1,15 @@
+doctype html
+
+head
+    include ../layout/scripts
+body
+    #wrapper
+        include ../layout/navigation
+
+    #page-wrapper
+        h1 Spy Details #{user._id}
+        p Name: #{user.firstname}
+        p Badge: #{user.surname}
+        p DOB: #{userdob}
+        p Is Loved: #{user.email}
+        p Is Loved: #{user.password}

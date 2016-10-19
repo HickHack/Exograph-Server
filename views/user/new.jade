@@ -1,0 +1,28 @@
+doctype html
+
+head
+    include ../layout/scripts
+body
+    #wrapper
+        include ../layout/navigation
+
+    #page-wrapper
+        h1.text-center #{title}
+        form.form-horizontal(name="adduser",method="post",action="/user")
+            .form-group.col-md-6
+                label.control-label Forename:
+                input(type="text", placeholder="ex. John", name="firstname")
+            .form-group.col-md-6
+                label.control-label Surname:
+                input(type="text", placeholder="ex. Smith", name="surname")
+            .form-group.col-md-6
+                label.control-label DOB:
+                input(type="date", name="dob")
+            .form-group.col-md-6
+                label.control-label Email:
+                input(type="email", name="email")
+            .form-group.col-md-6
+                label.control-label Password:
+                input(type="password", name='password')
+            .form-group.col-md-6
+                button.btn.btn-default(type="submit") Submit
