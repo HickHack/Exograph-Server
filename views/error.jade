@@ -1,14 +1,4 @@
-doctype html
-
-head
-    include layout/scripts
-
-    title=  message + ' ' + error.status
-body
-    #wrapper
-        include layout/navigation
-
-    #page-wrapper
-        h2= message
-        h2= error.status
-        pre #{error.stack}
+block content
+  h1= message
+  h2= error.status
+  pre #{error.stack}

@@ -1,3 +1,0 @@
-/*
- * Default Navigation Scripts
- */

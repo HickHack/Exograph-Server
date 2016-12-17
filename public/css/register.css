@@ -1,0 +1,11 @@
+.register-panel {
+  margin-top: 10%; }
+  .register-panel input {
+    padding: 0 5px 0 5px;
+    margin-bottom: 5px; }
+  .register-panel button {
+    width: 50%;
+    margin: auto; }
+
+.error {
+  color: red; }

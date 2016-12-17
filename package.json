@@ -1,20 +1,22 @@
 {
-  "name": "node-app",
+  "name": "exograph-server",
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon ./bin/www"
+    "test": "SASS Compile",
+    "build-css": "node-sass public/scss/test.scss public/css/test.css"
   },
   "dependencies": {
-    "body-parser": "^1.15.2",
-    "cookie-parser": "^1.3.5",
-    "debug": "^2.1.3",
-    "express": "^4.11.2",
-    "jade": "^1.9.2",
-    "method-override": "^2.3.6",
-    "mongoose": "^3.9.7",
-    "morgan": "^1.5.3",
-    "serve-favicon": "^2.2.1",
-    "nodemon": "~1.10.2"
+    "body-parser": "~1.15.2",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.2.0",
+    "express": "~4.14.0",
+    "jade": "~1.11.0",
+    "morgan": "~1.7.0",
+    "serve-favicon": "~2.3.0"
+  },
+  "devDependencies": {
+    "node-sass": "^4.0.0",
+    "nodemon": "^1.11.0"
   }
 }
