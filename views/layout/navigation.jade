@@ -9,79 +9,12 @@ nav.navbar.navbar-default.navbar-static-top(role='navigation', style='margin-bot
     a.navbar-brand(href='index.html') #{title}
   // /.navbar-header
   ul.nav.navbar-top-links.navbar-right
-    li.dropdown
-      a.dropdown-toggle(data-toggle='dropdown', href='#')
-        i.fa.fa-envelope.fa-fw
-        i.fa.fa-caret-down
-      ul.dropdown-menu.dropdown-messages
-        li
-          a(href='#')
-            div
-              strong John Smith
-              span.pull-right.text-muted
-                em Yesterday
-            div
-              | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eleifend...
-        li.divider
-        li
-          a(href='#')
-            div
-              strong John Smith
-              span.pull-right.text-muted
-                em Yesterday
-            div
-              | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eleifend...
-        li.divider
-        li
-          a(href='#')
-            div
-              strong John Smith
-              span.pull-right.text-muted
-                em Yesterday
-            div
-              | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eleifend...
-        li.divider
-        li
-          a.text-center(href='#')
-            strong Read All Messages
-            i.fa.fa-angle-right
-      // /.dropdown-messages
     // /.dropdown
     li.dropdown
       a.dropdown-toggle(data-toggle='dropdown', href='#')
         i.fa.fa-tasks.fa-fw
         i.fa.fa-caret-down
       ul.dropdown-menu.dropdown-tasks
-        li
-          a(href='#')
-            div
-              p
-                strong Task 1
-                span.pull-right.text-muted 40% Complete
-              .progress.progress-striped.active
-                .progress-bar.progress-bar-success(role='progressbar', aria-valuenow='40', aria-valuemin='0', aria-valuemax='100', style='width: 40%')
-                  span.sr-only 40% Complete (success)
-        li.divider
-        li
-          a(href='#')
-            div
-              p
-                strong Task 2
-                span.pull-right.text-muted 20% Complete
-              .progress.progress-striped.active
-                .progress-bar.progress-bar-info(role='progressbar', aria-valuenow='20', aria-valuemin='0', aria-valuemax='100', style='width: 20%')
-                  span.sr-only 20% Complete
-        li.divider
-        li
-          a(href='#')
-            div
-              p
-                strong Task 3
-                span.pull-right.text-muted 60% Complete
-              .progress.progress-striped.active
-                .progress-bar.progress-bar-warning(role='progressbar', aria-valuenow='60', aria-valuemin='0', aria-valuemax='100', style='width: 60%')
-                  span.sr-only 60% Complete (warning)
-        li.divider
         li
           a(href='#')
             div
@@ -107,22 +40,15 @@ nav.navbar.navbar-default.navbar-static-top(role='navigation', style='margin-bot
           a(href='#')
             div
               i.fa.fa-comment.fa-fw
-              |  New Comment
+              |  You created a new graph
               span.pull-right.text-muted.small 4 minutes ago
         li.divider
         li
           a(href='#')
             div
               i.fa.fa-twitter.fa-fw
-              |  3 New Followers
+              |  Twitter graph1 Saved
               span.pull-right.text-muted.small 12 minutes ago
-        li.divider
-        li
-          a(href='#')
-            div
-              i.fa.fa-envelope.fa-fw
-              |  Message Sent
-              span.pull-right.text-muted.small 4 minutes ago
         li.divider
         li
           a(href='#')
@@ -135,7 +61,7 @@ nav.navbar.navbar-default.navbar-static-top(role='navigation', style='margin-bot
           a(href='#')
             div
               i.fa.fa-upload.fa-fw
-              |  Server Rebooted
+              |  New graph availble
               span.pull-right.text-muted.small 4 minutes ago
         li.divider
         li
@@ -152,7 +78,7 @@ nav.navbar.navbar-default.navbar-static-top(role='navigation', style='margin-bot
         li
           a(href='#')
             i.fa.fa-user.fa-fw
-            |  User Profile
+            |  Profile
         li
           a(href='#')
             i.fa.fa-gear.fa-fw
@@ -176,9 +102,9 @@ nav.navbar.navbar-default.navbar-static-top(role='navigation', style='margin-bot
                 i.fa.fa-search
           // /input-group
         li
-          a(href='index.html')
+          a(href='graph')
             i.fa.fa-dashboard.fa-fw
-            |  Dashboard
+            |  Graphs
         li
           a(href='#')
             i.fa.fa-bar-chart-o.fa-fw
@@ -186,36 +112,24 @@ nav.navbar.navbar-default.navbar-static-top(role='navigation', style='margin-bot
             span.fa.arrow
           ul.nav.nav-second-level
             li
-              a(href='flot.html') Flot Charts
-            li
-              a(href='morris.html') Morris.js Charts
+              a(href='flot.html') Graph Analytics
           // /.nav-second-level
         li
-          a(href='tables.html')
+          a(href='#')
             i.fa.fa-table.fa-fw
-            |  Tables
+            |  Item 1
         li
           a(href='forms.html')
             i.fa.fa-edit.fa-fw
-            |  Forms
+            |  Item 2
         li
           a(href='#')
             i.fa.fa-wrench.fa-fw
-            |  UI Elements
+            |  Item 2
             span.fa.arrow
           ul.nav.nav-second-level
             li
-              a(href='panels-wells.html') Panels and Wells
-            li
-              a(href='buttons.html') Buttons
-            li
-              a(href='notifications.html') Notifications
-            li
-              a(href='typography.html') Typography
-            li
-              a(href='icons.html')  Icons
-            li
-              a(href='grid.html') Grid
+              a(href='#') Notifications
           // /.nav-second-level
         li
           a(href='#')
@@ -245,11 +159,11 @@ nav.navbar.navbar-default.navbar-static-top(role='navigation', style='margin-bot
         li
           a(href='#')
             i.fa.fa-files-o.fa-fw
-            |  Sample Pages
+            |  Trash
             span.fa.arrow
           ul.nav.nav-second-level
             li
-              a(href='blank.html') Blank Page
+              a(href='blank.html')
             li
-              a(href='login.html') Login Page
+              a(href='login.html')
 
