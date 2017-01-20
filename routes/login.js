@@ -1,18 +1,39 @@
-var express = require('express');
-var router = express.Router();
+var auth = require('../middleware/auth');
 
-/* GET login. */
-router.get('/', function(req, res, next) {
-    res.render('login/login', { title: 'Exograph' });
-});
+module.exports = function (app, passport) {
 
-router.route('/').post(function (req, res) {
-    var email = req.body.email;
-    var password = req.body.password;
+    //GET Login
+    app.get('/login', function(req, res, next) {
+        if (req.isAuthenticated()) {
+            res.redirect('/')
+        }
 
-    console.log('Email: ' + email +' Password: ' + password);
+        res.render('auth/login', {
+            title: 'Exograph',
+            message: req.flash('loginMessage'),
+            email: req.session.emailField
+        });
 
-    res.render('index');
-});
+        delete req.session.emailField
+    });
 
-module.exports = router;
+    //POST
+    app.post('/login', passport.authenticate('local-login', {
+        successRedirect: '/',
+        failureRedirect: '/login',
+        failureFlash: true
+    }));
+
+    // GET Logout
+    app.get('/logout', function (req, res, next) {
+        auth.logout(req, res, function (err, success) {
+            if (err) next(err);
+
+            if(success) {
+                res.redirect('/login');
+            } else {
+                res.redirect('/');
+            }
+        });
+    })
+}

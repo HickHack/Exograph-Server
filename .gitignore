@@ -4,3 +4,6 @@ node_modules
 # Intellij Files
 exograph-server.iml
 .idea
+
+# Compiled CSS
+public/css/

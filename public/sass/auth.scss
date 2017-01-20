@@ -1,4 +1,4 @@
-.register-panel {
+.auth-panel {
   margin-top: 10%;
 
   input {
@@ -10,8 +10,8 @@
     width: 50%;
     margin: auto;
   }
-}
 
-.error {
-  color: red;
+  .existingLink {
+    margin-top: 10px;
+  }
 }

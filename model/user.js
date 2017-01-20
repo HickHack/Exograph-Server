@@ -3,6 +3,7 @@
 
 var neo4j = require('neo4j');
 var errors = require('./errors');
+var hashUtil = require('../util/hashUtil');
 
 var db = new neo4j.GraphDatabase('http://neo4j:Pa55w0rd!@localhost:7474');
 
@@ -49,7 +50,7 @@ User.VALIDATION_INFO = {
         pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
         message: 'Invalid email format.'
     },
-    'email': {
+    'password': {
         required: true,
         minLength: 6,
         maxLength: 50,
@@ -59,10 +60,30 @@ User.VALIDATION_INFO = {
 };
 
 // Public instance properties:
+Object.defineProperties(User.prototype, {
+   'id': {
+       get: function () { return this._node._id; }
+   },
+    'firstname': {
+        get: function () { return this._node.properties['firstname']; }
+    },
+    'surname': {
+        get: function () { return this._node.properties['surname']; }
+    },
+    'company': {
+        get: function () { return this._node.properties['company']; }
+    },
+    'country': {
+        get: function () { return this._node.properties['country']; }
+    },
+    'email': {
+        get: function () { return this._node.properties['email']; }
+    },
+    'password': {
+        get: function () { return this._node.properties['password']; }
+    }
 
-// The user's username, e.g. 'aseemk'.
-Object.defineProperty(User.prototype, 'username', {
-    get: function () { return this._node.properties['username']; }
+
 });
 
 // Private helpers:
@@ -80,6 +101,10 @@ function validate(props, required) {
         var val = props[prop];
         validateProp(prop, val, required);
         safeProps[prop] = val;
+    }
+
+    if(safeProps.password) {
+        safeProps.password = hashUtil.generateBcryptKey(safeProps.password);
     }
 
     return safeProps;
@@ -119,7 +144,8 @@ function validateProp(prop, val, required) {
 
 function isConstraintViolation(err) {
     return err instanceof neo4j.ClientError &&
-        err.neo4j.code === 'Neo.ClientError.Schema.ConstraintViolation';
+        err.neo4j.code === 'Neo.ClientError.Schema.ConstraintViolation' ||
+        err.neo4j.code === 'Neo.ClientError.Schema.ConstraintValidationFailed';
 }
 
 // Public instance methods:
@@ -130,7 +156,7 @@ User.prototype.patch = function (props, callback) {
     var safeProps = validate(props);
 
     var query = [
-        'MATCH (user:User {username: {username}})',
+        'MATCH (user:User {email: {email}})',
         'SET user += {props}',
         'RETURN user',
     ].join('\n');
@@ -147,18 +173,18 @@ User.prototype.patch = function (props, callback) {
         params: params,
     }, function (err, results) {
         if (isConstraintViolation(err)) {
-            // TODO: This assumes username is the only relevant constraint.
+            // TODO: This assumes email is the only relevant constraint.
             // We could parse the constraint property out of the error message,
             // but it'd be nicer if Neo4j returned this data semantically.
             // Alternately, we could tweak our query to explicitly check first
             // whether the username is taken or not.
             err = new errors.ValidationError(
-                'The username ‘' + props.username + '’ is taken.');
+                'The email ‘' + props.email + '’ is taken.');
         }
         if (err) return callback(err);
 
         if (!results.length) {
-            err = new Error('User has been deleted! Username: ' + self.username);
+            err = new Error('User has been deleted! Email: ' + self.username);
             return callback(err);
         }
 
@@ -276,14 +302,15 @@ User.prototype.getFollowingAndOthers = function (callback) {
 };
 
 // Static methods:
-User.get = function (username, callback) {
+User.get = function (id, callback) {
     var query = [
-        'MATCH (user:User {username: {username}})',
-        'RETURN user',
+        'MATCH (user:User)',
+        'MATCH (n:User) WHERE id(n) = {id}',
+        'RETURN user'
     ].join('\n')
 
     var params = {
-        username: username,
+        id: parseInt(id),
     };
 
     db.cypher({
@@ -292,13 +319,40 @@ User.get = function (username, callback) {
     }, function (err, results) {
         if (err) return callback(err);
         if (!results.length) {
-            err = new Error('No such user with username: ' + username);
+            err = new Error('No such user with id: ' + id);
             return callback(err);
         }
+
         var user = new User(results[0]['user']);
         callback(null, user);
     });
 };
+
+User.getBy = function(field, value, callback) {
+    var query = [
+        'MATCH (user:User)',
+        'WHERE ' + field + ' = {value}',
+        'RETURN user'
+    ].join('\n')
+
+    var params = {
+        value: value
+    };
+
+    db.cypher({
+        query: query, 
+        params: params
+    }, function (err, result) {
+        if (err) return callback(err);
+
+        if(!result[0]) {
+            return callback(null, null);
+        } else {
+            var user = new User(result[0]['user']);
+            return callback(null, user);
+        }
+    });
+}
 
 User.getAll = function (callback) {
     var query = [
@@ -332,14 +386,14 @@ User.create = function (props, callback) {
         query: query,
         params: params,
     }, function (err, results) {
-        if (isConstraintViolation(err)) {
+        if (err != null && isConstraintViolation(err)) {
             // TODO: This assumes username is the only relevant constraint.
             // We could parse the constraint property out of the error message,
             // but it'd be nicer if Neo4j returned this data semantically.
             // Alternately, we could tweak our query to explicitly check first
             // whether the username is taken or not.
             err = new errors.ValidationError(
-                'The username ‘' + props.username + '’ is taken.');
+                'The email ‘' + props.email + '’ is taken.');
         }
         if (err) return callback(err);
         var user = new User(results[0]['user']);
@@ -347,19 +401,22 @@ User.create = function (props, callback) {
     });
 };
 
-// Static initialization:
+User.isPasswordValid = function (password, pass, callback) {
+    return hashUtil.bcryptCompare(password, pass, callback);
+}
 
-// Register our unique username constraint.
-// TODO: This is done async'ly (fire and forget) here for simplicity,
-// but this would be better as a formal schema migration script or similar.
+/**
+ * Static initialization
+ */
+
+// Register our unique email constraint.
+// Should be done as a schema migration script
 db.createConstraint({
     label: 'User',
-    property: 'username',
+    property: 'email',
 }, function (err, constraint) {
     if (err) throw err;     // Failing fast for now, by crash the application.
     if (constraint) {
-        console.log('(Registered unique usernames constraint.)');
-    } else {
-        // Constraint already present; no need to log anything.
+        console.log('(Registered unique email constraint.)');
     }
 })

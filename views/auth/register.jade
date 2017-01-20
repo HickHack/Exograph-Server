@@ -2,16 +2,18 @@ doctype html
 html(lang='en')
     head
         include ../layout/head
-        link(href='css/register.css', rel='stylesheet', type='text/css')
+        link(href='css/auth.css', rel='stylesheet', type='text/css')
+        link(href='css/base.css', rel='stylesheet', type='text/css')
 
         title #{title}
 
     body
         include ../layout/basic-header
+
         .container
             .row
-                .col-md-6.col-md-offset-3
-                    .register-panel.panel.panel-default
+                .col-md-6.col-lg-6.col-md-3.col-lg-offset-3
+                    .auth-panel.panel.panel-default
                         .panel-heading
                             h3.panel-title Sign Up
                         .panel-body
@@ -29,6 +31,9 @@ html(lang='en')
                                         input.form-control(placeholder='Email', name='email', type='email', value='')
                                         input.form-control(placeholder='Password', name='password', type='password', value='')
 
-                                p.error.text-center #{error}
+                                p.error.text-center #{message}
                                 // Change this to a button or input when using this as a form
                                 button.btn.btn-lg.btn-success.btn-block(type='submit') Create Account
+
+                                p.text-center.existingLink Already have an account?&nbsp
+                                    a(href='/login') Login
