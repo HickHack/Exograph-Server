@@ -7,3 +7,6 @@ exograph-server.iml
 
 # Compiled CSS
 public/css/
+
+# Config file containing imporant info
+config.js

@@ -1,17 +1,21 @@
-.auth-panel {
-  margin-top: 10%;
+.auth {
+    .message-panel {
+      margin-top: 5%;
+    }
 
-  input {
-    padding: 0 5px 0 5px;
-    margin-bottom: 5px;
-  }
+    .auth-panel {
+      input {
+        padding: 0 5px 0 5px;
+        margin-bottom: 5px;
+      }
 
-  button {
-    width: 50%;
-    margin: auto;
-  }
+      button {
+        width: 50%;
+        margin: auto;
+      }
 
-  .existingLink {
-    margin-top: 10px;
-  }
+      .existingLink {
+        margin-top: 10px;
+      }
+    }
 }

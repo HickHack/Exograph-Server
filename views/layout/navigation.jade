@@ -76,13 +76,13 @@ nav.navbar.navbar-default.navbar-static-top(role='navigation', style='margin-bot
         i.fa.fa-caret-down
       ul.dropdown-menu.dropdown-user
         li
-          a(href='#')
+          a(href='/profile')
             i.fa.fa-user.fa-fw
             |  Profile
         li
-          a(href='#')
+          a(href='/home/account/')
             i.fa.fa-gear.fa-fw
-            |  Settings
+            |  Account
         li.divider
         li
           a(href='/logout')
@@ -90,6 +90,8 @@ nav.navbar.navbar-default.navbar-static-top(role='navigation', style='margin-bot
             |  Logout
       // /.dropdown-user
     // /.dropdown
+    li.dropdown
+        p.text-center Betty Liu
   // /.navbar-top-links
   .navbar-default.sidebar(role='navigation')
     .sidebar-nav.navbar-collapse

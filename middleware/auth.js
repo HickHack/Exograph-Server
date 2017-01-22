@@ -1,6 +1,6 @@
 var Auth = module.exports = function () {}
 
-Auth.isLoggedIn = function (req, res, next) {
+Auth.checkAuth = function (req, res, next) {
     if (req.isAuthenticated()) {
         return next();
     }
@@ -8,11 +8,10 @@ Auth.isLoggedIn = function (req, res, next) {
     res.redirect('/login');
 }
 
-Auth.logout = function (req, res, next) {
+Auth.logout = function (req, res) {
     if (req.isAuthenticated()) {
         req.logout();
-        next(null, true);
-    } else {
-        next(null, false);
     }
+
+    res.redirect('/login');
 }

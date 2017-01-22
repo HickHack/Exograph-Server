@@ -5,7 +5,7 @@ var neo4j = require('neo4j');
 var errors = require('./errors');
 var hashUtil = require('../util/hashUtil');
 
-var db = new neo4j.GraphDatabase('http://neo4j:Pa55w0rd!@localhost:7474');
+var db = new neo4j.GraphDatabase(process.conf.global.NEO4J_URL);
 
 // Private constructor:
 var User = module.exports = function User(_node) {
@@ -56,7 +56,6 @@ User.VALIDATION_INFO = {
         maxLength: 50,
         message: 'Password must be at least 6 characters long'
     },
-
 };
 
 // Public instance properties:
@@ -94,12 +93,18 @@ Object.defineProperties(User.prototype, {
 // (This allows `User.prototype.patch` to not require any.)
 // You can pass `true` for `required` to validate that all required properties
 // are present too. (Useful for `User.create`.)
-function validate(props, required) {
+function validate(props, callback) {
     var safeProps = {};
 
     for (var prop in User.VALIDATION_INFO) {
         var val = props[prop];
-        validateProp(prop, val, required);
+
+        validateProp(prop, val, function (err) {
+            if (err) {
+                return callback(err);
+            }
+        });
+
         safeProps[prop] = val;
     }
 
@@ -107,38 +112,39 @@ function validate(props, required) {
         safeProps.password = hashUtil.generateBcryptKey(safeProps.password);
     }
 
-    return safeProps;
+    return callback(null, safeProps);
 }
 
 // Validates the given property based on the validation info above.
 // By default, ignores null/undefined/empty values, but you can pass `true` for
 // the `required` param to enforce that any required properties are present.
-function validateProp(prop, val, required) {
+function validateProp(prop, val, callback) {
     var info = User.VALIDATION_INFO[prop];
     var message = info.message;
+    var err = undefined;
 
     if (!val) {
-        if (info.required && required) {
-            throw new errors.ValidationError(
-                'Missing ' + prop + ' (required).');
+        if (info.required) {
+            err = new errors.ValidationError('Missing ' + prop + ' (required).');
+            return callback(err);
         } else {
             return;
         }
     }
 
     if (info.minLength && val.length < info.minLength) {
-        throw new errors.ValidationError(
-            'Invalid ' + prop + ' (too short). Requirements: ' + message);
+        err = new errors.ValidationError('Invalid ' + prop + ' (too short). ' + message);
+        return callback(err);
     }
 
     if (info.maxLength && val.length > info.maxLength) {
-        throw new errors.ValidationError(
-            'Invalid ' + prop + ' (too long). Requirements: ' + message);
+        err = new errors.ValidationError('Invalid ' + prop + ' (too long). ' + message);
+        return callback(err);
     }
 
     if (info.pattern && !info.pattern.test(val)) {
-        throw new errors.ValidationError(
-            'Invalid ' + prop + ' (format). Requirements: ' + message);
+        err = new errors.ValidationError('Invalid ' + prop + ' (format). ' + message);
+        return callback(err);
     }
 }
 
@@ -305,7 +311,7 @@ User.prototype.getFollowingAndOthers = function (callback) {
 User.get = function (id, callback) {
     var query = [
         'MATCH (user:User)',
-        'MATCH (n:User) WHERE id(n) = {id}',
+        'WHERE id(user) = {id}',
         'RETURN user'
     ].join('\n')
 
@@ -371,16 +377,29 @@ User.getAll = function (callback) {
     });
 };
 
-// Creates the user and persists (saves) it to the db, incl. indexing it:
 User.create = function (props, callback) {
+    var success = true;
+    var error = null;
+
     var query = [
         'CREATE (user:User {props})',
         'RETURN user',
     ].join('\n');
 
     var params = {
-        props: validate(props)
+        props: validate(props, function (err, props) {
+            if (err) {
+                success = false;
+                error = err;
+            }
+
+            return props;
+        })
     };
+
+    if(!success && error) {
+        return callback(error);
+    }
 
     db.cypher({
         query: query,
@@ -415,7 +434,8 @@ db.createConstraint({
     label: 'User',
     property: 'email',
 }, function (err, constraint) {
-    if (err) throw err;     // Failing fast for now, by crash the application.
+    if (err) throw err;
+
     if (constraint) {
         console.log('(Registered unique email constraint.)');
     }
