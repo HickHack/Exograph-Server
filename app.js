@@ -7,7 +7,12 @@ var bodyParser = require('body-parser');
 var flash = require('connect-flash');
 var passport = require('passport')
 var session = require('express-session');
+process.conf = require('./config');
+
+//Routes
+var home = require('./routes/home');
 var graph = require('./routes/graph');
+var account = require('./routes/account');
 
 var app = express();
 
@@ -26,15 +31,17 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 //Setup Passport and Flash
-app.use(session({ secret: 'yoursecret' })); // session secret
+app.use(session({ secret: process.conf.global.SESSION_SECRET }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 
-require('./routes/index')(app, passport);
-require('./routes/registration')(app, passport);
 require('./routes/login')(app, passport);
-app.use('/graph', graph)
+require('./routes/registration')(app, passport);
+
+app.use('/', home);
+app.use('/graph', graph);
+app.use('/home/account', account);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -1,0 +1,17 @@
+doctype html
+
+head
+    include ../layout/head
+    link(href='/css/profile.css', rel='stylesheet', type='text/css')
+
+    title #{title}
+body
+    #wrapper
+        include ../layout/navigation
+
+        #page-wrapper
+            .container-fluid
+                .row
+                    .col-md-12
+                        if(user)
+                            h2.text-center Account (#{user.firstname} #{user.surname})

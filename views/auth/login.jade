@@ -10,9 +10,13 @@ html(lang='en')
     body
         include ../layout/basic-header
 
-        .container
+        .container-fluid
             .row
-                .col-md-4.col-lg-4.col-md-4.col-lg-offset-4
+                .col-md-4.col-lg-4.col-md-4.col-lg-offset-4.auth
+                    .message-panel
+                        if (message.length > 0)
+                            .alert.alert-danger.text-center #{message}
+
                     .auth-panel.panel.panel-default
                         .panel-heading
                             h3.panel-title Please Sign In
@@ -20,11 +24,9 @@ html(lang='en')
                             form(action='/login' role='form', method='POST')
                                 fieldset
                                     .form-group
-                                        input.form-control(placeholder='E-mail', name='email', type='email', autofocus='', value=email)
+                                        input.form-control(placeholder='E-mail', name='email', type='email', autofocus='', value=email, required)
                                     .form-group
-                                        input.form-control(placeholder='Password', name='password', type='password', value='')
-
-                                    p.error.text-center #{message}
+                                        input.form-control(placeholder='Password', name='password', type='password', value='', required)
 
                                     button.btn.btn-lg.btn-success.btn-block(type='submit') Login
 

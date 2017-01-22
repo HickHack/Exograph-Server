@@ -5,11 +5,11 @@ module.exports = function (app, passport) {
     //GET Login
     app.get('/login', function(req, res, next) {
         if (req.isAuthenticated()) {
-            res.redirect('/')
+            res.redirect('/');
         }
 
         res.render('auth/login', {
-            title: 'Exograph',
+            title: process.conf.app.NAME,
             message: req.flash('loginMessage'),
             email: req.session.emailField
         });
@@ -26,14 +26,6 @@ module.exports = function (app, passport) {
 
     // GET Logout
     app.get('/logout', function (req, res, next) {
-        auth.logout(req, res, function (err, success) {
-            if (err) next(err);
-
-            if(success) {
-                res.redirect('/login');
-            } else {
-                res.redirect('/');
-            }
-        });
-    })
+        auth.logout(req, res);
+    });
 }
