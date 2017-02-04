@@ -434,7 +434,9 @@ db.createConstraint({
     label: 'User',
     property: 'email',
 }, function (err, constraint) {
-    if (err) throw err;
+    if (err) {
+        console.log("Failed to register User:email constraint. " + err.message)
+    }
 
     if (constraint) {
         console.log('(Registered unique email constraint.)');
