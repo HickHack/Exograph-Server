@@ -1,0 +1,12 @@
+language: node_js
+sudo: true
+node_js:
+  - "6.1"
+services:
+  - neo4j
+before_install:
+  - sudo neo4j start
+install:
+  - npm install
+script:
+  - npm test
