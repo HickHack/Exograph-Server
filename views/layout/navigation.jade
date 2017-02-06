@@ -91,7 +91,7 @@ nav.navbar.navbar-default.navbar-static-top(role='navigation', style='margin-bot
       // /.dropdown-user
     // /.dropdown
     li.dropdown
-        p.text-center Betty Liu
+        p.text-center #{user.firstname}
   // /.navbar-top-links
   .navbar-default.sidebar(role='navigation')
     .sidebar-nav.navbar-collapse
@@ -104,7 +104,7 @@ nav.navbar.navbar-default.navbar-static-top(role='navigation', style='margin-bot
                 i.fa.fa-search
           // /input-group
         li
-          a(href='graph')
+          a(href='/graph')
             i.fa.fa-dashboard.fa-fw
             |  Graphs
         li
@@ -117,9 +117,9 @@ nav.navbar.navbar-default.navbar-static-top(role='navigation', style='margin-bot
               a(href='flot.html') Graph Analytics
           // /.nav-second-level
         li
-          a(href='#')
-            i.fa.fa-table.fa-fw
-            |  Item 1
+          a(href='/graph/import')
+            i.fa.fa-download.fa-fw
+            |  Import
         li
           a(href='forms.html')
             i.fa.fa-edit.fa-fw

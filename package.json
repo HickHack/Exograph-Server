@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "test": "node node_modules/mocha/bin/_mocha --timeout 15000 --ui bdd --recursive ./test",
-    "build-css": "node-sass public/scss/test.scss public/css/test.css"
+    "build-css": "node-sass public/scss/test.scss public/css/test.css",
+    "start": "nodemon bin/www"
   },
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
@@ -17,8 +18,11 @@
     "jade": "~1.11.0",
     "morgan": "~1.7.0",
     "neo4j": "^2.0.0-RC2",
+    "nodemon": "^1.11.0",
+    "npm-start": "^1.4.2",
     "passport": "~0.1.17",
     "passport-local": "~0.1.6",
+    "request": "^2.79.0",
     "serve-favicon": "~2.3.0",
     "sha256": "^0.2.0"
   },

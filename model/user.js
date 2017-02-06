@@ -81,8 +81,6 @@ Object.defineProperties(User.prototype, {
     'password': {
         get: function () { return this._node.properties['password']; }
     }
-
-
 });
 
 // Private helpers:

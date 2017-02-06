@@ -1,0 +1,33 @@
+@import "dimensions";
+@import "color";
+
+.import-container {
+
+  .message-panel {
+    margin: 20px 0 0px 0;
+    display: none;
+  }
+
+  ul {
+    list-style: none;
+  }
+
+  .panel {
+
+    margin-top: $panel-top-margin;
+
+    .panel-heading {
+      color: $text-blue;
+    }
+
+    .fa {
+      color: $text-blue;
+      margin-right: 5px;
+    }
+
+    .message-panel {
+      margin: $message-panel-margin;
+      padding: $message-panel-padding;
+    }
+  }
+}
