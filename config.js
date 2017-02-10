@@ -2,6 +2,9 @@
  * Created by graham on 20/01/17.
  */
 
+var fs = require('fs');
+var util = require('util');
+
 var config = {}
 
 config.global = {
@@ -26,4 +29,17 @@ config.app = {
     PORT: 3000,
 };
 
+// Overload console.log to write stout to file
+
+var logstdout = process.stdout;
+var logFile = fs.createWriteStream('log/server.log', { flags: 'a' });
+
+console.log = function () {
+    logFile.write(util.format.apply(null, arguments) + ' - ' + new Date() + '\n');
+    logstdout.write(util.format.apply(null, arguments) + '\n');
+};
+
+
+
+console.error = console.log;
 module.exports = config;

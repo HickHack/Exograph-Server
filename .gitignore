@@ -5,8 +5,10 @@ node_modules
 exograph-server.iml
 .idea
 
-# Compiled CSS
 public/css/
+public/img/
 
 # Config file containing imporant info
 config.js
+
+log/*

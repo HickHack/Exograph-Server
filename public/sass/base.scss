@@ -1,4 +1,12 @@
+/**
+*
+* Default styles which are used site wide
+* they are defined here to maintain consistency
+*
+*/
+
 @import "color";
+@import "font";
 
 .error {
   color: $error;
@@ -8,4 +16,18 @@ p {
   color: $text-blue;
 }
 
+.page-header {
+  margin-top: 0;
+}
 
+.panel-default {
+
+  .panel-heading {
+    color: $text-blue;
+
+    .fa {
+      color: $text-blue;
+      margin-right: 5px;
+    }
+  }
+}

@@ -1,5 +1,5 @@
 var express = require('express');
-var auth = require('../middleware/auth');
+var auth = require('../helper/auth');
 
 var router = express.Router();
 

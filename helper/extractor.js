@@ -6,16 +6,20 @@ var endpoints = {};
 var auth = {expire: '', token: ''};
 
 var Extractor = module.exports = function Extractor() {
-    obtainToken(function () {
-        getEndpoints(function (err, result) {
-            if (err) {
-                console.log('Failed to obtain endpoints');
-            } else {
+    obtainToken(function (err) {
+        if (err) {
+            console.log(err.message);
+        } else {
+            getEndpoints(function (err, result) {
+                if (err) {
+                    throw err;
+                }
+
                 endpoints = result;
-            }
-        });
+            });
+        }
     });
-}
+};
 
 // Public methods
 Extractor.prototype.launchLinkedin = function (props, next) {
@@ -25,6 +29,7 @@ Extractor.prototype.launchLinkedin = function (props, next) {
     perform_request(req, function (err, res) {
         if (err) {
             var error = new Error('Oops something went wrong!');
+            console.log(error);
             return next(error);
         }
 
@@ -36,16 +41,19 @@ Extractor.prototype.launchLinkedin = function (props, next) {
                     return next(null, result.jobs[0]);
                 } else {
                     var noJobError = new Error('Failed to trigger job');
+                    console.log(error);
+
                     return next(noJobError);
                 }
             });
         }
     });
-}
+};
 
 // Private helpers
 function perform_request(req, callback) {
     validateToken(function () {
+        console.log("Extractor request: " + req.url + " " + req.method);
         req.headers.Authorization = auth.token;
 
         request(req, function (err, res, body) {
@@ -60,9 +68,13 @@ function validateToken(next) {
     var now = new Date();
 
     if (auth.token == '' || now.getTime() > auth.expire.getTime()) {
-        obtainToken(function () {
+        obtainToken(function (err) {
+            if (err) {
+               console.log("Token refresh error: " + err);
+            }
+
             return next();
-        })
+        });
     }
 
     return next();
@@ -74,8 +86,8 @@ function obtainToken(next) {
 
     request(req, function (err, res, body) {
         if (err) {
-            console.log('Error obtaining token');
-            return next();
+            console.log('Error obtaining token: ' + err);
+            return next(err);
         }
 
         if (res.statusCode == 200 && res.headers['content-type'] == 'application/json') {
@@ -90,7 +102,8 @@ function obtainToken(next) {
                 auth.token = 'Bearer ' + result['token'];
                 auth.expire = date;
 
-                return next();
+                console.log('Token obtained');
+                return next(null);
             }
         }
     });
@@ -132,5 +145,7 @@ function parseJSONResponse(res, next) {
     }
 
     var err = new Error('Unable to parse response, body is not json');
+    console.log(err);
+
     return next(err);
 }

@@ -1,0 +1,104 @@
+doctype html
+
+head
+    include ../layout/head
+    script(src='/js/cytoscape.js')
+    link(href='/css/dashboard.css', rel='stylesheet', type='text/css')
+
+    title #{title}
+
+    - if (networks && networks.length > 0)
+        - var num_networks = networks.length
+    - else
+        - var num_networks = 0
+body
+    #wrapper
+        include ../layout/navigation
+
+        #page-wrapper
+            .container-fluid
+
+                include ../layout/pageHeader
+
+                .row
+                    .col-lg-3.col-md-6
+                        .panel.panel-primary
+                            .panel-heading
+                                .row
+                                    .col-xs-3
+                                        i.fa.icon-relations-graph.fa-5x
+                                    .col-xs-9.text-right
+                                        .huge #{num_networks}
+
+                                        - if (num_networks == 1)
+                                            div Network
+                                        - else
+                                            div Networks
+
+                    .col-lg-3.col-md-6
+                        .panel.panel-green
+                            .panel-heading
+                                .row
+                                    .col-xs-3
+                                        i.fa.icon-job.fa-5x
+                                    .col-xs-9.text-right
+                                        .huge 12
+                                        div Jobs Running
+
+                    .col-lg-3.col-md-6
+                        .panel.panel-yellow
+                            .panel-heading
+                                .row
+                                    .col-xs-3
+                                        i.fa.fa-shopping-cart.fa-5x
+                                    .col-xs-9.text-right
+                                        .huge 124
+                                        div New Orders!
+
+
+                    .col-lg-3.col-md-6
+                        .panel.panel-red
+                            .panel-heading
+                                .row
+                                    .col-xs-3
+                                        i.fa.fa-support.fa-5x
+                                    .col-xs-9.text-right
+                                        .huge 13
+                                        div Support Tickets!
+
+                .row
+                    hr
+                    - if(networks)
+                        each network in networks
+
+                            - if (network.type == 'LINKEDIN')
+                                - var icon = 'fa fa-linkedin'
+                            -else if (network.type == 'TWITTER')
+                                 - var icon = 'fa fa-twitter'
+
+                            .col-lg-4.network-panel
+                                .panel.panel-default
+                                    .panel-heading
+                                        i(class='#{icon}')
+                                        |  #{network.name}
+                                        .pull-right
+                                            .btn-group
+                                                button.btn.btn-default.btn-xs.dropdown-toggle(type='button', data-toggle='dropdown')
+                                                    | Actions
+                                                    span.caret
+                                                ul.dropdown-menu.pull-right(role='menu')
+                                                    li
+                                                        a(href='/graph/view/#{network.id}') View
+                                                    li
+                                                        a(href='/graph/trash/#{network.id}') Send to Trash
+                                                    li.divider
+                                                    li
+                                                        a(href='#') Import Details
+                                    .panel-body
+                                        img.img-thumbnail(src='/img/graph/#{network.imageRef}')
+
+
+
+
+
+

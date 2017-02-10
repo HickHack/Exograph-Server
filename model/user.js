@@ -1,11 +1,12 @@
 // user.js
 // User model logic.
 
-var neo4j = require('neo4j');
 var errors = require('./errors');
 var hashUtil = require('../util/hashUtil');
+var Database = require('./db');
 
-var db = new neo4j.GraphDatabase(process.conf.global.NEO4J_URL);
+var neo4j = new Database();
+
 
 // Private constructor:
 var User = module.exports = function User(_node) {
@@ -14,8 +15,7 @@ var User = module.exports = function User(_node) {
     this._node = _node;
 }
 
-// Public constants:
-
+// Public constants
 User.VALIDATION_INFO = {
     'firstname': {
         required: true,
@@ -58,28 +58,42 @@ User.VALIDATION_INFO = {
     },
 };
 
-// Public instance properties:
+// Public instance properties
 Object.defineProperties(User.prototype, {
-   'id': {
-       get: function () { return this._node._id; }
-   },
+    'id': {
+        get: function () {
+            return this._node._id;
+        }
+    },
     'firstname': {
-        get: function () { return this._node.properties['firstname']; }
+        get: function () {
+            return this._node.properties['firstname'];
+        }
     },
     'surname': {
-        get: function () { return this._node.properties['surname']; }
+        get: function () {
+            return this._node.properties['surname'];
+        }
     },
     'company': {
-        get: function () { return this._node.properties['company']; }
+        get: function () {
+            return this._node.properties['company'];
+        }
     },
     'country': {
-        get: function () { return this._node.properties['country']; }
+        get: function () {
+            return this._node.properties['country'];
+        }
     },
     'email': {
-        get: function () { return this._node.properties['email']; }
+        get: function () {
+            return this._node.properties['email'];
+        }
     },
     'password': {
-        get: function () { return this._node.properties['password']; }
+        get: function () {
+            return this._node.properties['password'];
+        }
     }
 });
 
@@ -106,7 +120,7 @@ function validate(props, callback) {
         safeProps[prop] = val;
     }
 
-    if(safeProps.password) {
+    if (safeProps.password) {
         safeProps.password = hashUtil.generateBcryptKey(safeProps.password);
     }
 
@@ -172,11 +186,11 @@ User.prototype.patch = function (props, callback) {
 
     var self = this;
 
-    db.cypher({
+    neo4j.run({
         query: query,
-        params: params,
+        params: params
     }, function (err, results) {
-        if (isConstraintViolation(err)) {
+        if (neo4j.isConstraintViolation(err)) {
             // TODO: This assumes email is the only relevant constraint.
             // We could parse the constraint property out of the error message,
             // but it'd be nicer if Neo4j returned this data semantically.
@@ -214,9 +228,9 @@ User.prototype.del = function (callback) {
         username: this.username,
     };
 
-    db.cypher({
+    neo4j.run({
         query: query,
-        params: params,
+        params: params
     }, function (err) {
         callback(err);
     });
@@ -234,9 +248,9 @@ User.prototype.follow = function (other, callback) {
         otherUsername: other.username,
     };
 
-    db.cypher({
+    neo4j.run({
         query: query,
-        params: params,
+        params: params
     }, function (err) {
         callback(err);
     });
@@ -255,9 +269,9 @@ User.prototype.unfollow = function (other, callback) {
         otherUsername: other.username,
     };
 
-    db.cypher({
+    neo4j.run({
         query: query,
-        params: params,
+        params: params
     }, function (err) {
         callback(err);
     });
@@ -279,9 +293,9 @@ User.prototype.getFollowingAndOthers = function (callback) {
     };
 
     var user = this;
-    db.cypher({
+    neo4j.run({
         query: query,
-        params: params,
+        params: params
     }, function (err, results) {
         if (err) return callback(err);
 
@@ -317,9 +331,9 @@ User.get = function (id, callback) {
         id: parseInt(id),
     };
 
-    db.cypher({
+    neo4j.run({
         query: query,
-        params: params,
+        params: params
     }, function (err, results) {
         if (err) return callback(err);
         if (!results.length) {
@@ -332,7 +346,7 @@ User.get = function (id, callback) {
     });
 };
 
-User.getBy = function(field, value, callback) {
+User.getBy = function (field, value, callback) {
     var query = [
         'MATCH (user:User)',
         'WHERE ' + field + ' = {value}',
@@ -343,20 +357,20 @@ User.getBy = function(field, value, callback) {
         value: value
     };
 
-    db.cypher({
-        query: query, 
+    neo4j.run({
+        query: query,
         params: params
     }, function (err, result) {
         if (err) return callback(err);
 
-        if(!result[0]) {
+        if (!result[0]) {
             return callback(null, null);
         } else {
             var user = new User(result[0]['user']);
             return callback(null, user);
         }
     });
-}
+};
 
 User.getAll = function (callback) {
     var query = [
@@ -364,7 +378,7 @@ User.getAll = function (callback) {
         'RETURN user',
     ].join('\n');
 
-    db.cypher({
+    neo4j.run({
         query: query,
     }, function (err, results) {
         if (err) return callback(err);
@@ -395,13 +409,13 @@ User.create = function (props, callback) {
         })
     };
 
-    if(!success && error) {
+    if (!success && error) {
         return callback(error);
     }
 
-    db.cypher({
+    neo4j.run({
         query: query,
-        params: params,
+        params: params
     }, function (err, results) {
         if (err != null && isConstraintViolation(err)) {
             // TODO: This assumes username is the only relevant constraint.
@@ -426,17 +440,9 @@ User.isPasswordValid = function (password, pass, callback) {
  * Static initialization
  */
 
-// Register our unique email constraint.
 // Should be done as a schema migration script
-db.createConstraint({
-    label: 'User',
-    property: 'email',
-}, function (err, constraint) {
+neo4j.createConstraint('User', 'email', function (err) {
     if (err) {
-        console.log("Failed to register User:email constraint. " + err.message)
+        console.warn(err.message);
     }
-
-    if (constraint) {
-        console.log('(Registered unique email constraint.)');
-    }
-})
+});

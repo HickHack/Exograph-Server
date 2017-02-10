@@ -46,4 +46,4 @@ Validator.prototype.validateProp = function(prop, val, callback) {
         err = 'Invalid ' + info.key + ' (format). ' + message;
         return callback(err);
     }
-}
+};
