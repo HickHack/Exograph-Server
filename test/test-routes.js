@@ -10,14 +10,6 @@ chai.use(chaiHttp);
 
 describe('', function () {
 
-    beforeEach(function (done) {
-        done();
-    });
-
-    afterEach(function (done) {
-        done();
-    })
-
     it('should test GET login page', function (done) {
         chai.request(server)
             .get('/login')

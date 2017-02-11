@@ -7,7 +7,7 @@ process.env.NODE_ENV = 'test';
 var mocha = require('mocha');
 var chai = require('chai');
 var sinon = require('sinon');
-var auth = require('../../middleware/auth');
+var auth = require('../../helper/auth');
 
 var describe = mocha.describe;
 var it = mocha.it;

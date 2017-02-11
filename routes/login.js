@@ -1,4 +1,4 @@
-var auth = require('../middleware/auth');
+var auth = require('../helper/auth');
 
 module.exports = function (app, passport) {
 
@@ -19,7 +19,7 @@ module.exports = function (app, passport) {
 
     //POST
     app.post('/login', passport.authenticate('local-login', {
-        successRedirect: '/',
+        successRedirect: '/dashboard',
         failureRedirect: '/login',
         failureFlash: true
     }));

@@ -6,7 +6,7 @@ Auth.checkAuth = function (req, res, next) {
     }
 
     res.redirect('/login');
-}
+};
 
 Auth.logout = function (req, res) {
     if (req.isAuthenticated()) {
@@ -14,4 +14,4 @@ Auth.logout = function (req, res) {
     }
 
     res.redirect('/login');
-}
+};

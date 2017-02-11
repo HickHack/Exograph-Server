@@ -1,10 +1,33 @@
-@import "color";
+/**
+*
+* Default styles which are used site wide
+* they are defined here to maintain consistency
+*
+*/
 
-//TODO: Remove if never used
+@import "color";
+@import "font";
+
 .error {
   color: $error;
 }
 
 p {
-  color: $text-standard;
+  color: $text-blue;
+}
+
+.page-header {
+  margin-top: 0;
+}
+
+.panel-default {
+
+  .panel-heading {
+    color: $text-blue;
+
+    .fa {
+      color: $text-blue;
+      margin-right: 5px;
+    }
+  }
 }
