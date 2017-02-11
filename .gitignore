@@ -8,7 +8,4 @@ exograph-server.iml
 public/css/
 public/img/
 
-# Config file containing imporant info
-config.js
-
 log/*
