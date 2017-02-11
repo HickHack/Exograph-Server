@@ -8,7 +8,7 @@ var mocha = require('mocha');
 var chai = require('chai');
 var sinon = require('sinon');
 var rewire = require('rewire');
-var extractor = rewire('../../middleware/extractor');
+var extractor = rewire('../../helper/extractor');
 
 var describe = mocha.describe;
 var should = chai.should();
