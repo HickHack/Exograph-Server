@@ -30,15 +30,18 @@ config.app = {
 };
 
 // Overload console.log to write stout to file
-var logstdout = process.stdout;
-var logFile = fs.createWriteStream('log/server.log', { flags: 'a' });
+if (process.env.type != 'test') {
+    var logstdout = process.stdout;
+    var logFile = fs.createWriteStream('log/server.log', { flags: 'a' });
 
-console.log = function () {
-    logFile.write(util.format.apply(null, arguments) + ' - ' + new Date() + '\n');
-    logstdout.write(util.format.apply(null, arguments) + '\n');
-};
+    console.log = function () {
+        logFile.write(util.format.apply(null, arguments) + ' - ' + new Date() + '\n');
+        logstdout.write(util.format.apply(null, arguments) + '\n');
+    };
 
 
 
-console.error = console.log;
+    console.error = console.log;
+}
+
 module.exports = config;

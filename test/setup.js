@@ -1,6 +1,7 @@
 /**
  * Unit Test Helper Methods
  */
+process.env.type = 'test';
 
 var setup = {}
 
