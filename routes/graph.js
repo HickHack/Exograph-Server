@@ -9,6 +9,14 @@ router.get('/import', auth.checkAuth, function(req, res, next) {
     controller.handleImport(req, res);
 });
 
+router.get('/view/:id', auth.checkAuth, function(req, res, next) {
+    controller.handleViewPage(req, res);
+});
+
+router.get('/data/:id', auth.checkAuth, function(req, res, next) {
+    controller.handleGraphLoad(req, res);
+});
+
 router.post('/import/linkedin', auth.checkAuth, function(req, res, next) {
     controller.launchLinkedinImport(req, res);
 });

@@ -1,0 +1,39 @@
+doctype html
+
+head
+    include ../layout/head
+
+    link(href='/css/graph.css', rel='stylesheet', type='text/css')
+    script(src='https://d3js.org/d3.v3.min.js')
+    script(src='/js/graph-render.js')
+    script(src='/js/graph-side-panel.js')
+
+    title #{title}
+
+body
+    include ../layout/complex-header
+
+    #wrapper
+        .loading
+            img.center-block(src='/img/loading.gif')
+
+        .container-fluid.graph-container
+            .row
+                .graph-info-container
+                    .container-fluid
+                        .row
+                            .col-lg-12
+                                button.close-btn
+                                    i.fa.fa-close
+
+
+                .col-lg-12
+                    .graph(endpoint='#{graphEndpoint}')
+
+
+
+
+
+
+
+

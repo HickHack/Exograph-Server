@@ -1,171 +1,79 @@
+include ./complex-header
 
-nav.navbar.navbar-default.navbar-static-top(role='navigation', style='margin-bottom: 0')
-  .navbar-header
-    button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
-      span.sr-only Toggle navigation
-      span.icon-bar
-      span.icon-bar
-      span.icon-bar
-    a.navbar-brand(href='/') #{title}
-  // /.navbar-header
-  ul.nav.navbar-top-links.navbar-right
-    // /.dropdown
-    li.dropdown
-      a.dropdown-toggle(data-toggle='dropdown', href='#')
-        i.fa.fa-tasks.fa-fw
-        i.fa.fa-caret-down
-      ul.dropdown-menu.dropdown-tasks
-        li
-          a(href='#')
-            div
-              p
-                strong Task 4
-                span.pull-right.text-muted 80% Complete
-              .progress.progress-striped.active
-                .progress-bar.progress-bar-danger(role='progressbar', aria-valuenow='80', aria-valuemin='0', aria-valuemax='100', style='width: 80%')
-                  span.sr-only 80% Complete (danger)
-        li.divider
-        li
-          a.text-center(href='#')
-            strong See All Tasks
-            i.fa.fa-angle-right
-      // /.dropdown-tasks
-    // /.dropdown
-    li.dropdown
-      a.dropdown-toggle(data-toggle='dropdown', href='#')
-        i.fa.fa-bell.fa-fw
-        i.fa.fa-caret-down
-      ul.dropdown-menu.dropdown-alerts
-        li
-          a(href='#')
-            div
-              i.fa.fa-comment.fa-fw
-              |  You created a new graph
-              span.pull-right.text-muted.small 4 minutes ago
-        li.divider
-        li
-          a(href='#')
-            div
-              i.fa.fa-twitter.fa-fw
-              |  Twitter graph1 Saved
-              span.pull-right.text-muted.small 12 minutes ago
-        li.divider
-        li
-          a(href='#')
-            div
-              i.fa.fa-tasks.fa-fw
-              |  New Task
-              span.pull-right.text-muted.small 4 minutes ago
-        li.divider
-        li
-          a(href='#')
-            div
-              i.fa.fa-upload.fa-fw
-              |  New graph availble
-              span.pull-right.text-muted.small 4 minutes ago
-        li.divider
-        li
-          a.text-center(href='#')
-            strong See All Alerts
-            i.fa.fa-angle-right
-      // /.dropdown-alerts
-    // /.dropdown
-    li.dropdown
-      a.dropdown-toggle(data-toggle='dropdown', href='#')
-        i.fa.fa-user.fa-fw
-        i.fa.fa-caret-down
-      ul.dropdown-menu.dropdown-user
-        li
-          a(href='/profile')
-            i.fa.fa-user.fa-fw
-            |  Profile
-        li
-          a(href='/home/account/')
-            i.fa.fa-gear.fa-fw
-            |  Account
-        li.divider
-        li
-          a(href='/logout')
-            i.fa.fa-sign-out.fa-fw
-            |  Logout
-      // /.dropdown-user
-    // /.dropdown
-    li.dropdown
-        p.text-center #{user.firstname}
-  // /.navbar-top-links
-  .navbar-default.sidebar(role='navigation')
+// /.navbar-top-links
+.navbar-default.sidebar(role='navigation')
     .sidebar-nav.navbar-collapse
-      ul#side-menu.nav
-        li.sidebar-search
-          .input-group.custom-search-form
-            input.form-control(type='text', placeholder='Search...')
-            span.input-group-btn
-              button.btn.btn-default(type='button')
-                i.fa.fa-search
-          // /input-group
-        li
-          a(href='/dashboard')
-            i.fa.fa-dashboard.fa-fw
-            |  Dashboard
-        li
-          a(href='#')
-            i.fa.fa-bar-chart-o.fa-fw
-            |  Charts
-            span.fa.arrow
-          ul.nav.nav-second-level
+        ul#side-menu.nav
+            li.sidebar-search
+                .input-group.custom-search-form
+                    input.form-control(type='text', placeholder='Search...')
+                    span.input-group-btn
+                        button.btn.btn-default(type='button')
+                            i.fa.fa-search
+                // /input-group
             li
-              a(href='flot.html') Graph Analytics
-          // /.nav-second-level
-        li
-          a(href='/graph/import')
-            i.fa.fa-download.fa-fw
-            |  Import
-        li
-          a(href='forms.html')
-            i.fa.fa-edit.fa-fw
-            |  Item 2
-        li
-          a(href='#')
-            i.fa.fa-wrench.fa-fw
-            |  Item 2
-            span.fa.arrow
-          ul.nav.nav-second-level
+                a(href='/dashboard')
+                    i.fa.fa-dashboard.fa-fw
+                    |  Dashboard
             li
-              a(href='#') Notifications
-          // /.nav-second-level
-        li
-          a(href='#')
-            i.fa.fa-sitemap.fa-fw
-            |  Multi-Level Dropdown
-            span.fa.arrow
-          ul.nav.nav-second-level
+                a(href='#')
+                    i.fa.fa-bar-chart-o.fa-fw
+                    |  Charts
+                    span.fa.arrow
+                ul.nav.nav-second-level
+                    li
+                        a(href='flot.html') Graph Analytics
+                // /.nav-second-level
             li
-              a(href='#') Second Level Item
+                a(href='/graph/import')
+                    i.fa.fa-download.fa-fw
+                    |  Import
             li
-              a(href='#') Second Level Item
+                a(href='forms.html')
+                    i.fa.fa-edit.fa-fw
+                    |  Item 2
             li
-              a(href='#')
-                | Third Level
-                span.fa.arrow
-              ul.nav.nav-third-level
-                li
-                  a(href='#') Third Level Item
-                li
-                  a(href='#') Third Level Item
-                li
-                  a(href='#') Third Level Item
-                li
-                  a(href='#') Third Level Item
-              // /.nav-third-level
-          // /.nav-second-level
-        li
-          a(href='#')
-            i.fa.fa-trash.fa-fw
-            |  Trash
-            span.fa.arrow
-          ul.nav.nav-second-level
+                a(href='#')
+                    i.fa.fa-wrench.fa-fw
+                    |  Item 2
+                    span.fa.arrow
+                ul.nav.nav-second-level
+                    li
+                        a(href='#') Notifications
+                // /.nav-second-level
             li
-              a(href='blank.html')
+                a(href='#')
+                    i.fa.fa-sitemap.fa-fw
+                    |  Multi-Level Dropdown
+                    span.fa.arrow
+                ul.nav.nav-second-level
+                    li
+                        a(href='#') Second Level Item
+                    li
+                        a(href='#') Second Level Item
+                    li
+                        a(href='#')
+                            | Third Level
+                            span.fa.arrow
+                        ul.nav.nav-third-level
+                            li
+                                a(href='#') Third Level Item
+                            li
+                                a(href='#') Third Level Item
+                            li
+                                a(href='#') Third Level Item
+                            li
+                                a(href='#') Third Level Item
+                        // /.nav-third-level
+                // /.nav-second-level
             li
-              a(href='login.html')
+                a(href='#')
+                    i.fa.fa-trash.fa-fw
+                    |  Trash
+                    span.fa.arrow
+                ul.nav.nav-second-level
+                    li
+                        a(href='blank.html')
+                    li
+                        a(href='login.html')
 

@@ -9,24 +9,28 @@
 @import "font";
 
 .error {
-  color: $error;
+  color: $error-color;
 }
 
 p {
-  color: $text-blue;
+  color: $text-blue-color;
 }
 
 .page-header {
   margin-top: 0;
 }
 
+.sidebar {
+  margin-top: 0;
+}
+
 .panel-default {
 
   .panel-heading {
-    color: $text-blue;
+    color: $text-blue-color;
 
     .fa {
-      color: $text-blue;
+      color: $text-blue-color;
       margin-right: 5px;
     }
   }
