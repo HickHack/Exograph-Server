@@ -30,7 +30,7 @@ config.app = {
 };
 
 // Overload console.log to write stout to file
-if (process.env.type != 'test') {
+if (fs.exists('log/server.log')) {
     var logstdout = process.stdout;
     var logFile = fs.createWriteStream('log/server.log', { flags: 'a' });
 

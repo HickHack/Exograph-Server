@@ -1,6 +1,50 @@
-#cy {
-  width: 100%;
-  height: 500px;
-  color: #0d6aad;
+@import "color";
 
+.loading {
+  display: none;
+}
+
+#wrapper {
+
+  .graph-container {
+    [class^="col-"] {
+      padding: 0;
+    }
+
+    .graph {
+      height: 600px;
+
+      .node {
+        fill: #3f729b;
+        stroke: #3f729b;
+      }
+
+      .edge {
+        stroke: #808080;
+      }
+    }
+
+    .graph-info-container {
+      background-color: #ffffff;
+      position: absolute;
+      right: 0;
+
+      display: none;
+      z-index: 50;
+      border-left: 1px solid $border-color;
+
+      .close-btn {
+        border: none;
+        outline: none;
+        background-color: Transparent;
+        float: right;
+        padding: 10px;
+
+        i {
+          font-size: 1.5em;
+        }
+      }
+    }
+
+  }
 }

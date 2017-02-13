@@ -2,8 +2,9 @@
  * Created by graham on 10/02/17.
  */
 
-var converter = require('../util/conversionUtil');
 var Extractor = require('../helper/extractor');
+var Graph = require('../model/graph');
+var converter = require('../util/conversionUtil');
 
 var extractor = new Extractor();
 
@@ -36,5 +37,22 @@ GraphController.prototype.launchLinkedinImport = function (req, res){
 
             res.send(JSON.stringify(job));
         }
+    });
+};
+
+GraphController.prototype.handleViewPage = function (req, res) {
+    res.render('graph/view', {
+        title: process.conf.app.NAME,
+        user: req.user,
+        graphEndpoint: '/graph/data/' + req.params['id']
+    });
+};
+
+GraphController.prototype.handleGraphLoad = function (req, res) {
+    var graph = new Graph();
+    var networkId = parseInt(req.params['id']);
+
+    graph.load(req.user.id, networkId, function (graph) {
+        res.send(JSON.stringify(graph));
     });
 };
