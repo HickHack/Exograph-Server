@@ -17,6 +17,10 @@ router.get('/data/:id', auth.checkAuth, function(req, res, next) {
     controller.handleGraphLoad(req, res);
 });
 
+router.get('/connection/:id', auth.checkAuth, function(req, res, next) {
+    controller.handleLoadConnection(req, res);
+});
+
 router.post('/import/linkedin', auth.checkAuth, function(req, res, next) {
     controller.launchLinkedinImport(req, res);
 });

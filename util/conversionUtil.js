@@ -1,12 +1,20 @@
-var Converter = module.exports = {}
+var Converter = module.exports = {};
 
-Converter.unixTimeToDateTime = function (unixTime, next) {
-    var time = new Date(unixTime * 1000);
+/**
+ * This method converts a posix timestamp in seconds
+ * to a formatted string date. Unfortunately it can't
+ * be done synchronously since it's used in model getters
+ * that don't execute asynchronously
+ *
+ * @param posix
+ */
+Converter.unixTimeToDateTime = function (posix) {
+    var time = new Date(posix * 1000);
 
-    return next(time);
+    return Converter.formatDate(time);
 };
 
-Converter.formatDate = function(date, next) {
+Converter.formatDate = function(date) {
 
     var month = padValue(date.getMonth() + 1);
     var day = padValue(date.getDate());
@@ -27,9 +35,18 @@ Converter.formatDate = function(date, next) {
     hour = padValue(hour);
 
     var formatted = month + "-" + day + "-" + year + " " + hour + ":" + minute + " " + ampm;
-    return next(formatted);
+    return formatted;
 };
 
 function padValue(value) {
     return (value < 10) ? "0" + value : value;
 }
+
+Converter.base64Decode = function (b64) {
+    if (b64 == '') {
+        return '';
+    }
+
+    var buffer = new Buffer(b64, 'base64');
+    return buffer.toString();
+};

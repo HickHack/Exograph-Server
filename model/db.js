@@ -10,7 +10,7 @@
  */
 
 var neo4j = require('neo4j');
-var errors = require('./errors');
+var errors = require('./../helper/errors');
 
 var Database = module.exports = function Database() {
     this._db = new neo4j.GraphDatabase(process.conf.global.NEO4J_URL);

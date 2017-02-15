@@ -1,7 +1,7 @@
 // user.js
 // User model logic.
 
-var errors = require('./errors');
+var errors = require('./../helper/errors');
 var hashUtil = require('../util/hashUtil');
 var Database = require('./db');
 
