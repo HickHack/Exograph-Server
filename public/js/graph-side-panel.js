@@ -3,10 +3,19 @@ var graphInfoWidget = null;
 function GraphInfoWidget(dataEndpoint) {
     this.graphContainer = $('.graph');
     this.container = $('.graph-info-container');
-    this.model = this.loadData(dataEndpoint);
-    this.layout();
-    this.setupEventHandlers();
+    this.imgContainer = $('.info-img-container');
+    this.itemsContainer = $('.info-items');
+    this.model = {};
     graphInfoWidget = this;
+
+    this.setVisibility(false);
+    this.clean();
+
+    this.loadData(dataEndpoint, function (model) {
+        graphInfoWidget.model = model;
+        graphInfoWidget.layout();
+        graphInfoWidget.setupEventHandlers();
+    });
 }
 
 GraphInfoWidget.prototype.setupEventHandlers = function () {
@@ -29,10 +38,50 @@ GraphInfoWidget.prototype.layout = function() {
 
     this.container.width(width / 3);
     this.container.height(height);
+
+    this.renderImage();
+    this.populateItems();
+    this.setVisibility(true);
 };
 
-GraphInfoWidget.prototype.loadData = function(endpoint) {
+GraphInfoWidget.prototype.renderImage = function () {
+    if (this.model) {
+        $('<img/>', {
+            'src': this.model.profileImageUrl.value,
+            'class': 'img-responsive img-thumbnail'
+        }).appendTo(this.imgContainer);
+    }
+};
+
+GraphInfoWidget.prototype.populateItems = function () {
+    if (this.model) {
+        var table = $('<table/>', {
+            'class': 'table table-bordered'
+        });
+
+        for (var prop in this.model) {
+            if (this.model[prop].attr.type == 'text' && this.model[prop].value != '') {
+                var row = $('<tr/>');
+                var key = $('<td/>').text(this.model[prop].key).addClass('text-right');
+                var value = $('<td/>').text(this.model[prop].value).addClass('text-center');
+
+                row.append(key).append(value);
+                table.append(row);
+            }
+        }
+
+        table.appendTo(this.itemsContainer);
+    }
+};
+
+GraphInfoWidget.prototype.loadData = function(endpoint, callback) {
     $.getJSON(endpoint, function (response) {
         console.log(response);
+        return callback(response.node);
     });
+};
+
+GraphInfoWidget.prototype.clean = function () {
+    this.imgContainer.empty();
+    this.itemsContainer.empty();
 };

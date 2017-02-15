@@ -90,7 +90,7 @@ Network.get = function (id, callback) {
     }, function (err, results) {
         if (err) return callback(err);
         if (!results.length) {
-            err = new Error('No such user with id: ' + id);
+            err = new Error('No such node with id: ' + id);
             return callback(err);
         }
 

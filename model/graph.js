@@ -42,7 +42,12 @@ function parseCypherResult(results, callback) {
     results.forEach(function (row) {
         row.nodes.forEach(function (n) {
             if (idIndex(nodes, n._id) == null)
-                nodes.push({id: n._id, label: n.labels[0], name: n.properties.name});
+                nodes.push({
+                    id: n._id,
+                    label: n.labels[0],
+                    name: n.properties.name,
+                    endpoint: '/graph/connection/' + n._id
+                });
         });
 
         var r = row.relationship;

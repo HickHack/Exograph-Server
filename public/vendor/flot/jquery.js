@@ -1456,7 +1456,7 @@ jQuery.support = (function() {
 		support.doesNotIncludeMarginInBodyOffset = ( body.offsetTop !== 1 );
 
 		// NOTE: To any future maintainer, we've window.getComputedStyle
-		// because jsdom on node.js will break without it.
+		// because jsdom on connection.js will break without it.
 		if ( window.getComputedStyle ) {
 			support.pixelPosition = ( window.getComputedStyle( div, null ) || {} ).top !== "1%";
 			support.boxSizingReliable = ( window.getComputedStyle( div, null ) || { width: "4px" } ).width === "4px";
@@ -6818,7 +6818,7 @@ jQuery.extend({
 });
 
 // NOTE: To any future maintainer, we've window.getComputedStyle
-// because jsdom on node.js will break without it.
+// because jsdom on connection.js will break without it.
 if ( window.getComputedStyle ) {
 	curCSS = function( elem, name ) {
 		var ret, width, minWidth, maxWidth,

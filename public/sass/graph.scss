@@ -1,50 +1,67 @@
 @import "color";
 
 .loading {
-  display: none;
+    display: none;
 }
 
 #wrapper {
 
-  .graph-container {
-    [class^="col-"] {
-      padding: 0;
-    }
-
-    .graph {
-      height: 600px;
-
-      .node {
-        fill: #3f729b;
-        stroke: #3f729b;
-      }
-
-      .edge {
-        stroke: #808080;
-      }
-    }
-
-    .graph-info-container {
-      background-color: #ffffff;
-      position: absolute;
-      right: 0;
-
-      display: none;
-      z-index: 50;
-      border-left: 1px solid $border-color;
-
-      .close-btn {
-        border: none;
-        outline: none;
-        background-color: Transparent;
-        float: right;
-        padding: 10px;
-
-        i {
-          font-size: 1.5em;
+    .graph-container {
+        [class^="col-"] {
+            padding: 0;
         }
-      }
-    }
 
-  }
+        .graph {
+            height: 600px;
+
+            .node {
+                fill: #3f729b;
+                stroke: #3f729b;
+            }
+
+            .edge {
+                stroke: #808080;
+            }
+        }
+
+        .graph-info-container {
+            background-color: #ffffff;
+            position: absolute;
+            right: 0;
+            display: none;
+            z-index: 50;
+            border-left: 1px solid $border-color;
+            overflow-y: scroll;
+
+            .close-btn {
+                border: none;
+                outline: none;
+                background-color: Transparent;
+                float: right;
+                margin: -10px 10px 0px 0px;
+
+                i {
+                    font-size: 1.5em;
+                }
+            }
+
+            .top-container {
+                padding-top: 20px;
+
+                .info-img-container {
+                    min-height: 200px;
+                    min-width: 200px;
+                    max-height: 200px;
+                    max-width: 200px;
+                    margin: auto;
+                }
+            }
+
+            .info-items {
+                margin-top: 20px;
+                max-height: inherit;
+            }
+        }
+
+    }
 }

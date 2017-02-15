@@ -65,7 +65,7 @@ function configureSvgContainer(height, width) {
 }
 
 function loadGraph(props, endpoint, callback) {
-    d3.json('/js/graph.json', function (error, graph) {
+    d3.json(endpoint, function (error, graph) {
         if (error) throw error;
 
         var link = props.svg.selectAll("line")
@@ -86,7 +86,7 @@ function loadGraph(props, endpoint, callback) {
                 return d3.rgb(props.fill(d.group)).darker();
             })
             .on("click", function (d) {
-                triggerSidePanel('/js/graph.json');
+                triggerSidePanel(d.endpoint);
             })
             .call(props.force.drag);
 
@@ -129,6 +129,5 @@ function loadGraph(props, endpoint, callback) {
 }
 
 function triggerSidePanel(endpoint) {
-    var sidePanel = new GraphInfoWidget(endpoint);
-    sidePanel.setVisibility(true);
+    new GraphInfoWidget(endpoint);
 }

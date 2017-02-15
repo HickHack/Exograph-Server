@@ -4,6 +4,7 @@
 
 var Extractor = require('../helper/extractor');
 var Graph = require('../model/graph');
+var connection = require('../model/connection');
 var converter = require('../util/conversionUtil');
 
 var extractor = new Extractor();
@@ -29,11 +30,7 @@ GraphController.prototype.launchLinkedinImport = function (req, res){
             var error = {error: err.message};
             res.send(JSON.stringify(error));
         } else {
-            converter.unixTimeToDateTime(job.start_time, function (date) {
-                converter.formatDate(date, function (formatted) {
-                    job.start_time = formatted;
-                });
-            });
+            job.start_time = converter.unixTimeToDateTime(job.start_time);
 
             res.send(JSON.stringify(job));
         }
@@ -54,5 +51,17 @@ GraphController.prototype.handleGraphLoad = function (req, res) {
 
     graph.load(req.user.id, networkId, function (graph) {
         res.send(JSON.stringify(graph));
+    });
+};
+
+GraphController.prototype.handleLoadConnection = function(req, res){
+
+    connection.get(req.params['id'], function (err, result) {
+        if (err) {
+            var message = {message: 'Failed to load Connection'};
+            res.send(JSON.stringify(message));
+        } else {
+            res.send(JSON.stringify(result));
+        }
     });
 };
