@@ -16,6 +16,11 @@ p {
   color: $text-blue-color;
 }
 
+.linkedIn {
+  @extend p;
+  margin-right: 5px;
+}
+
 .page-header {
   margin-top: 0;
 }

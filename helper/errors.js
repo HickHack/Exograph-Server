@@ -19,3 +19,13 @@ function ConstraintError(msg) {
 
 util.inherits(ConstraintError, Error);
 exports.ConstraintError = ConstraintError;
+
+function NodeNotFoundError(msg) {
+    Error.call(this);
+    this.name = 'NodeNotFoundError';
+    this.mgs = msg;
+    Error.captureStackTrace(this, this.constructor);
+}
+
+util.inherits(NodeNotFoundError, Error);
+exports.NodeNotFoundError = NodeNotFoundError;

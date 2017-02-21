@@ -2,10 +2,10 @@
  * Created by graham on 10/02/17.
  */
 
-var Extractor = require('../helper/extractor');
-var Graph = require('../model/graph');
-var connection = require('../model/connection');
-var converter = require('../util/conversionUtil');
+var Extractor = require('./../helper/extractor');
+var Graph = require('../model/graph-model');
+var connection = require('../model/connection-model');
+var converter = require('../util/conversion-util');
 
 var extractor = new Extractor();
 
@@ -30,7 +30,7 @@ GraphController.prototype.launchLinkedinImport = function (req, res){
             var error = {error: err.message};
             res.send(JSON.stringify(error));
         } else {
-            job.start_time = converter.unixTimeToDateTime(job.start_time);
+            job.start_time = converter.unixTimeToFormattedTime(job.start_time);
 
             res.send(JSON.stringify(job));
         }

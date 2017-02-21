@@ -12,7 +12,9 @@
  * map to edges
  */
 
-var db = require('./db');
+var db = require('./../helper/db');
+var connection =  require('./connection-model');
+
 var neo4j = new db();
 
 var Graph = module.exports = function Graph() {
@@ -20,20 +22,33 @@ var Graph = module.exports = function Graph() {
 
 Graph.prototype.load = function (userId, networkId, callback) {
     var query = [
-        'MATCH (a:Connection)-[r:CONNECTED_TO]-(b:Connection) ',
-        'RETURN [a, b] AS nodes, r AS relationship'
+        'MATCH (head:Connection)',
+        'WHERE id(head) = {rootId}',
+        'CALL apoc.path.expandConfig(head, {config}) YIELD path',
+        'WITH LAST(NODES(path)) as a',
+        'MATCH (a)-[r:CONNECTED_TO]->(b)',
+        'RETURN [a, b] as nodes, r as relationships'
     ].join('\n');
 
-    neo4j.run({
-        query: query,
-        params: {}
-    }, function (err, result) {
-        if (err) return callback(err);
+    connection.getNodeForNetworkByUserId(userId, networkId, function (err, result) {
+        if(err) return callback(err);
 
-        parseCypherResult(result, function (d3Model) {
-            return callback(d3Model);
+        var params = {
+            rootId: result.id,
+            config: {relationshipFilter:'CONNECTED_TO', uniqueness:'NODE_GLOBAL', bfs: false}
+        };
+
+        neo4j.run({
+            query: query,
+            params: params
+        }, function (err, result) {
+            if (err) return callback(err);
+
+            parseCypherResult(result, function (d3Model) {
+                return callback(d3Model);
+            });
         });
-    });
+    })
 };
 
 function parseCypherResult(results, callback) {
@@ -50,7 +65,7 @@ function parseCypherResult(results, callback) {
                 });
         });
 
-        var r = row.relationship;
+        var r = row.relationships;
         links = links.concat(
             {source: idIndex(nodes, r._fromId), target: idIndex(nodes, r._toId), type: r.type}
         );

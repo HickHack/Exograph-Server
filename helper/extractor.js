@@ -26,10 +26,9 @@ Extractor.prototype.launchLinkedin = function (props, next) {
     var req = getRequest(endpoints['run_linkedin'], 'POST');
     req.body = JSON.stringify(props);
 
-    perform_request(req, function (err, res) {
+    performRequest(req, function (err, res) {
         if (err) {
             var error = new Error('Oops something went wrong!');
-            console.log(error);
             return next(error);
         }
 
@@ -41,8 +40,6 @@ Extractor.prototype.launchLinkedin = function (props, next) {
                     return next(null, result.jobs[0]);
                 } else {
                     var noJobError = new Error('Failed to trigger job');
-                    console.log(error);
-
                     return next(noJobError);
                 }
             });
@@ -50,8 +47,34 @@ Extractor.prototype.launchLinkedin = function (props, next) {
     });
 };
 
+Extractor.prototype.getJobsForUser = function (userId, count, next) {
+    var url = endpoints['job_by_user_id']+  userId + '?count=' + count;
+    var req = getRequest(url, 'GET');
+
+    performRequest(req, function (err, res) {
+        if(err) {
+            var error = new Error('Oops something went wrong!');
+            return next(error);
+        }
+
+        if (res.statusCode == 200) {
+            parseJSONResponse(res, function (err, jobs) {
+                if (err) return next(err);
+
+                return next(null, jobs);
+            });
+        } else {
+            var error = new Error('Problem loading jobs ' + res.statusCode);
+            return next(error);
+        }
+
+    });
+};
+
+
+
 // Private helpers
-function perform_request(req, callback) {
+function performRequest(req, callback) {
     validateToken(function () {
         console.log("Extractor request: " + req.url + " " + req.method);
         req.headers.Authorization = auth.token;
@@ -112,7 +135,7 @@ function obtainToken(next) {
 function getEndpoints(next) {
     var req = getRequest('http://localhost:8000/api/v1/endpoints', 'GET');
 
-    perform_request(req, function (err, res) {
+    performRequest(req, function (err, res) {
         if (err) return next(err);
 
         if (res.statusCode == 200) {
@@ -145,7 +168,5 @@ function parseJSONResponse(res, next) {
     }
 
     var err = new Error('Unable to parse response, body is not json');
-    console.log(err);
-
     return next(err);
 }

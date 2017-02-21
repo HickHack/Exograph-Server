@@ -10,9 +10,10 @@ var session = require('express-session');
 process.conf = require('./config');
 
 //Routes
-var graph = require('./routes/graph');
-var dashboard = require('./routes/dashboard');
-var account = require('./routes/account');
+var graph = require('./routes/graph-route');
+var dashboard = require('./routes/dashboard-route');
+var account = require('./routes/account-route');
+var job = require('./routes/job-route');
 
 var app = express();
 
@@ -36,12 +37,13 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 
-require('./routes/login')(app, passport);
-require('./routes/registration')(app, passport);
+require('./routes/login-route')(app, passport);
+require('./routes/registration-route')(app, passport);
 
 app.use('/graph', graph);
 app.use('/', dashboard);
 app.use('/dashboard', dashboard);
+app.use('/job', job);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

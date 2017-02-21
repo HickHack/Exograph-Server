@@ -5,8 +5,9 @@
  * This model represents a Connection node
  */
 
-var db = require('./db');
-var converter = require('../util/conversionUtil');
+var db = require('./../helper/db');
+var converter = require('../util/conversion-util');
+var errors = require('../helper/errors')
 
 var neo4j = new db();
 
@@ -28,12 +29,12 @@ Object.defineProperties(Connection.prototype, {
     },
     memberSince: {
         get: function () {
-            return converter.unixTimeToDateTime(this._node.properties['member_since'] / 1000);
+            return converter.unixTimeToFormattedTime(this._node.properties['member_since'] / 1000);
         }
     },
     connectionDate: {
         get: function () {
-            return converter.unixTimeToDateTime(this._node.properties['connection_date'] / 1000);
+            return converter.unixTimeToFormattedTime(this._node.properties['connection_date'] / 1000);
         }
     },
     profileUrl: {
@@ -176,6 +177,41 @@ Connection.get = function (id, callback) {
 
         var node = new Connection(results[0]['connection']);
         callback(null, node);
+    });
+};
+
+Connection.getNodeForNetworkByUserId = function(userId, networkId, callback) {
+    var query = [
+        'MATCH (user:User)-[owns:OWNS]->(network:Network)-[contains:CONTAINS]->(connection:Connection)',
+        'WHERE id(user) = {userId} AND id(network) = {networkId}',
+        'RETURN connection',
+        'LIMIT 1'
+    ].join('\n');
+
+    var params = {
+        userId: userId,
+        networkId: networkId
+    }
+
+    neo4j.run({
+        query: query,
+        params: params
+    }, function (err, result) {
+        if (err){
+            console.log(err);
+            return callback(err);
+        };
+
+        if(result.length > 0) {
+            var node = new Connection(result[0]['connection']);
+            return callback(null, node);
+        }
+
+        var msg = 'Connection not found where userId = ' + userId + ' and networkId = ' + networkId;
+        var error = new errors.NodeNotFoundError(msg);
+        console.log(error);
+
+        return callback(error);
     });
 };
 

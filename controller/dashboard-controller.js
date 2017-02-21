@@ -2,14 +2,12 @@
  * Created by graham on 10/02/17.
  */
 
-var networkModel = require('../model/network');
-
 var DashboardController = module.exports = function DashboardController() {};
 
 
 DashboardController.prototype.handleInitialLoad  = function (req, res) {
 
-    networkModel.getAllByUserId(req.user.id, function (err, results) {
+    req.user.getNetworks(function (err, networks) {
         if (err) {
             // TODO Handle error
         } else {
@@ -17,7 +15,7 @@ DashboardController.prototype.handleInitialLoad  = function (req, res) {
                 title: process.conf.app.NAME,
                 pageName: 'Dashboard',
                 user: req.user,
-                networks: results
+                networks: networks
             });
         }
     });
