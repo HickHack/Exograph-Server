@@ -2,10 +2,10 @@
 // User model logic.
 
 var errors = require('./../helper/errors');
-var hashUtil = require('../util/hashUtil');
-var Database = require('./db');
-
-var neo4j = new Database();
+var hashUtil = require('../util/hash-util');
+var network = require('./network-model');
+var database = require('./../helper/db');
+var neo4j = new database();
 
 
 // Private constructor:
@@ -13,7 +13,7 @@ var User = module.exports = function User(_node) {
     // All we'll really store is the node; the rest of our properties will be
     // derivable or just pass-through properties (see below).
     this._node = _node;
-}
+};
 
 // Public constants
 User.VALIDATION_INFO = {
@@ -319,6 +319,13 @@ User.prototype.getFollowingAndOthers = function (callback) {
     });
 };
 
+User.prototype.getNetworks = function (next) {
+    network.getAllByUserId(this.id, function (err, networks) {
+        if (err) return next(err);
+        return next(null, networks);
+    });
+};
+
 // Static methods:
 User.get = function (id, callback) {
     var query = [
@@ -431,6 +438,7 @@ User.create = function (props, callback) {
         callback(null, user);
     });
 };
+
 
 User.isPasswordValid = function (password, pass, callback) {
     return hashUtil.bcryptCompare(password, pass, callback);

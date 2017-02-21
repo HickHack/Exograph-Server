@@ -2,7 +2,6 @@ doctype html
 
 head
     include ../layout/head
-    script(src='/js/cytoscape.js')
     link(href='/css/dashboard.css', rel='stylesheet', type='text/css')
 
     title #{title}
@@ -66,36 +65,40 @@ body
                                         .huge 13
                                         div Support Tickets!
 
-                .row
-                    hr
-                    - if(networks)
-                        each network in networks
+                .containter
+                    .row
+                        .col-lg-12
+                            h3 Networks
+                            hr
 
-                            - if (network.type == 'LINKEDIN')
-                                - var icon = 'fa fa-linkedin'
-                            -else if (network.type == 'TWITTER')
-                                 - var icon = 'fa fa-twitter'
+                            - if(networks)
+                                each network in networks
 
-                            .col-lg-4.network-panel
-                                .panel.panel-default
-                                    .panel-heading
-                                        i(class='#{icon}')
-                                        |  #{network.name}
-                                        .pull-right
-                                            .btn-group
-                                                button.btn.btn-default.btn-xs.dropdown-toggle(type='button', data-toggle='dropdown')
-                                                    | Actions
-                                                    span.caret
-                                                ul.dropdown-menu.pull-right(role='menu')
-                                                    li
-                                                        a(href='/graph/view/#{network.id}') View
-                                                    li
-                                                        a(href='/graph/trash/#{network.id}') Send to Trash
-                                                    li.divider
-                                                    li
-                                                        a(href='#') Import Details
-                                    .panel-body
-                                        img.img-thumbnail(src='/img/graph/#{network.imageRef}')
+                                    - if (network.type == 'LINKEDIN')
+                                        - var icon = 'fa fa-linkedin'
+                                    -else if (network.type == 'TWITTER')
+                                         - var icon = 'fa fa-twitter'
+
+                                    .col-lg-4.network-panel
+                                        .panel.panel-default
+                                            .panel-heading
+                                                i(class='#{icon}')
+                                                |  #{network.name}
+                                                .pull-right
+                                                    .btn-group
+                                                        button.btn.btn-default.btn-xs.dropdown-toggle(type='button', data-toggle='dropdown')
+                                                            | Actions
+                                                            span.caret
+                                                        ul.dropdown-menu.pull-right(role='menu')
+                                                            li
+                                                                a(href='/graph/view/#{network.id}') View
+                                                            li
+                                                                a(href='/graph/trash/#{network.id}') Send to Trash
+                                                            li.divider
+                                                            li
+                                                                a(href='#') Import Details
+                                            .panel-body
+                                                img.img-thumbnail(src='/img/graph/#{network.imageRef}')
 
 
 

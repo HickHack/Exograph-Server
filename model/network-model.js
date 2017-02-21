@@ -6,7 +6,8 @@
  * a User to a social graph of Connections
  */
 
-var db = require('./db');
+var graph = require('./graph-model');
+var db = require('./../helper/db');
 var neo4j = new db();
 
 var Network = module.exports = function Network(node) {
@@ -101,9 +102,9 @@ Network.get = function (id, callback) {
 
 Network.getAllByUserId = function (userId, callback) {
     var query = [
-        'MATCH (user:User)-[:OWNS]-(network:Network) ' +
-        'WHERE id(user) = {id} ' +
-        'RETURN network'
+        'MATCH (user:User)-[:OWNS]-(network:Network) ',
+        'WHERE id(user) = {id} ',
+        'RETURN DISTINCT network'
     ].join('\n')
 
     var params = {
@@ -119,11 +120,11 @@ Network.getAllByUserId = function (userId, callback) {
         if (!result.length > 0) {
             return callback(null, null);
         } else {
-            var networks = []
+            var networks = [];
 
-            for (var i in result) {
-                networks.push(new Network(result[i]['network']));
-            }
+            result.forEach(function (element) {
+                networks.push(new Network(element['network']));
+            });
 
             return callback(null, networks);
         }

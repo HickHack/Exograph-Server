@@ -15,12 +15,17 @@
             height: 600px;
 
             .node {
+                cursor: move;
                 fill: #3f729b;
                 stroke: #3f729b;
             }
 
             .edge {
                 stroke: #808080;
+            }
+
+            .node.fixed {
+                fill: #f00;
             }
         }
 

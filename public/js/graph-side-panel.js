@@ -8,7 +8,6 @@ function GraphInfoWidget(dataEndpoint) {
     this.model = {};
     graphInfoWidget = this;
 
-    this.setVisibility(false);
     this.clean();
 
     this.loadData(dataEndpoint, function (model) {
@@ -32,6 +31,10 @@ GraphInfoWidget.prototype.setVisibility = function (isVisible) {
     }
 };
 
+GraphInfoWidget.prototype.isVisible = function () {
+    return this.container.is(":visible");
+};
+
 GraphInfoWidget.prototype.layout = function() {
     var width = this.graphContainer.width();
     var height = this.graphContainer.height();
@@ -46,10 +49,14 @@ GraphInfoWidget.prototype.layout = function() {
 
 GraphInfoWidget.prototype.renderImage = function () {
     if (this.model) {
+        var link = $('<a/>', {href: this.model.profileImageUrl.attr.value});
+
         $('<img/>', {
             'src': this.model.profileImageUrl.value,
-            'class': 'img-responsive img-thumbnail'
-        }).appendTo(this.imgContainer);
+            'class': 'img-responsive img-thumbnail center-block'
+        }).appendTo(link);
+
+        link.appendTo(this.imgContainer);
     }
 };
 
