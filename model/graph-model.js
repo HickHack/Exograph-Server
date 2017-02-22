@@ -17,10 +17,9 @@ var connection =  require('./connection-model');
 
 var neo4j = new db();
 
-var Graph = module.exports = function Graph() {
-};
+var Graph = module.exports = function Graph() {};
 
-Graph.prototype.load = function (userId, networkId, callback) {
+Graph.getLinkedIn = function (owner, network, callback) {
     var query = [
         'MATCH (head:Connection)',
         'WHERE id(head) = {rootId}',
@@ -30,7 +29,7 @@ Graph.prototype.load = function (userId, networkId, callback) {
         'RETURN [a, b] as nodes, r as relationships'
     ].join('\n');
 
-    connection.getNodeForNetworkByUserId(userId, networkId, function (err, result) {
+    connection.getNodeForNetworkByUserId(owner.id, network.id, function (err, result) {
         if(err) return callback(err);
 
         var params = {
@@ -45,7 +44,7 @@ Graph.prototype.load = function (userId, networkId, callback) {
             if (err) return callback(err);
 
             parseCypherResult(result, function (d3Model) {
-                return callback(d3Model);
+                return callback(null, d3Model);
             });
         });
     })

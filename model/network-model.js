@@ -10,8 +10,9 @@ var graph = require('./graph-model');
 var db = require('./../helper/db');
 var neo4j = new db();
 
-var Network = module.exports = function Network(node) {
+var Network = module.exports = function Network(node, owner) {
     this._node = node;
+    this._owner = owner;
 };
 
 // Public instance properties
@@ -55,7 +56,14 @@ Object.defineProperties(Network.prototype, {
     isTrash: {
         get: function () {
             return this._node.properties['is_trash'];
-        }
+        },
+        set: function (isTrash) {
+            this._node.properties['is_trash'] = isTrash;
+        },
+        configurable: true
+    },
+    owner: {
+        get: function () { return this._owner }
     }
 });
 
@@ -74,15 +82,24 @@ Network.prototype.toJSON = function () {
     return network;
 };
 
-Network.get = function (id, callback) {
+Network.prototype.getGraph = function (next) {
+    if (this.type == 'LINKEDIN') {
+        graph.getLinkedIn(this._owner, this, function (err, graph) {
+            if (err) return next(err);
+            return next(null, graph);
+        });
+    }
+};
+
+Network.get = function (id, user, callback) {
     var query = [
         'MATCH (network:Network)',
         'WHERE id(network) = {id}',
         'RETURN network'
-    ].join('\n')
+    ].join('\n');
 
     var params = {
-        id: parseInt(id),
+        id: parseInt(id)
     };
 
     neo4j.run({
@@ -95,20 +112,20 @@ Network.get = function (id, callback) {
             return callback(err);
         }
 
-        var network = new Network(results[0]['network']);
+        var network = new Network(results[0]['network'], user);
         callback(null, network);
     });
 };
 
-Network.getAllByUserId = function (userId, callback) {
+Network.getAllByUser = function (user, callback) {
     var query = [
         'MATCH (user:User)-[:OWNS]-(network:Network) ',
         'WHERE id(user) = {id} ',
         'RETURN DISTINCT network'
-    ].join('\n')
+    ].join('\n');
 
     var params = {
-        id: userId
+        id: user.id
     };
 
     neo4j.run({
@@ -123,13 +140,40 @@ Network.getAllByUserId = function (userId, callback) {
             var networks = [];
 
             result.forEach(function (element) {
-                networks.push(new Network(element['network']));
+                networks.push(new Network(element['network'], user));
             });
 
             return callback(null, networks);
         }
     });
 };
+
+Network.prototype.patch = function (next) {
+    var query = [
+        'MATCH (network:Network {job_id: {jobId}})',
+        'SET network += {props}',
+        'RETURN network',
+    ].join('\n');
+
+    var params = {
+        jobId: this.jobId,
+        props: this._node.properties
+    };
+
+    neo4j.run({
+        query: query,
+        params: params
+    }, function (err, results) {
+        if (err) next(err);
+        if (!results.length) {
+            err = new Error('Network ' + this.id + ' doesn\'t exist');
+            return next(err);
+        }
+
+        return next(null);
+    });
+};
+
 
 neo4j.createConstraint('Network', 'job_id', function (err) {
     if (err) {

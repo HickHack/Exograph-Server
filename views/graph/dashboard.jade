@@ -6,10 +6,19 @@ head
 
     title #{title}
 
+    // Calculate dashboard call to actions
     - if (networks && networks.length > 0)
         - var num_networks = networks.length
     - else
         - var num_networks = 0
+
+    - var num_trash = 0
+    - if (networks && networks.length > 0)
+        - each network in networks
+            - if (network.isTrash)
+                - num_trash += 1
+
+
 body
     #wrapper
         include ../layout/navigation
@@ -49,10 +58,10 @@ body
                             .panel-heading
                                 .row
                                     .col-xs-3
-                                        i.fa.fa-shopping-cart.fa-5x
+                                        i.fa.fa-trash.fa-5x
                                     .col-xs-9.text-right
-                                        .huge 124
-                                        div New Orders!
+                                        .huge #{num_trash}
+                                        div Trash!
 
 
                     .col-lg-3.col-md-6
@@ -73,32 +82,32 @@ body
 
                             - if(networks)
                                 each network in networks
+                                    - if (!network.isTrash)
+                                        - if (network.type == 'LINKEDIN')
+                                            - var icon = 'fa fa-linkedin'
+                                        -else if (network.type == 'TWITTER')
+                                             - var icon = 'fa fa-twitter'
 
-                                    - if (network.type == 'LINKEDIN')
-                                        - var icon = 'fa fa-linkedin'
-                                    -else if (network.type == 'TWITTER')
-                                         - var icon = 'fa fa-twitter'
-
-                                    .col-lg-4.network-panel
-                                        .panel.panel-default
-                                            .panel-heading
-                                                i(class='#{icon}')
-                                                |  #{network.name}
-                                                .pull-right
-                                                    .btn-group
-                                                        button.btn.btn-default.btn-xs.dropdown-toggle(type='button', data-toggle='dropdown')
-                                                            | Actions
-                                                            span.caret
-                                                        ul.dropdown-menu.pull-right(role='menu')
-                                                            li
-                                                                a(href='/graph/view/#{network.id}') View
-                                                            li
-                                                                a(href='/graph/trash/#{network.id}') Send to Trash
-                                                            li.divider
-                                                            li
-                                                                a(href='#') Import Details
-                                            .panel-body
-                                                img.img-thumbnail(src='/img/graph/#{network.imageRef}')
+                                        .col-lg-4.network-panel
+                                            .panel.panel-default
+                                                .panel-heading
+                                                    i(class='#{icon}')
+                                                    |  #{network.name}
+                                                    .pull-right
+                                                        .btn-group
+                                                            button.btn.btn-default.btn-xs.dropdown-toggle(type='button', data-toggle='dropdown')
+                                                                | Actions
+                                                                span.caret
+                                                            ul.dropdown-menu.pull-right(role='menu')
+                                                                li
+                                                                    a(href='/graph/view/#{network.id}') View
+                                                                li
+                                                                    a(href='/graph/trash/#{network.id}') Send to Trash
+                                                                li.divider
+                                                                li
+                                                                    a(href='#') Import Details
+                                                .panel-body
+                                                    img.img-thumbnail(src='/img/graph/#{network.imageRef}')
 
 
 

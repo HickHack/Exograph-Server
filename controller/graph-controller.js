@@ -3,7 +3,6 @@
  */
 
 var Extractor = require('./../helper/extractor');
-var Graph = require('../model/graph-model');
 var connection = require('../model/connection-model');
 var converter = require('../util/conversion-util');
 
@@ -46,11 +45,20 @@ GraphController.prototype.handleViewPage = function (req, res) {
 };
 
 GraphController.prototype.handleGraphLoad = function (req, res) {
-    var graph = new Graph();
     var networkId = parseInt(req.params['id']);
 
-    graph.load(req.user.id, networkId, function (graph) {
-        res.send(JSON.stringify(graph));
+    req.user.getNetwork(networkId, function (networkError, network) {
+        if (networkError) {
+            //TODO: Handle error
+        }
+
+        network.getGraph(function (graphError, graph) {
+            if(graphError) {
+                //TODO: Handle Error
+            }
+
+            res.send(JSON.stringify(graph));
+        })
     });
 };
 
@@ -63,5 +71,21 @@ GraphController.prototype.handleLoadConnection = function(req, res){
         } else {
             res.send(JSON.stringify(result));
         }
+    });
+};
+
+GraphController.prototype.handleTrashNetwork = function (req, res) {
+    var networkId = req.params['id'];
+
+    req.user.getNetwork(networkId, function (err, network) {
+        if (err) {
+            //TODO Handle Error
+            throw new Error();
+        }
+
+        network.isTrash = true;
+        network.patch(function (err) {
+            if(!err) res.redirect('/');
+        });
     });
 };

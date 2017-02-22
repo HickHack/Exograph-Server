@@ -55,7 +55,7 @@ User.VALIDATION_INFO = {
         minLength: 6,
         maxLength: 50,
         message: 'Password must be at least 6 characters long'
-    },
+    }
 };
 
 // Public instance properties
@@ -180,7 +180,7 @@ User.prototype.patch = function (props, callback) {
     ].join('\n');
 
     var params = {
-        username: this.username,
+        username: this.email,
         props: safeProps,
     };
 
@@ -320,9 +320,16 @@ User.prototype.getFollowingAndOthers = function (callback) {
 };
 
 User.prototype.getNetworks = function (next) {
-    network.getAllByUserId(this.id, function (err, networks) {
+    network.getAllByUser(this, function (err, networks) {
         if (err) return next(err);
         return next(null, networks);
+    });
+};
+
+User.prototype.getNetwork = function (id, next) {
+    network.get(id, this, function (err, network) {
+        if (err) return next(err);
+        return next(null, network);
     });
 };
 
