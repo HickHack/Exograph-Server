@@ -10,6 +10,7 @@
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "~1.15.2",
+    "bootstrap-sass": "^3.3.7",
     "connect-flash": "latest",
     "cookie-parser": "~1.4.3",
     "debug": "~2.2.0",
