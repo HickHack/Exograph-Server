@@ -29,19 +29,21 @@ config.app = {
     PORT: 3000,
 };
 
-// Overload console.log to write stout to file
-if (fs.exists('log/server.log')) {
-    var logstdout = process.stdout;
-    var logFile = fs.createWriteStream('log/server.log', { flags: 'a' });
 
-    console.log = function () {
-        logFile.write(util.format.apply(null, arguments) + ' - ' + new Date() + '\n');
-        logstdout.write(util.format.apply(null, arguments) + '\n');
-    };
+fs.exists('log/server.log', function(exists) {
+    if (exists) {
+        var logstdout = process.stdout;
+        var logFile = fs.createWriteStream('log/server.log', { flags: 'a' });
+
+        console.log = function () {
+            logFile.write(util.format.apply(null, arguments) + ' - ' + new Date() + '\n');
+            logstdout.write(util.format.apply(null, arguments) + '\n');
+        };
 
 
 
-    console.error = console.log;
-}
+        console.error = console.log;
+    }
+});
 
 module.exports = config;
