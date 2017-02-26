@@ -74,6 +74,18 @@ GraphController.prototype.handleLoadConnection = function(req, res){
     });
 };
 
+GraphController.prototype.handleTrashView = function (req, res) {
+
+    req.user.getNetworks(function (err, networks) {
+        res.render('graph/trash', {
+            title: process.conf.app.NAME,
+            user: req.user,
+            pageName: 'Trash',
+            networks: networks
+        });
+    });
+};
+
 GraphController.prototype.handleTrashNetwork = function (req, res) {
     var networkId = req.params['id'];
 

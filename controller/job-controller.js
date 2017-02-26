@@ -18,9 +18,7 @@ JobController.prototype.handleJobsAlert = function(req, res, next) {
             response = getResponse(jobs, '');
         }
 
-        res.json(response);
-
-        return next();
+        res.send(response);
     });
 };
 

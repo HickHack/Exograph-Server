@@ -1,0 +1,70 @@
+doctype html
+
+head
+    include ../layout/head
+    script(type='text/javascript', src='/js/network-trash.js')
+    link(href='/css/trash.css', rel='stylesheet', type='text/css')
+
+    title #{title}
+
+body
+    #wrapper
+        include ../layout/navigation
+
+        #page-wrapper
+            .container-fluid
+
+                include ../layout/pageHeader
+
+                .row.trash-panel
+                   .col-lg-12
+                       p.selected-count
+                       table.table.table-striped.table-bordered.table-responsive.text-center
+                           thead
+                               tr
+                                   th.text-center Type
+                                   th.text-center Name
+                                   th.text-center Created
+                                   th.text-center View
+                                   th.text-center
+                                       input.small.view-excluded.select-all(type="checkbox" value="")
+
+                           tbody
+                               - if(networks && networks.length > 0)
+                                   each network in networks
+                                       - if (network.isTrash)
+                                           tr
+                                               td.text-center
+                                                   - if (network.type == 'LINKEDIN')
+                                                        i.fa.fa-linkedin.fa-1x
+                                                   - else
+                                                        i.fa.fa-twitter.fa-1x
+
+                                               td #{network.name}
+                                               td #{network.createdTime}
+                                               td
+                                                   a.btn.btn-primary.btn-xs(href='/graph/view/#{network.id}')
+                                                       i.fa.fa-eye
+                                               td
+                                                   input.view-excluded(data-id='#{network.id}', type="checkbox")
+                               - else
+                                   tr.text-center
+                                       td(colspan="3") 0 Networks in Trash
+
+            footer.container-fluid
+                .row
+                    .col-lg-12
+                        .btn-group.dropup
+                            button.btn.btn-default.dropdown-toggle.disabled.actions-btn(type='button', data-toggle='dropdown')
+                                | Actions &nbsp
+                                span.caret
+                            ul.dropdown-menu(role='menu')
+                                li
+                                    a.restore-button(href='#') Restore
+                                    form.restore-form(action='/graph/trash', method='PATCH')
+
+                                li.divider
+                                li
+                                    a.delete-button(href='#') Delete
+                                    form.trash-form(action='/graph/delete/#{network.id}', method='PATCH')
+

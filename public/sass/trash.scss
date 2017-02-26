@@ -1,0 +1,37 @@
+@import "color";
+
+#page-wrapper {
+    position: relative;
+}
+
+.trash-panel {
+    margin-bottom: 60px;
+
+    table {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        margin-bottom: 8%;
+
+        tbody {
+            tr:hover{
+                cursor: pointer;
+                background-color: $lavender !important;
+            }
+        }
+    }
+
+}
+
+footer {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 1rem;
+    background-color: $border-color;
+    display: inline-block;
+}

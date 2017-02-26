@@ -7,6 +7,7 @@
  */
 
 var graph = require('./graph-model');
+var converter = require('../util/conversion-util');
 var db = require('./../helper/db');
 var neo4j = new db();
 
@@ -45,7 +46,7 @@ Object.defineProperties(Network.prototype, {
     createdTime: {
         get: function () {
 
-            return this._node.properties['created_time'];
+            return converter.timeSince(this._node.properties['created_time'] );
         }
     },
     imageRef: {
