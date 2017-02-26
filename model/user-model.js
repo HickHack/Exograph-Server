@@ -449,7 +449,7 @@ User.create = function (props, callback) {
 
 User.isPasswordValid = function (password, pass, callback) {
     return hashUtil.bcryptCompare(password, pass, callback);
-}
+};
 
 /**
  * Static initialization

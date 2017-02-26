@@ -41,10 +41,14 @@ router.post('/import/linkedin', auth.checkAuth, function(req, res, next) {
     controller.launchLinkedinImport(req, res);
 });
 
+router.get('/trash', auth.checkAuth, function (req, res, next) {
+    controller.handleTrashView(req, res);
+});
+
 /**
- * Send a graph to trash
+ * Send or remove graph to or from trash
  */
-router.get('/trash/:id', auth.checkAuth, function (req, res, next) {
+router.patch('/trash/:id', auth.checkAuth, function (req, res, next) {
     controller.handleTrashNetwork(req, res);
 });
 

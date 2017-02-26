@@ -3,20 +3,23 @@ doctype html
 head
     include ../layout/head
     link(href='/css/dashboard.css', rel='stylesheet', type='text/css')
+    script(type='text/javascript', src='/js/network-trash.js')
 
     title #{title}
 
-    // Calculate dashboard call to actions
-    - if (networks && networks.length > 0)
-        - var num_networks = networks.length
-    - else
-        - var num_networks = 0
 
     - var num_trash = 0
+    - var num_networks = 0
+    // Calculate dashboard call to actions
     - if (networks && networks.length > 0)
+
         - each network in networks
             - if (network.isTrash)
                 - num_trash += 1
+        - num_networks = networks.length - num_trash
+
+
+
 
 
 body
@@ -61,7 +64,7 @@ body
                                         i.fa.fa-trash.fa-5x
                                     .col-xs-9.text-right
                                         .huge #{num_trash}
-                                        div Trash!
+                                        div Trash
 
 
                     .col-lg-3.col-md-6
@@ -69,10 +72,10 @@ body
                             .panel-heading
                                 .row
                                     .col-xs-3
-                                        i.fa.fa-support.fa-5x
+                                        i.fa.fa-exclamation-triangle.fa-5x
                                     .col-xs-9.text-right
-                                        .huge 13
-                                        div Support Tickets!
+                                        .huge 2
+                                        div Warnings
 
                 .containter
                     .row
@@ -102,7 +105,8 @@ body
                                                                 li
                                                                     a(href='/graph/view/#{network.id}') View
                                                                 li
-                                                                    a(href='/graph/trash/#{network.id}') Send to Trash
+                                                                    a.trash-button(href='#') Send to Trash
+                                                                    form.trash-form(action='/graph/trash/#{network.id}', method='PATCH')
                                                                 li.divider
                                                                 li
                                                                     a(href='#') Import Details

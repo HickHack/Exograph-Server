@@ -12,12 +12,16 @@
   color: $error-color;
 }
 
-p {
+.icon-default {
   color: $text-blue-color;
 }
 
+.fa-linkedin {
+  @extend .icon-default
+}
+
 .linkedIn {
-  @extend p;
+  @extend .fa-linkedin;
   margin-right: 5px;
 }
 
