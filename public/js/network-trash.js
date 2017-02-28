@@ -8,38 +8,53 @@ $(document).ready(function(){
 
     // Single action send to trash from dashboard
     $('.trash-button').click(function (event) {
-        var form = $('.trash-form');
-
-        $.ajax({
-            type: form.attr('method'),
-            url: form.attr('action')
-        }).done(function (data) {
-
-        });
-
         event.preventDefault();
+
+        var form = $('.trash-form');
+        var ids = [form.find('input').attr('value')];
+        submitMultiActionForm(form, ids);
+
     });
 
     // Multi action restore
     $('.restore-button').click(function (event) {
-        var form = $('.restore-form');
-
-        submitMultiActionForm(form);
         event.preventDefault();
+
+        var form = $('.restore-form');
+        var ids = findSelectedItems();
+        submitMultiActionForm(form, ids);
     });
 
     // Multi action delete
     $('.delete-button').click(function (event) {
-        var form = $('.trash-form');
-
-        submitMultiActionForm(form);
         event.preventDefault();
+
+        var form = $('.trash-form');
+        var ids =  findSelectedItems();
+        submitMultiActionForm(form, ids);
     });
     
-    function submitMultiActionForm(form) {
-        var ids =  findSelectedItems();
+    function submitMultiActionForm(form, ids) {
+
+        if (ids.length > 0) {
+            var payload = {ids: ids};
+
+            $.ajax({
+                type: form.attr('method'),
+                url: form.attr('action'),
+                contentType: 'application/json',
+                data: JSON.stringify(payload),
+                success: function (data) {
+                    window.location = data;
+                },
+                error: function (error) {
+                    console.log(error.responseJSON.error);
+                }
+            });
+        }
     }
 
+    // Select the ids of checkboxes in the table
     function findSelectedItems() {
         var checkboxes = $('tbody input');
         var selectedIds = [];

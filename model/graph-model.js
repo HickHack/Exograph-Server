@@ -19,7 +19,7 @@ var neo4j = new db();
 
 var Graph = module.exports = function Graph() {};
 
-Graph.getLinkedIn = function (owner, network, callback) {
+Graph.getLinkedIn = function (network, callback) {
     var query = [
         'MATCH (head:Connection)',
         'WHERE id(head) = {rootId}',
@@ -29,7 +29,7 @@ Graph.getLinkedIn = function (owner, network, callback) {
         'RETURN [a, b] as nodes, r as relationships'
     ].join('\n');
 
-    connection.getNodeForNetworkByUserId(owner.id, network.id, function (err, result) {
+    connection.getNodeForNetworkByUserId(network.owner.id, network.id, function (err, result) {
         if(err) return callback(err);
 
         var params = {

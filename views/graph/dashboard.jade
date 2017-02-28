@@ -83,7 +83,7 @@ body
                             h3 Networks
                             hr
 
-                            - if(networks)
+                            - if(networks && networks.length > 0)
                                 each network in networks
                                     - if (!network.isTrash)
                                         - if (network.type == 'LINKEDIN')
@@ -99,19 +99,23 @@ body
                                                     .pull-right
                                                         .btn-group
                                                             button.btn.btn-default.btn-xs.dropdown-toggle(type='button', data-toggle='dropdown')
-                                                                | Actions
+                                                                | Actions &nbsp
                                                                 span.caret
                                                             ul.dropdown-menu.pull-right(role='menu')
                                                                 li
                                                                     a(href='/graph/view/#{network.id}') View
                                                                 li
                                                                     a.trash-button(href='#') Send to Trash
-                                                                    form.trash-form(action='/graph/trash/#{network.id}', method='PATCH')
+                                                                        form.trash-form(action='/graph/trash', method='PATCH')
+                                                                            input(type='hidden', value='#{network.id}')
                                                                 li.divider
                                                                 li
                                                                     a(href='#') Import Details
                                                 .panel-body
                                                     img.img-thumbnail(src='/img/graph/#{network.imageRef}')
+                            - else
+                                p.text-center You dont have any networks.
+                                    a(href='/graph/import') Try import one
 
 
 
