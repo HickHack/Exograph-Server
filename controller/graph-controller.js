@@ -5,12 +5,14 @@
 var Extractor = require('./../helper/extractor');
 var connection = require('../model/connection-model');
 var converter = require('../util/conversion-util');
+var errors = require('../helper/errors');
 
 var extractor = new Extractor();
 
-var GraphController = module.exports = function GraphController() {};
+var GraphController = module.exports = function GraphController() {
+};
 
-GraphController.prototype.handleImport = function(req, res) {
+GraphController.prototype.handleImport = function (req, res) {
     res.render('graph/import', {
         title: process.conf.app.NAME,
         pageName: 'Import',
@@ -18,7 +20,7 @@ GraphController.prototype.handleImport = function(req, res) {
     });
 };
 
-GraphController.prototype.launchLinkedinImport = function (req, res){
+GraphController.prototype.launchLinkedinImport = function (req, res) {
     extractor.launchLinkedin({
         name: req.body.importName,
         username: req.body.linkedinEmail,
@@ -47,22 +49,36 @@ GraphController.prototype.handleViewPage = function (req, res) {
 GraphController.prototype.handleGraphLoad = function (req, res) {
     var networkId = parseInt(req.params['id']);
 
-    req.user.getNetwork(networkId, function (networkError, network) {
-        if (networkError) {
-            //TODO: Handle error
-        }
+    req.user.getNetwork(networkId)
+        .then(network => {
+            network.getGraph()
+                .then(graph => {
+                    res.send(JSON.stringify(graph));
+                })
+                .catch(err => {
+                    console.log(err);
 
-        network.getGraph(function (graphError, graph) {
-            if(graphError) {
-                //TODO: Handle Error
-            }
-
-            res.send(JSON.stringify(graph));
+                    res.status(400)
+                        .send(new errors.ErrorResponse({
+                                message: 'Unable to load graph',
+                                redirect: '/'
+                            })
+                        );
+                });
         })
-    });
+        .catch(err => {
+            console.log(err);
+
+            res.status(400)
+                .send(new errors.ErrorResponse({
+                        message: 'Unable to load network',
+                        redirect: '/'
+                    })
+                );
+        });
 };
 
-GraphController.prototype.handleLoadConnection = function(req, res){
+GraphController.prototype.handleLoadConnection = function (req, res) {
 
     connection.get(req.params['id'], function (err, result) {
         if (err) {
@@ -87,17 +103,89 @@ GraphController.prototype.handleTrashView = function (req, res) {
 };
 
 GraphController.prototype.handleTrashNetwork = function (req, res) {
-    var networkId = req.params['id'];
+    var ids = req.body.ids;
 
-    req.user.getNetwork(networkId, function (err, network) {
-        if (err) {
-            //TODO Handle Error
-            throw new Error();
-        }
+    if (ids && ids.constructor === Array) {
+        var fn = function asyncGetNetworks(id) {
+            return new Promise((resolve, reject) => {
+                req.user.getNetwork(id)
+                    .then(network => {
+                        resolve(network);
+                    })
+                    .catch(error => {
+                        reject(error)
+                    });
+            });
+        };
 
-        network.isTrash = true;
-        network.patch(function (err) {
-            if(!err) res.redirect('/');
-        });
-    });
+        var actions = ids.map(fn);
+
+        Promise.all(actions)
+            .then(networks => {
+                var promises = [];
+
+                networks.forEach(network => {
+                    network.isTrash = !network.isTrash;
+                    promises.push(network.patch());
+                });
+
+                Promise.all(promises)
+                    .then(() => {
+                        res.status(200).send('/graph/trash');
+                    });
+
+            })
+            .catch(() => {
+                res.status(400).send(new errors.ErrorResponse({
+                    message: 'Please refresh your browser'
+                }));
+            });
+
+    } else {
+        res.status(400).send();
+    }
+};
+
+GraphController.prototype.handleDeleteNetwork = function (req, res) {
+    var ids = req.body.ids;
+
+    if (ids && ids.constructor === Array) {
+        var fn = function asyncGetNetworks(id) {
+            return new Promise((resolve, reject) => {
+                req.user.getNetwork(id)
+                    .then(network => {
+                        resolve(network);
+                    })
+                    .catch(error => {
+                        reject(error)
+                    });
+            });
+        };
+
+        var actions = ids.map(fn);
+
+        Promise.all(actions)
+            .then(networks => {
+                var promises = [];
+
+                networks.forEach(network => {
+                    network.isTrash = !network.isTrash;
+                    promises.push(network.patch());
+                });
+
+                Promise.all(promises)
+                    .then(() => {
+                        res.status(200).send('/graph/trash');
+                    });
+
+            })
+            .catch(() => {
+                res.status(400).send(new errors.ErrorResponse({
+                    message: 'Please refresh your browser'
+                }));
+            });
+
+    } else {
+        res.status(400).send();
+    }
 };

@@ -47,9 +47,17 @@ router.get('/trash', auth.checkAuth, function (req, res, next) {
 
 /**
  * Send or remove graph to or from trash
+ * This route expects a JSON list of IDs
  */
-router.patch('/trash/:id', auth.checkAuth, function (req, res, next) {
+router.patch('/trash/', auth.checkAuth, function (req, res, next) {
     controller.handleTrashNetwork(req, res);
+});
+
+/**
+ * Permanently delete a graph
+ */
+router.delete('/trash/', auth.checkAuth, function (req, res, next) {
+    controller.handleDeleteNetwork(req, res);
 });
 
 module.exports = router;

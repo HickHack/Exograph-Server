@@ -326,10 +326,15 @@ User.prototype.getNetworks = function (next) {
     });
 };
 
-User.prototype.getNetwork = function (id, next) {
-    network.get(id, this, function (err, network) {
-        if (err) return next(err);
-        return next(null, network);
+User.prototype.getNetwork = function (id) {
+    return new Promise((resolve, reject) => {
+        network.get(id, this, function (err, network) {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(network);
+            }
+        });
     });
 };
 
