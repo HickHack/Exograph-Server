@@ -185,6 +185,37 @@ Network.prototype.patch = function () {
     });
 };
 
+Network.prototype.delete = function () {
+    return new Promise((resolve, reject) => {
+        var query = [
+            'MATCH (user:User)-[owns:OWNS]-(network:Network)-[contains:CONTAINS]-(connection:Connection)',
+            'SET network += {props}',
+            'RETURN network',
+        ].join('\n');
+
+        var params = {
+            jobId: this.jobId,
+            props: this._node.properties
+        };
+
+        neo4j.run({
+            query: query,
+            params: params
+        }, function (err, results) {
+
+            if (err){
+                reject(err);
+            } else if (!results.length) {
+                err = new Error('Network ' + this.id + ' doesn\'t exist');
+                return reject(err);
+            } else {
+                resolve(null);
+            }
+        });
+    });
+};
+
+
 
 neo4j.createConstraint('Network', 'job_id', function (err) {
     if (err) {
