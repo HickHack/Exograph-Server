@@ -29,3 +29,16 @@ function NodeNotFoundError(msg) {
 
 util.inherits(NodeNotFoundError, Error);
 exports.NodeNotFoundError = NodeNotFoundError;
+
+function ErrorResponse(params) {
+    var body = {
+        error: params.message,
+        redirect: params.redirect
+    };
+    
+    this.toJSON = function () {
+        return body;
+    }
+}
+
+exports.ErrorResponse = ErrorResponse;

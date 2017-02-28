@@ -8,6 +8,7 @@
 
 var graph = require('./graph-model');
 var converter = require('../util/conversion-util');
+var errors = require('../helper/errors');
 var db = require('./../helper/db');
 var neo4j = new db();
 
@@ -83,11 +84,16 @@ Network.prototype.toJSON = function () {
     return network;
 };
 
-Network.prototype.getGraph = function (next) {
+Network.prototype.getGraph = function () {
     if (this.type == 'LINKEDIN') {
-        graph.getLinkedIn(this._owner, this, function (err, graph) {
-            if (err) return next(err);
-            return next(null, graph);
+        return new Promise((resolve, reject) => {
+            graph.getLinkedIn(this, function (err, graph) {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(graph);
+                }
+            });
         });
     }
 };
@@ -109,7 +115,7 @@ Network.get = function (id, user, callback) {
     }, function (err, results) {
         if (err) return callback(err);
         if (!results.length) {
-            err = new Error('No such node with id: ' + id);
+            err = new errors.NodeNotFoundError('No such node with id: ' + id);
             return callback(err);
         }
 
@@ -149,29 +155,33 @@ Network.getAllByUser = function (user, callback) {
     });
 };
 
-Network.prototype.patch = function (next) {
-    var query = [
-        'MATCH (network:Network {job_id: {jobId}})',
-        'SET network += {props}',
-        'RETURN network',
-    ].join('\n');
+Network.prototype.patch = function () {
+    return new Promise((resolve, reject) => {
+        var query = [
+            'MATCH (network:Network {job_id: {jobId}})',
+            'SET network += {props}',
+            'RETURN network',
+        ].join('\n');
 
-    var params = {
-        jobId: this.jobId,
-        props: this._node.properties
-    };
+        var params = {
+            jobId: this.jobId,
+            props: this._node.properties
+        };
 
-    neo4j.run({
-        query: query,
-        params: params
-    }, function (err, results) {
-        if (err) next(err);
-        if (!results.length) {
-            err = new Error('Network ' + this.id + ' doesn\'t exist');
-            return next(err);
-        }
+        neo4j.run({
+            query: query,
+            params: params
+        }, function (err, results) {
 
-        return next(null);
+            if (err){
+                reject(err);
+            } else if (!results.length) {
+                err = new Error('Network ' + this.id + ' doesn\'t exist');
+                return reject(err);
+            } else {
+                resolve(null);
+            }
+        });
     });
 };
 

@@ -3,6 +3,7 @@
  */
 
 var job = require('../model/job-model');
+var errors = require('../helper/errors');
 
 var JobController = module.exports = function JobController() {};
 
@@ -12,8 +13,7 @@ JobController.prototype.handleJobsAlert = function(req, res, next) {
         var response = {};
 
         if (err) {
-            var message = 'Failed to load recent jobs';
-            response = getResponse([], message)
+            response = getResponse([], err.message)
         } else {
             response = getResponse(jobs, '');
         }
@@ -27,5 +27,5 @@ function getResponse(jobs, message) {
         jobs: jobs,
         message: message
     }
-};
+}
 

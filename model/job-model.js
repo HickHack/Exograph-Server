@@ -79,7 +79,7 @@ Job.getJobsForUser = function(userId, count, next) {
             var error = new Error('Failed to load recent jobs');
             return next(error)
         } else if (!result.jobs.length) {
-            var noJobError = new Error('No jobs found for User ' + userId);
+            var noJobError = new Error('No jobs found');
             return next(noJobError);
         } else {
             var jobs = [];
