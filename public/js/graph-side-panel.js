@@ -83,7 +83,6 @@ GraphInfoWidget.prototype.populateItems = function () {
 
 GraphInfoWidget.prototype.loadData = function(endpoint, callback) {
     $.getJSON(endpoint, function (response) {
-        console.log(response);
         return callback(response.node);
     });
 };
