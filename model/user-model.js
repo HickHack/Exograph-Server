@@ -460,9 +460,9 @@ User.isPasswordValid = function (password, pass, callback) {
  * Static initialization
  */
 
-// Should be done as a schema migration script
-neo4j.createConstraint('User', 'email', function (err) {
-    if (err) {
-        console.warn(err.message);
-    }
-});
+//Should be done as a schema migration script
+// neo4j.createConstraint('User', 'email', function (err) {
+//     if (err) {
+//         console.warn(err.message);
+//     }
+// });

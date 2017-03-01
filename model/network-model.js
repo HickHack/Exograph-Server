@@ -216,10 +216,10 @@ Network.prototype.delete = function () {
 };
 
 
-
-neo4j.createConstraint('Network', 'job_id', function (err) {
-    if (err) {
-        console.warn(err.message);
-    }
-});
+//
+// neo4j.createConstraint('Network', 'job_id', function (err) {
+//     if (err) {
+//         console.warn(err.message);
+//     }
+// });
 
