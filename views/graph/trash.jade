@@ -62,20 +62,19 @@ body
                        - else
                            p.text-center You don't have any networks
 
-            footer.container-fluid
-                .row
-                    .col-lg-12
-                        .btn-group.dropup
-                            button.btn.btn-default.dropdown-toggle.disabled.actions-btn(type='button', data-toggle='dropdown')
-                                | Actions &nbsp
-                                span.caret
-                            ul.dropdown-menu(role='menu')
-                                li
-                                    a.restore-button(href='') Restore
-                                    form.restore-form(action='/graph/trash', method='PATCH')
+        footer.container-fluid
+            .row
+                .col-lg-12
+                    .btn-group.dropup
+                        button.btn.btn-default.dropdown-toggle.disabled.actions-btn(type='button', data-toggle='dropdown')
+                            | Actions &nbsp
+                            span.caret
+                        ul.dropdown-menu(role='menu')
+                            li
+                                a.restore-button(href='') Restore
+                                form.restore-form(action='/graph/trash', method='PATCH')
 
-                                li.divider
-                                li
-                                    a.delete-button(href='') Delete
-                                    form.trash-form(action='/graph/delete', method='DELETE')
-
+                            li.divider
+                            li
+                                a.delete-button(href='') Delete
+                                form.trash-form(action='/graph/delete', method='DELETE')
