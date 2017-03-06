@@ -9,7 +9,9 @@
  * D3 requires that each node is unique in the list and that
  * the relationships refer to the array-index (not the id) of the node.
  * The domain specific terminology D3 uses is Node and Links where links
- * map to edges
+ * map to edges.
+ *
+ *
  */
 
 var db = require('./../helper/db');
@@ -18,6 +20,10 @@ var connection =  require('./connection-model');
 var neo4j = new db();
 
 var Graph = module.exports = function Graph() {};
+
+Graph.delete = function () {
+    
+};
 
 Graph.getLinkedIn = function (network, callback) {
     var query = [
@@ -34,7 +40,7 @@ Graph.getLinkedIn = function (network, callback) {
 
         var params = {
             rootId: result.id,
-            config: {relationshipFilter:'CONNECTED_TO', uniqueness:'NODE_GLOBAL', bfs: false}
+            config: {relationshipFilter:'CONNECTED_TO', uniqueness:'NODE_GLOBAL', bfs: true}
         };
 
         neo4j.run({
@@ -48,7 +54,8 @@ Graph.getLinkedIn = function (network, callback) {
             });
         });
     })
-};
+}
+
 
 function parseCypherResult(results, callback) {
     var nodes = [], links = [];
@@ -58,6 +65,9 @@ function parseCypherResult(results, callback) {
             if (idIndex(nodes, n._id) == null)
                 nodes.push({
                     id: n._id,
+                    type: 'circle',
+                    size: 60,
+                    score: 1,
                     label: n.labels[0],
                     name: n.properties.name,
                     endpoint: '/graph/connection/' + n._id

@@ -9,7 +9,12 @@
         }
 
         .graph {
+            overflow: hidden;
             height: 600px;
+
+            text {
+                pointer-events: none;
+            }
 
             .node {
                 cursor: move;
