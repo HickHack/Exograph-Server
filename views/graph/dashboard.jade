@@ -4,6 +4,7 @@ head
     include ../layout/head
     link(href='/css/dashboard.css', rel='stylesheet', type='text/css')
     script(type='text/javascript', src='/js/network-trash.js')
+    script(type='text/javascript', src='/js/job-details.js')
 
     title #{title}
 
@@ -18,10 +19,6 @@ head
                 - num_trash += 1
         - num_networks = networks.length - num_trash
 
-
-
-
-
 body
     #wrapper
         include ../layout/navigation
@@ -30,6 +27,18 @@ body
             .container-fluid
 
                 include ../layout/pageHeader
+                #jobModal.modal.fade(role='dialog')
+                    .modal-dialog
+                        // Modal content
+                        .modal-content
+                            .modal-header
+                                button.close(type='button', data-dismiss='modal') ×
+                                h4.modal-title Import Launched
+                            .modal-body
+                                ul#job_details
+                            .modal-footer
+                                button.btn.btn-default(type='button', data-dismiss='modal') Close
+
 
                 .row
                     .col-lg-3.col-md-6
@@ -110,7 +119,7 @@ body
                                                                             input(type='hidden', value='#{network.id}')
                                                                 li.divider
                                                                 li
-                                                                    a(href='#') Import Details
+                                                                    a.job-details(href='/job/#{network.jobId}') Import Details
                                                 .panel-body
                                                     img.img-thumbnail(src='/img/graph/#{network.imageRef}')
                             - else

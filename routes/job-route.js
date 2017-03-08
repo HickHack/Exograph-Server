@@ -6,7 +6,11 @@ var router = express.Router();
 var controller = new JobController();
 
 router.get('/alert', auth.checkAuth, function(req, res, next) {
-    controller.handleJobsAlert(req, res, next);
+    controller.getJobsAlert(req, res, next);
+});
+
+router.get('/:id', auth.checkAuth, function(req, res, next) {
+    controller.getJob(req, res, next);
 });
 
 module.exports = router;

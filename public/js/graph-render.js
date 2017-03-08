@@ -5,7 +5,7 @@
     var outline = false;
 
     var highlightColor = "blue";
-    var defaultNodeColor = "#ccc";
+    var defaultNodeColor = "#337ab7";
     var defaultLinkColor = "#888";
     var toColor = "fill";
     var toWhite = "stroke";
