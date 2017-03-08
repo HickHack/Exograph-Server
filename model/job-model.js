@@ -69,7 +69,6 @@ Job.prototype.toJSON = function () {
     return job;
 };
 
-
 // Static methods
 Job.getJobsForUser = function(userId, count, next) {
 
@@ -92,4 +91,14 @@ Job.getJobsForUser = function(userId, count, next) {
         }
 
     });
+};
+
+Job.getById = function(id, next) {
+    extractor.getJob(id)
+        .then(job => {
+            return next(null, new Job(job.jobs[0]))
+        })
+        .catch(err => {
+            return next(err);
+        });
 };

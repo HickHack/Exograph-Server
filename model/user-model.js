@@ -1,6 +1,3 @@
-// user.js
-// User model logic.
-
 var errors = require('./../helper/errors');
 var hashUtil = require('../util/hash-util');
 var network = require('./network-model');
@@ -253,69 +250,6 @@ User.prototype.follow = function (other, callback) {
         params: params
     }, function (err) {
         callback(err);
-    });
-};
-
-User.prototype.unfollow = function (other, callback) {
-    var query = [
-        'MATCH (user:User {username: {thisUsername}})',
-        'MATCH (other:User {username: {otherUsername}})',
-        'MATCH (user) -[rel:follows]-> (other)',
-        'DELETE rel',
-    ].join('\n')
-
-    var params = {
-        thisUsername: this.username,
-        otherUsername: other.username,
-    };
-
-    neo4j.run({
-        query: query,
-        params: params
-    }, function (err) {
-        callback(err);
-    });
-};
-
-// Calls callback w/ (err, following, others), where following is an array of
-// users this user follows, and others is all other users minus him/herself.
-User.prototype.getFollowingAndOthers = function (callback) {
-    // Query all users and whether we follow each one or not:
-    var query = [
-        'MATCH (user:User {username: {thisUsername}})',
-        'MATCH (other:User)',
-        'OPTIONAL MATCH (user) -[rel:follows]-> (other)',
-        'RETURN other, COUNT(rel)', // COUNT(rel) is a hack for 1 or 0
-    ].join('\n')
-
-    var params = {
-        thisUsername: this.username,
-    };
-
-    var user = this;
-    neo4j.run({
-        query: query,
-        params: params
-    }, function (err, results) {
-        if (err) return callback(err);
-
-        var following = [];
-        var others = [];
-
-        for (var i = 0; i < results.length; i++) {
-            var other = new User(results[i]['other']);
-            var follows = results[i]['COUNT(rel)'];
-
-            if (user.username === other.username) {
-                continue;
-            } else if (follows) {
-                following.push(other);
-            } else {
-                others.push(other);
-            }
-        }
-
-        callback(null, following, others);
     });
 };
 
