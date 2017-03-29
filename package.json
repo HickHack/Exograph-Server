@@ -5,7 +5,8 @@
   "scripts": {
     "test": "mocha --timeout 15000 --ui bdd --recursive ./test",
     "build-css": "node-sass public/scss/test.scss public/css/test.css",
-    "start": "nodemon bin/www"
+    "startdev": "nodemon bin/www",
+    "assets": "node-sass ~/Exograph-Server/public/sass -o ~//Exograph-Server/public/css"
   },
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
@@ -31,7 +32,6 @@
     "chai": "^3.5.0",
     "chai-http": "^3.0.0",
     "mocha": "^3.2.0",
-    "node-sass": "^4.0.0",
     "nodemon": "^1.11.0",
     "rewire": "^2.5.2",
     "sinon": "~1.17.7"

@@ -42,9 +42,9 @@ $(document).ready(function(){
             ).append(
                 $('<li>').text('Successful: ' + model.isSuccess)
             ).append(
-                $('<li>').text('Start Time:  ' + model.startTime)
+                $('<li>').text('Start Time: ' + model.startTime)
             ).append(
-                $('<li>').text('Total Time:  ' + model.totalTime)
+                $('<li>').text('Total Time: ' + model.totalTime)
             )
 
         }
