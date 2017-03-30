@@ -7,8 +7,7 @@ function init() {
 
 function fetchExograph() {
 	cd ~/
-	rm -rf Exograph-Server
-	git clone https://github.com/HickHack/Exograph-Server.git
+	git clone -b deployment https://github.com/HickHack/Exograph-Server.git
 	cd Exograph-Server
 }
 
@@ -20,8 +19,7 @@ triggerExograph() {
 
 function fetchExtractor() {
 	 cd ~/
-	 rm -rf Extractor-API
-	 git clone https://github.com/HickHack/Extractor-API.git
+	 git clone -b setupDeployment https://github.com/HickHack/Extractor-API.git
 	 cd ~/Extractor-API
 	 pip3 install --upgrade -r requirements.txt
 }
