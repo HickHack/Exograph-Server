@@ -2,7 +2,7 @@
 
 function init() {
     chmod +x ~/Exograph-Server/dependencies.sh
-    ./dependencies.sh
+    ~/Exograph-Server/dependencies.sh
     setupExograph
     launchServices
 
