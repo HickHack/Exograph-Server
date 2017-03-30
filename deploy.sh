@@ -15,6 +15,7 @@ function setupExograph() {
 
 function launchServices() {
 	sudo neo4j start
+	ls
 	node start bin/www
 }
 
