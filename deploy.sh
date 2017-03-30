@@ -8,7 +8,6 @@ function init() {
 
 function setupExograph() {
 	cd ~/
-	rm -rf Exograph-Server
 	sudo npm install -g node-sass
 	npm install
 }
