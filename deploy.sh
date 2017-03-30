@@ -1,5 +1,7 @@
+#!/usr/bin/env bash
+
 function init() {
-    chmod +x ./dependencies.sh
+    chmod +x ~/Exograph-Server/dependencies.sh
     ./dependencies.sh
     setupExograph
     launchServices
@@ -7,15 +9,13 @@ function init() {
 }
 
 function setupExograph() {
-	cd ~/
 	sudo npm install -g node-sass
 	npm install
 }
 
 function launchServices() {
 	sudo neo4j start
-	ls
-	node start bin/www
+	node start ~/Exograph-Server/bin/www &
 }
 
 init
