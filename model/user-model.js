@@ -4,7 +4,6 @@ var network = require('./network-model');
 var database = require('./../helper/db');
 var neo4j = new database();
 
-
 // Private constructor:
 var User = module.exports = function User(_node) {
     // All we'll really store is the node; the rest of our properties will be
@@ -13,7 +12,7 @@ var User = module.exports = function User(_node) {
 };
 
 // Public constants
-User.VALIDATION_INFO = {
+User.CREATE_VALIDATION_INFO = {
     'firstname': {
         required: true,
         minLength: 1,
@@ -53,6 +52,13 @@ User.VALIDATION_INFO = {
         maxLength: 50,
         message: 'Password must be at least 6 characters long'
     }
+};
+
+User.UPDATE_VALIDATION_INFO = {
+    'firstname': User.CREATE_VALIDATION_INFO.firstname,
+    'surname': User.CREATE_VALIDATION_INFO.surname,
+    'company': User.CREATE_VALIDATION_INFO.company,
+    'country': User.CREATE_VALIDATION_INFO.country
 };
 
 // Public instance properties
@@ -102,13 +108,13 @@ Object.defineProperties(User.prototype, {
 // (This allows `User.prototype.patch` to not require any.)
 // You can pass `true` for `required` to validate that all required properties
 // are present too. (Useful for `User.create`.)
-function validate(props, callback) {
+function validate(props, validation_info, callback) {
     var safeProps = {};
 
-    for (var prop in User.VALIDATION_INFO) {
+    for (var prop in validation_info) {
         var val = props[prop];
 
-        validateProp(prop, val, function (err) {
+        validateProp(prop, val, validation_info, function (err) {
             if (err) {
                 return callback(err);
             }
@@ -127,13 +133,13 @@ function validate(props, callback) {
 // Validates the given property based on the validation info above.
 // By default, ignores null/undefined/empty values, but you can pass `true` for
 // the `required` param to enforce that any required properties are present.
-function validateProp(prop, val, callback) {
-    var info = User.VALIDATION_INFO[prop];
+function validateProp(prop, val, validation_info, callback) {
+    var info = validation_info[prop];
     var message = info.message;
     var err = undefined;
 
     if (!val) {
-        if (info.required) {
+        if (info.required && !skipRequired) {
             err = new errors.ValidationError('Missing ' + prop + ' (required).');
             return callback(err);
         } else {
@@ -168,7 +174,14 @@ function isConstraintViolation(err) {
 // Atomically updates this user, both locally and remotely in the db, with the
 // given property updates.
 User.prototype.patch = function (props, callback) {
-    var safeProps = validate(props);
+
+    var safeProps = validate(props, User.UPDATE_VALIDATION_INFO, function (err, props) {
+        if (err) {
+            callback(err.message);
+        }
+
+        return props;
+    });
 
     var query = [
         'MATCH (user:User {email: {email}})',
@@ -177,7 +190,7 @@ User.prototype.patch = function (props, callback) {
     ].join('\n');
 
     var params = {
-        username: this.email,
+        email: this.email,
         props: safeProps,
     };
 
@@ -187,20 +200,10 @@ User.prototype.patch = function (props, callback) {
         query: query,
         params: params
     }, function (err, results) {
-        if (neo4j.isConstraintViolation(err)) {
-            // TODO: This assumes email is the only relevant constraint.
-            // We could parse the constraint property out of the error message,
-            // but it'd be nicer if Neo4j returned this data semantically.
-            // Alternately, we could tweak our query to explicitly check first
-            // whether the username is taken or not.
-            err = new errors.ValidationError(
-                'The email ‘' + props.email + '’ is taken.');
-        }
-        if (err) return callback(err);
 
-        if (!results.length) {
-            err = new Error('User has been deleted! Email: ' + self.username);
-            return callback(err);
+        if (err) {
+            var error = new Error('Failed failed!');
+            return callback(error);
         }
 
         // Update our node with this updated+latest data from the server:
@@ -352,7 +355,7 @@ User.create = function (props, callback) {
     ].join('\n');
 
     var params = {
-        props: validate(props, function (err, props) {
+        props: validate(props, User.CREATE_VALIDATION_INFO, function (err, props) {
             if (err) {
                 success = false;
                 error = err;
@@ -384,7 +387,6 @@ User.create = function (props, callback) {
         callback(null, user);
     });
 };
-
 
 User.isPasswordValid = function (password, pass, callback) {
     return hashUtil.bcryptCompare(password, pass, callback);

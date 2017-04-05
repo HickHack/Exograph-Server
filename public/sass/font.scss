@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css?family=Exo:200');
+
 @font-face {
   font-family: 'icomoon';
   src:  url('../font/glyph/custom.eot?5ybidw');
@@ -7,6 +9,11 @@
   url('../font/glyph/custom.svg?5ybidw#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
+}
+
+@font-face {
+  font-family: armadillo;
+  src: url('../font/glyph/custom.eot')
 }
 
 [class^="icon-"], [class*=" icon-"] {

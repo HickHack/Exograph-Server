@@ -70,7 +70,7 @@ $(function () {
             .append(
                 $('<a/>', {'class': 'text-center', href: '#'})
                     .append(
-                        $('<strong/>').text('See All Alerts')
+                        $('<strong/>').text('See All Jobs')
                     ).append(
                     $('<i/>', {'class': 'fa fa-angle-right'})
                 )
