@@ -87,16 +87,26 @@ Job.getJobsForUser = function(userId, count, next) {
                jobs.push(new Job(job));
             });
 
-            next(null, jobs)
+            next(null, jobs);
         }
 
     });
 };
 
+Job.getSummaryForUser = function(user_id, next) {
+    extractor.getJobSummaryForUser(user_id)
+        .then(result => {
+            return next(null, result.summary);
+        })
+        .catch(err => {
+            return next(err);
+        });
+};
+
 Job.getById = function(id, next) {
     extractor.getJob(id)
         .then(job => {
-            return next(null, new Job(job.jobs[0]))
+            return next(null, new Job(job.jobs[0]));
         })
         .catch(err => {
             return next(err);

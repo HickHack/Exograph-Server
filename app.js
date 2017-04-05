@@ -12,7 +12,7 @@ process.conf = require('./config');
 //Routes
 var graph = require('./routes/graph-route');
 var dashboard = require('./routes/dashboard-route');
-var account = require('./routes/account-route');
+var user = require('./routes/user-route');
 var job = require('./routes/job-route');
 
 var app = express();
@@ -44,6 +44,7 @@ app.use('/graph', graph);
 app.use('/', dashboard);
 app.use('/dashboard', dashboard);
 app.use('/job', job);
+app.use('/user', user);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

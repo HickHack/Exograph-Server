@@ -1,0 +1,27 @@
+@import "font";
+
+.profile {
+
+    margin-top: 40px;
+
+    .details-container {
+        font-family: 'Exo', sans-serif;
+
+        .name {
+            margin-bottom: 15px;
+        }
+
+        p {
+            font-size: 20px;
+        }
+
+        .btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 25%;
+        }
+    }
+
+
+}

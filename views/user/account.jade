@@ -2,7 +2,7 @@ doctype html
 
 head
     include ../layout/head
-    link(href='/css/profile.css', rel='stylesheet', type='text/css')
+    script(src='/js/user-details-form.js', type='text/javascript')
 
     title #{title}
 body
@@ -11,7 +11,55 @@ body
 
         #page-wrapper
             .container-fluid
+                include ../layout/pageHeader
+
                 .row
                     .col-md-12
-                        if(user)
-                            h2.text-center Account (#{user.firstname} #{user.surname})
+                        .message-panel
+                            .alert.text-center
+                                ul#messages
+                        .col-md-6
+
+                            .panel.panel-default
+                                .panel-heading
+                                    h4.panel-title Account Details
+                                .panel-body
+                                    form.user-details-form(action='/user/update' role='form', method='POST')
+                                        fieldset
+                                            .form-group
+                                                label Firstname
+                                                input.form-control(placeholder='Firstname', name='firstname', type='text', autofocus='', value=user.firstname, required)
+
+                                                label Surname
+                                                input.form-control(placeholder='Surname', name='surname', type='text', value=user.surname, required)
+
+                                            .form-group
+                                                label Company
+                                                input.form-control(placeholder='Company', name='company', type='text', value=user.company, required)
+
+                                                label Country
+                                                input.form-control(placeholder='Country', name='country', type='text', value=user.country, required)
+
+
+                                            .form-group
+                                                label Email
+                                                p #{user.email}
+
+                                        // Change this to a button or input when using this as a form
+                                        button.btn.btn-md.btn-primary.btn-block(type='submit') Update
+                        .col-md-6
+                            .panel.panel-default
+                                .panel-heading
+                                    h4.panel-title Account Settings
+                                .panel-body
+                                    form(action='/user/update' role='form', method='POST')
+                                        fieldset
+                                            .form-group.checkbox-inline
+                                                input.checkbox(type="checkbox")
+                                                label Receive email notification of import completion
+
+
+
+
+                                        // Change this to a button or input when using this as a form
+                                        button.btn.btn-md.btn-primary.btn-block(type='submit') Change Settings

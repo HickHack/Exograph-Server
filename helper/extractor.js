@@ -73,6 +73,22 @@ Extractor.prototype.getJob = function (id) {
     });
 };
 
+Extractor.prototype.getJobSummaryForUser = function (userId) {
+    var url = endpoints['job_user_summary'].replace('<user_id>', userId);
+    var req = getRequest(url, 'GET');
+
+    return new Promise((resolve, reject) => {
+        performRequest(req)
+            .then(job => {
+                resolve(job);
+            })
+            .catch(() => {
+                var error = new Error('Problem loading job');
+                reject(error);
+            });
+    });
+};
+
 // Private helpers
 function performRequest(req) {
 

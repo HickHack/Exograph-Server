@@ -1,0 +1,43 @@
+doctype html
+
+head
+    include ../layout/head
+    link(href='/css/profile.css', rel='stylesheet', type='text/css')
+
+    title #{title}
+body
+    #wrapper
+        include ../layout/navigation
+
+        #page-wrapper
+            .container-fluid
+                include ../layout/pageHeader
+
+                .row.profile
+                    .col-md-12
+                        .row
+                            .col-md-3.image-container
+                                img.img-responsive.img-thumbnail.img-circle(src='/img/person-placeholder.jpg')
+
+                            .col-md-8.col-md-offset-1.details-container
+                                .row
+                                    .col-md-6
+                                        .col-md-12.name
+                                            h1 #{user.firstname} #{user.surname}
+
+                                        .col-md-12
+                                            p
+                                                i.fa.fa-globe
+                                                | &nbsp #{user.country}
+                                        .col-md-12
+                                            p
+                                                i.fa.fa-briefcase
+                                                | &nbsp #{user.company}
+                                        .col-md-12
+                                            p
+                                                i.fa.fa-envelope
+                                                | &nbsp #{user.email}
+                                    .col-md-6
+                                        a(href='/user/account')
+                                            .btn.btn-primary Update Details
+

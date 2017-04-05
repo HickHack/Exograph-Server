@@ -6,7 +6,7 @@
     "test": "mocha --timeout 15000 --ui bdd --recursive ./test",
     "build-css": "node-sass public/scss/test.scss public/css/test.css",
     "startdev": "nodemon bin/www",
-    "assets": "node-sass ~/Exograph-Server/public/sass -o ~//Exograph-Server/public/css"
+    "assets": "node-sass ~/Exograph-Server/public/sass -o ~/Exograph-Server/public/css"
   },
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
