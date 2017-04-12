@@ -22,9 +22,26 @@ GraphController.prototype.handleImport = function (req, res) {
 
 GraphController.prototype.launchLinkedinImport = function (req, res) {
     extractor.launchLinkedin({
-        name: req.body.importName,
+        graph_name: req.body.importName,
         username: req.body.linkedinEmail,
         password: req.body.linkedinPassword,
+        user_id: req.user.id
+    }, function (err, job) {
+        if (err) {
+            var error = {error: err.message};
+            res.send(JSON.stringify(error));
+        } else {
+            job.start_time = converter.unixTimeToFormattedTime(job.start_time);
+
+            res.send(JSON.stringify(job));
+        }
+    });
+};
+
+GraphController.prototype.launchTwitterImport = function (req, res) {
+    extractor.launchTwitter({
+        graph_name: req.body.importName,
+        screen_name: req.body.screenName,
         user_id: req.user.id
     }, function (err, job) {
         if (err) {
@@ -76,18 +93,6 @@ GraphController.prototype.handleGraphLoad = function (req, res) {
                     })
                 );
         });
-};
-
-GraphController.prototype.handleLoadConnection = function (req, res) {
-
-    connection.get(req.params['id'], function (err, result) {
-        if (err) {
-            var message = {message: 'Failed to load Connection'};
-            res.send(JSON.stringify(message));
-        } else {
-            res.send(JSON.stringify(result));
-        }
-    });
 };
 
 GraphController.prototype.handleTrashView = function (req, res) {

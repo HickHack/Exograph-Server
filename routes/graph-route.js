@@ -41,6 +41,13 @@ router.post('/import/linkedin', auth.checkAuth, function(req, res, next) {
     controller.launchLinkedinImport(req, res);
 });
 
+/**
+ * Trigger Twitter Crawler
+ */
+router.post('/import/twitter', auth.checkAuth, function(req, res, next) {
+    controller.launchTwitterImport(req, res);
+});
+
 router.get('/trash', auth.checkAuth, function (req, res, next) {
     controller.handleTrashView(req, res);
 });

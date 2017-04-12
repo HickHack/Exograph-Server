@@ -25,22 +25,35 @@ Graph.delete = function () {
     
 };
 
-Graph.getLinkedIn = function (network, callback) {
+Graph.get = function (network, callback) {
+
+    if (network.isLinkedIn) {
+        getGraph(network, 'Connection', 'CONNECTED_TO', function (err, model) {
+            callback(err, model);
+        });
+    } else if (network.isTwitter) {
+        getGraph(network, 'Follower', 'IS_FOLLOWING', function (err, model) {
+            callback(err, model);
+        });
+    }
+};
+
+function getGraph(network, label, rel, callback) {
     var query = [
-        'MATCH (head:Connection)',
+        'MATCH (head:' + label + ')',
         'WHERE id(head) = {rootId}',
         'CALL apoc.path.expandConfig(head, {config}) YIELD path',
         'WITH LAST(NODES(path)) as a',
-        'MATCH (a)-[r:CONNECTED_TO]->(b)',
+        'MATCH (a)-[r:'+ rel +']->(b)',
         'RETURN [a, b] as nodes, r as relationships'
     ].join('\n');
 
-    connection.getNodeForNetworkByUserId(network.owner.id, network.id, function (err, result) {
+    network.getContainingRootId(label, function (err, result) {
         if(err) return callback(err);
 
         var params = {
-            rootId: result.id,
-            config: {relationshipFilter:'CONNECTED_TO', uniqueness:'NODE_GLOBAL', bfs: true}
+            rootId: result,
+            config: {relationshipFilter:rel, uniqueness:'NODE_GLOBAL', bfs: true}
         };
 
         neo4j.run({
@@ -56,7 +69,6 @@ Graph.getLinkedIn = function (network, callback) {
     })
 }
 
-
 function parseCypherResult(results, callback) {
     var nodes = [], links = [];
 
@@ -70,7 +82,7 @@ function parseCypherResult(results, callback) {
                     score: 1,
                     label: n.labels[0],
                     name: n.properties.name,
-                    endpoint: '/graph/connection/' + n._id
+                    endpoint: '/'+ n.labels[0].toLowerCase() +'/' + n._id
                 });
         });
 

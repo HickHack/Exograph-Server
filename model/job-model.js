@@ -30,10 +30,14 @@ Object.defineProperties(Job.prototype, {
         get: function () { return this._job['type']; }
     },
     isComplete: {
-        get: function () { return this._job['complete']; }
+        get: function () {
+            return converter.booleanToYesOrNo(this._job['complete']);
+        }
     },
     isSuccess: {
-        get: function() { return this._job['success']; }
+        get: function() {
+            return converter.booleanToYesOrNo(this._job['success']);
+        }
     },
     startTime: {
         get: function () {

@@ -1,8 +1,12 @@
 /**
+ * Created by graham on 12/04/17.
+ */
+
+/**
  * @author Graham Murray
  * @date 13/02/17
  *
- * This model represents a Connection node
+ * This model represents a Follower node
  */
 
 var db = require('./../helper/db');
@@ -11,12 +15,12 @@ var errors = require('../helper/errors')
 
 var neo4j = new db();
 
-var Connection = module.exports = function Connection(node) {
+var Follower = module.exports = function Follower(node) {
     this._node = node;
 };
 
 // Public instance properties
-Object.defineProperties(Connection.prototype, {
+Object.defineProperties(Follower.prototype, {
     id: {
         get: function () {
             return this._node._id;
@@ -29,12 +33,7 @@ Object.defineProperties(Connection.prototype, {
     },
     memberSince: {
         get: function () {
-            return converter.unixTimeToFormattedTime(this._node.properties['member_since'] / 1000);
-        }
-    },
-    connectionDate: {
-        get: function () {
-            return converter.unixTimeToFormattedTime(this._node.properties['connection_date'] / 1000);
+            return converter.unixTimeToFormattedTime(this._node.properties['member_since']);
         }
     },
     profileUrl: {
@@ -53,34 +52,34 @@ Object.defineProperties(Connection.prototype, {
             return converter.base64Decode(url);
         }
     },
-    phone: {
+    friendsCount: {
         get: function () {
-            return this._node.properties['phone'];
+            return this._node.properties['friends_count']
         }
     },
-    email: {
+    followersCount: {
         get: function () {
-            return this._node.properties['email'];
+            return this._node.properties['followers_count']
         }
     },
-    company: {
+    screenName: {
         get: function () {
-            return this._node.properties['company'];
-        }
-    },
-    title: {
-        get: function () {
-            return this._node.properties['title']
+            return '@' + this._node.properties['screen_name']
         }
     },
     location: {
         get: function () {
-            return this._node.properties['location'];
+            return converter.base64Decode(this._node.properties['location'])
+        }
+    },
+    description: {
+        get: function () {
+            return converter.base64Decode(this._node.properties['description'])
         }
     }
 });
 
-Connection.prototype.toJSON = function () {
+Follower.prototype.toJSON = function () {
     var node = {
         node: {
             name: {
@@ -90,9 +89,9 @@ Connection.prototype.toJSON = function () {
                     type: 'text'
                 }
             },
-            connectionDate: {
-                key: 'Connected',
-                value: this.connectionDate,
+            name: {
+                key: 'Screen Name',
+                value: this.screenName,
                 attr: {
                     type: 'text'
                 }
@@ -112,34 +111,26 @@ Connection.prototype.toJSON = function () {
                     value: this.profileUrl
                 }
             },
-            phone: {
-                key: 'Phone No',
-                value: this.phone,
+            followerCount: {
+                key: 'No. Followers',
+                value: this.followersCount,
                 attr: {
                     type: 'text'
                 }
             },
-            email: {
-                key: 'Email',
-                value: this.email,
+            friendsCount: {
+                key: 'No. Friends',
+                value: this.friendsCount,
                 attr: {
                     type: 'text'
                 }
             },
-            company: {
-                key: 'Company',
-                value: this.company,
+            description: {
+                key: 'Description',
+                value: this.description,
                 attr: {
                     type: 'text'
                 }
-            },
-            title: {
-                key: 'Job Title',
-                value: this.title,
-                attr: {
-                    type: 'text'
-                }
-
             },
             location: {
                 key: 'Location',
@@ -154,11 +145,12 @@ Connection.prototype.toJSON = function () {
     return node;
 };
 
-Connection.get = function (id, callback) {
+
+Follower.get = function (id, callback) {
     var query = [
-        'MATCH (connection:Connection)',
-        'WHERE id(connection) = {id}',
-        'RETURN connection'
+        'MATCH (follower:Follower)',
+        'WHERE id(follower) = {id}',
+        'RETURN follower'
     ].join('\n')
 
     var params = {
@@ -175,8 +167,44 @@ Connection.get = function (id, callback) {
             return callback(err);
         }
 
-        var node = new Connection(results[0]['connection']);
+        var node = new Follower(results[0]['follower']);
         callback(null, node);
+    });
+};
+
+
+Follower.getContainingRootId = function(userId, networkId, callback) {
+    var query = [
+        'MATCH (user:User)-[owns:OWNS]->(network:Network)-[contains:CONTAINS]->(root:Follower)',
+        'WHERE id(user) = {userId} AND id(network) = {networkId}',
+        'RETURN root',
+        'LIMIT 1'
+    ].join('\n');
+
+    var params = {
+        userId: userId,
+        networkId: networkId
+    }
+
+    neo4j.run({
+        query: query,
+        params: params
+    }, function (err, result) {
+        if (err){
+            console.log(err);
+            return callback(err);
+        };
+
+        if(result.length > 0) {
+            var node = new Follower(result[0]['root']);
+            return callback(null, node);
+        }
+
+        var msg = 'Follower not found where userId = ' + userId + ' and networkId = ' + networkId;
+        var error = new errors.NodeNotFoundError(msg);
+        console.log(error);
+
+        return callback(error);
     });
 };
 

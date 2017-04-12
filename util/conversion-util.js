@@ -86,3 +86,12 @@ Converter.base64Decode = function (b64) {
     var buffer = new Buffer(b64, 'base64');
     return buffer.toString();
 };
+
+Converter.booleanToYesOrNo = function (value) {
+
+    if (value) {
+        return 'Yes'
+    } else {
+        return 'No'
+    }
+};

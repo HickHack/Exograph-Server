@@ -67,7 +67,7 @@ GraphInfoWidget.prototype.populateItems = function () {
         });
 
         for (var prop in this.model) {
-            if (this.model[prop].attr.type == 'text' && this.model[prop].value != '') {
+            if (this.model[prop].attr.type == 'text' && (this.model[prop].value != '' || this.model[prop].value != " ")) {
                 var row = $('<tr/>');
                 var key = $('<td/>').text(this.model[prop].key).addClass('text-right');
                 var value = $('<td/>').text(this.model[prop].value).addClass('text-center');

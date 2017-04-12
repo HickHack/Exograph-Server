@@ -28,6 +28,22 @@ Extractor.prototype.launchLinkedin = function (props, next) {
     var req = getRequest(endpoints['run_linkedin'], 'POST');
     req.body = JSON.stringify(props);
 
+    this.launchJob(req, function (err, result) {
+        next(err, result);
+    });
+};
+
+Extractor.prototype.launchTwitter = function (props, next) {
+    var req = getRequest(endpoints['run_twitter'], 'POST');
+    req.body = JSON.stringify(props);
+
+    this.launchJob(req, function (err, result) {
+        next(err, result);
+    });
+};
+
+Extractor.prototype.launchJob = function (req, next) {
+
     performRequest(req)
         .then(result => {
             if (result.jobs.length > 0) {
