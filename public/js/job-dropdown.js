@@ -46,7 +46,7 @@ $(function () {
         var divider = $('<li/>', {'class': 'divider'});
         var link = $('<a/>', {href: '#'});
         var div = $('<div/>');
-        var icon = $('<i/>', {'class': 'fa fa-linkedin fa-fw linkedIn'});
+        var icon = $('<i/>', {'class': getIconClass(job.type)});
         var time = $('<span/>', {'class': 'pull-right text-muted small'});
 
         time.text(job.startTime);
@@ -68,7 +68,7 @@ $(function () {
     function getFooter() {
         var footer = $('<li/>')
             .append(
-                $('<a/>', {'class': 'text-center', href: '#'})
+                $('<a/>', {'class': 'text-center', href: '/job/all'})
                     .append(
                         $('<strong/>').text('See All Jobs')
                     ).append(
@@ -92,3 +92,11 @@ $(function () {
     }
 
 });
+
+function getIconClass(type) {
+    if (type == 'LINKEDIN') {
+        return 'fa fa-linkedin fa-fw text-with-icon'
+    }
+
+    return 'fa fa-twitter fa-fw text-with-icon'
+}

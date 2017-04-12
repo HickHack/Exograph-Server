@@ -8,6 +8,8 @@
 @import "color";
 @import "font";
 
+$icon-text-margin-right: 5px;
+
 .error {
   color: $error-color;
 }
@@ -16,17 +18,12 @@
   color: $text-blue-color;
 }
 
-.fa-linkedin {
+.fa-linkedin, .fa-twitter {
   @extend .icon-default
 }
 
-.linkedIn {
-  @extend .fa-linkedin;
+.text-with-icon {
   margin-right: 5px;
-}
-
-.page-header {
-  margin-top: 0;
 }
 
 .sidebar {

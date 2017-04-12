@@ -9,8 +9,12 @@ router.get('/alert', auth.checkAuth, function(req, res, next) {
     controller.getJobsAlert(req, res, next);
 });
 
-router.get('/:id', auth.checkAuth, function(req, res, next) {
+router.get('/:id(\\d+)', auth.checkAuth, function(req, res, next) {
     controller.getJob(req, res, next);
+});
+
+router.get('/all', auth.checkAuth, function(req, res, next) {
+    controller.getJobs(req, res, next);
 });
 
 module.exports = router;

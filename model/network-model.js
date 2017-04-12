@@ -66,6 +66,16 @@ Object.defineProperties(Network.prototype, {
     },
     owner: {
         get: function () { return this._owner }
+    },
+    isLinkedIn: {
+        get: function () {
+            return this._node.properties['type'] == 'LINKEDIN';
+        }
+    },
+    isTwitter: {
+        get: function () {
+            return this._node.properties['type'] == 'TWITTER';
+        }
     }
 });
 
@@ -85,17 +95,15 @@ Network.prototype.toJSON = function () {
 };
 
 Network.prototype.getGraph = function () {
-    if (this.type == 'LINKEDIN') {
-        return new Promise((resolve, reject) => {
-            graph.getLinkedIn(this, function (err, graph) {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(graph);
-                }
-            });
+    return new Promise((resolve, reject) => {
+        graph.get(this, function (err, graph) {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(graph);
+            }
         });
-    }
+    });
 };
 
 Network.get = function (id, user, callback) {
@@ -212,6 +220,40 @@ Network.prototype.delete = function () {
                 resolve(null);
             }
         });
+    });
+};
+
+Network.prototype.getContainingRootId = function(label, callback) {
+    var query = [
+        'MATCH (user:User)-[owns:OWNS]->(network:Network)-[contains:CONTAINS]->(root:'+ label +')',
+        'WHERE id(user) = {userId} AND id(network) = {networkId}',
+        'RETURN root',
+        'LIMIT 1'
+    ].join('\n');
+
+    var params = {
+        userId: this.owner.id,
+        networkId: this.id
+    };
+
+    neo4j.run({
+        query: query,
+        params: params
+    }, function (err, result) {
+        if (err){
+            console.log(err);
+            return callback(err);
+        };
+
+        if(result.length > 0) {
+            return callback(null, result[0]['root']._id);
+        }
+
+        var msg = 'Connection not found where userId = ' + userId + ' and networkId = ' + networkId;
+        var error = new errors.NodeNotFoundError(msg);
+        console.log(error);
+
+        return callback(error);
     });
 };
 

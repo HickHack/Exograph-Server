@@ -1,4 +1,4 @@
-var VALIDATION_INFO = {
+var VALIDATION_INFO_LINKEDIN = {
     'importName': {
         key: 'name',
         required: true,
@@ -21,6 +21,25 @@ var VALIDATION_INFO = {
     }
 };
 
+var VALIDATION_INFO_TWITTER = {
+    'importName': {
+        key: 'name',
+        required: true,
+        minLength: 1,
+        maxLength: 90,
+        pattern: /^[a-zA-Z ]*$/,
+        message: 'Import name must be characters only.'
+    },
+    'screenName': {
+        key: 'screen name',
+        required: true,
+        minLength: 1,
+        maxLength: 40,
+        pattern: /^(?!@).+$/,
+        message: 'Screen name must not start with @'
+    },
+};
+
 var keys = {
     'id': 'Job ID',
     'name': 'Name',
@@ -32,46 +51,75 @@ var keys = {
 };
 
 /**
- * Submitting the LinkedIn launch form
+ * Submitting the launch form
  */
+
 $(document).ready(function () {
-    var form = $('#job_launch');
+    var linkedinForm = $('.linkedin_launch');
+    var twitterForm = $('.twitter_launch');
 
-    form.submit(function (event) {
-
-        var formData = {
-            'importName': $('input[name=importName]').val(),
-            'linkedinEmail': $('input[name=linkedinEmail]').val(),
-            'linkedinPassword': $('input[name=linkedinPassword]').val(),
-        };
-
-        var validator = new Validator(VALIDATION_INFO);
-        validator.validate(formData, function (errs) {
-            if (errs.length > 0) {
-                processErrors(errs);
-            } else {
-                $.ajax({
-                    type: form.attr('method'),
-                    url: form.attr('action'),
-                    data: formData,
-                    dataType: 'json',
-                    encode: true
-                }).done(function (data) {
-                    $('#job_details').empty();
-                    $('.message-panel').hide();
-                    document.getElementById("job_launch").reset();
-
-                    if (data) {
-                        processModal(data);
-                    }
-                });
-            }
-        });
-
-        // stop the form from submitting normally
+    linkedinForm.submit(function (event) {
         event.preventDefault();
+        processForm(linkedinForm);
+    });
+    twitterForm.submit(function (event) {
+        event.preventDefault();
+        processForm(twitterForm);
     });
 });
+
+function processForm(form) {
+    var formData = getFormData(form);
+
+    var validator = getValidator(form.attr('data-type'));
+    validator.validate(formData, function (errs) {
+        if (errs.length > 0) {
+            processErrors(errs);
+        } else {
+            $.ajax({
+                type: form.attr('method'),
+                url: form.attr('action'),
+                data: formData,
+                dataType: 'json',
+                encode: true
+            }).done(function (data) {
+                $('#job_details').empty();
+                $('.message-panel').hide();
+
+                if (data) {
+                    processModal(data);
+                }
+            });
+        }
+    });
+}
+
+function getFormData (form) {
+    var inputs = form.find('input');
+    var formData = {};
+
+    if (inputs && inputs.length) {
+        for (var i = 0; i < inputs.length; i++) {
+            Object.defineProperty(formData, inputs[i].name,
+                {
+                    value : inputs[i].value,
+                    writable : true,
+                    enumerable : true,
+                    configurable : true
+                });
+        }
+    }
+
+    return formData;
+}
+
+function getValidator(launchType) {
+    if (launchType == 'LINKEDIN') {
+        return new Validator(VALIDATION_INFO_LINKEDIN);
+    }
+
+    return new Validator(VALIDATION_INFO_TWITTER);
+}
 
 function processErrors(errors) {
     var items = [];

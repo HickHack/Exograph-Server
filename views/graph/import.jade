@@ -31,14 +31,18 @@ body
 
                     .col-lg-12
                         .row
+                            .message-panel
+                                .alert.alert-danger.text-center
+                                    ul#errors
+
                             .col-lg-6
                                 .panel.panel-default
                                     .panel-heading
                                         i.fa.fa-linkedin
                                         | LinkedIn
-                                    form(id='job_launch', role='form', action='/graph/import/linkedin' method='POST').panel-body
+                                    form.linkedin_launch(role='form', action='/graph/import/linkedin' method='POST', data-type='LINKEDIN').panel-body
                                         .form-group
-                                            label Name
+                                            label Job Name
                                             input.form-control(name='importName')
                                             p.help-block Give your import a name
                                         .form-group
@@ -52,34 +56,27 @@ body
                                             p.help-block Your credentials are not stored
                                         .text-center
                                             button.btn.btn-default(type='submit') Submit
-                                .message-panel
-                                    .alert.alert-danger.text-center
-                                        ul#errors
 
                             .col-lg-6
                                 .panel.panel-default
                                     .panel-heading
                                         i.fa.fa-twitter
                                         | Twitter
-                                    form(role='form').panel-body
+                                    form.twitter_launch(role='form', action='/graph/import/twitter' method='POST', data-type='TWITTER').panel-body
                                         .form-group
-                                            label Text Input
-                                            input.form-control
-                                            p.help-block Example block-level help text here.
+                                            label Job Name
+                                            input.form-control(name='importName')
+                                            p.help-block Give your import a name
                                         .form-group
-                                            label Text Input with Placeholder
-                                            input.form-control(placeholder='Enter text')
+                                            label Screen Name
+                                            input.form-control(name='screenName', required)
+                                            p.help-block Example @Exograph without '@'
                                         .form-group
-                                            label Static Control
-                                            p.form-control-static email@example.com
-                                        .form-group
-                                            label File input
-                                            input(type='file')
-                                        .form-group
-                                            label Text area
-                                            textarea.form-control(rows='3')
-
-                                        button.btn.btn-default(type='submit') Submit
+                                            p.form-control-static
+                                                | Twitter imports can take a considerable amount of time
+                                                | due to restrictions imposed by Twitter.
+                                        .text-center
+                                            button.btn.btn-default(type='submit') Submit
 
 
 
