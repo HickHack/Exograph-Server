@@ -55,7 +55,7 @@
             .enter().append("svg:marker")    // This section adds in the arrows
             .attr("id", String)
             .attr("viewBox", "0 -5 10 10")
-            .attr("refX", 31)
+            .attr("refX", 29)
             .attr("refY", 0)
             .attr("markerWidth", 6)
             .attr("markerHeight", 6)
