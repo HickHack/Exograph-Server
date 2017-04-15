@@ -12,7 +12,7 @@ var extractor = new Extractor();
 var GraphController = module.exports = function GraphController() {
 };
 
-GraphController.prototype.handleImport = function (req, res) {
+GraphController.prototype.getImportView = function (req, res) {
     res.render('graph/import', {
         title: process.conf.app.NAME,
         pageName: 'Import',
@@ -20,7 +20,7 @@ GraphController.prototype.handleImport = function (req, res) {
     });
 };
 
-GraphController.prototype.launchLinkedinImport = function (req, res) {
+GraphController.prototype.postLaunchLinkedinImport = function (req, res) {
     extractor.launchLinkedin({
         graph_name: req.body.importName,
         username: req.body.linkedinEmail,
@@ -38,7 +38,7 @@ GraphController.prototype.launchLinkedinImport = function (req, res) {
     });
 };
 
-GraphController.prototype.launchTwitterImport = function (req, res) {
+GraphController.prototype.postLaunchTwitterImport = function (req, res) {
     extractor.launchTwitter({
         graph_name: req.body.importName,
         screen_name: req.body.screenName,
@@ -55,7 +55,7 @@ GraphController.prototype.launchTwitterImport = function (req, res) {
     });
 };
 
-GraphController.prototype.handleViewPage = function (req, res) {
+GraphController.prototype.getViewPage = function (req, res) {
     res.render('graph/view', {
         title: process.conf.app.NAME,
         user: req.user,
@@ -63,7 +63,15 @@ GraphController.prototype.handleViewPage = function (req, res) {
     });
 };
 
-GraphController.prototype.handleGraphLoad = function (req, res) {
+GraphController.prototype.getAnalyticsView = function (req, res) {
+    res.render('graph/analytics', {
+        title: process.conf.app.NAME,
+        user: req.user,
+        pageName: 'Analytics',
+    });
+};
+
+GraphController.prototype.getGraphData = function (req, res) {
     var networkId = parseInt(req.params['id']);
 
     req.user.getNetwork(networkId)
@@ -95,7 +103,7 @@ GraphController.prototype.handleGraphLoad = function (req, res) {
         });
 };
 
-GraphController.prototype.handleTrashView = function (req, res) {
+GraphController.prototype.getTrashView = function (req, res) {
 
     req.user.getNetworks(function (err, networks) {
         res.render('graph/trash', {
@@ -107,7 +115,7 @@ GraphController.prototype.handleTrashView = function (req, res) {
     });
 };
 
-GraphController.prototype.handleTrashNetwork = function (req, res) {
+GraphController.prototype.postTrashNetwork = function (req, res) {
     var ids = req.body.ids;
 
     if (ids && ids.constructor === Array) {
@@ -151,7 +159,7 @@ GraphController.prototype.handleTrashNetwork = function (req, res) {
     }
 };
 
-GraphController.prototype.handleDeleteNetwork = function (req, res) {
+GraphController.prototype.postDeleteNetwork = function (req, res) {
     var ids = req.body.ids;
 
     if (ids && ids.constructor === Array) {
