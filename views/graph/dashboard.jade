@@ -116,6 +116,8 @@ body
                                                                 li
                                                                     a(href='/graph/view/#{network.id}') View
                                                                 li
+                                                                    a(href='/graph/analytics/#{network.id}') Analytics
+                                                                li
                                                                     a.trash-button(href='#') Send to Trash
                                                                         form.trash-form(action='/graph/trash', method='PATCH')
                                                                             input(type='hidden', value='#{network.id}')
