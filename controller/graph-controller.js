@@ -63,14 +63,6 @@ GraphController.prototype.getViewPage = function (req, res) {
     });
 };
 
-GraphController.prototype.getAnalyticsView = function (req, res) {
-    res.render('graph/analytics', {
-        title: process.conf.app.NAME,
-        user: req.user,
-        pageName: 'Analytics',
-    });
-};
-
 GraphController.prototype.getGraphData = function (req, res) {
     var networkId = parseInt(req.params['id']);
 

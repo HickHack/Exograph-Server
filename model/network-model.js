@@ -106,6 +106,13 @@ Network.prototype.getGraph = function () {
     });
 };
 
+Network.prototype.getDegreeDistribution = function (callback) {
+    graph.getDegree(this, function (err, result) {
+        if (err) return callback(err, null);
+        return callback(null, result);
+    });
+};
+
 Network.get = function (id, user, callback) {
     var query = [
         'MATCH (network:Network)',
@@ -256,11 +263,3 @@ Network.prototype.getContainingRootId = function(label, callback) {
         return callback(error);
     });
 };
-
-//
-// neo4j.createConstraint('Network', 'job_id', function (err) {
-//     if (err) {
-//         console.warn(err.message);
-//     }
-// });
-

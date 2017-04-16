@@ -38,6 +38,53 @@ Graph.get = function (network, callback) {
     }
 };
 
+Graph.getDegree = function (network, callback) {
+    if (network.isLinkedIn) {
+        getDegree(network, 'Connection', 'CONNECTED_TO', function (err, model) {
+            callback(err, model);
+        });
+    } else if (network.isTwitter) {
+        getDegree(network, 'Follower', 'IS_FOLLOWING', function (err, model) {
+            callback(err, model);
+        });
+    }
+};
+
+function getDegree(network, label, rel, callback) {
+    var query = [
+        'MATCH (head:' + label + ')',
+        'WHERE id(head) = {rootId}',
+        'CALL apoc.path.expandConfig(head, {config}) YIELD path',
+        'WITH LAST(NODES(path)) as a',
+        'MATCH (a)-[r]->(b)',
+        'WITH a as nodes, COUNT(DISTINCT r) as degree',
+        'RETURN [degree, COUNT(nodes)] as data'
+    ].join('\n');
+
+    network.getContainingRootId(label, function (err, result) {
+        if(err) return callback(err);
+
+        var params = {
+            rootId: result,
+            config: {relationshipFilter:rel, uniqueness:'NODE_GLOBAL', bfs: true}
+        };
+
+        neo4j.run({
+            query: query,
+            params: params
+        }, function (err, result) {
+            if (err) return callback(err);
+
+            var data = [["No. nodes", "Degree"]];
+            for (var i = 0; i < result.length; i++) {
+                data.push([result[i].data[0], result[i].data[1]]);
+            }
+
+            return callback(null, data);
+        });
+    })
+}
+
 function getGraph(network, label, rel, callback) {
     var query = [
         'MATCH (head:' + label + ')',
@@ -62,14 +109,14 @@ function getGraph(network, label, rel, callback) {
         }, function (err, result) {
             if (err) return callback(err);
 
-            parseCypherResult(result, function (d3Model) {
+            parseGraph(result, function (d3Model) {
                 return callback(null, d3Model);
             });
         });
     })
 }
 
-function parseCypherResult(results, callback) {
+function parseGraph(results, callback) {
     var nodes = [], links = [];
 
     results.forEach(function (row) {
@@ -97,6 +144,7 @@ function parseCypherResult(results, callback) {
         links: links
     });
 }
+
 
 function idIndex(a, id) {
     for (var i = 0; i < a.length; i++) {

@@ -14,13 +14,6 @@ router.get('/view/:id', auth.checkAuth, function(req, res, next) {
 });
 
 /**
- * Route for analytics page
- */
-router.get('/analytics/:id', auth.checkAuth, function(req, res, next) {
-    controller.getAnalyticsView(req, res);
-});
-
-/**
  * Route for getting a graph in JSON
  */
 router.get('/data/:id', auth.checkAuth, function(req, res, next) {
