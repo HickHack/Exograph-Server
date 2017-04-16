@@ -16,6 +16,7 @@ var user = require('./routes/user-route');
 var job = require('./routes/job-route');
 var connection = require('./routes/connection-route');
 var follower = require('./routes/follower-route');
+var analytics = require('./routes/analytics-route');
 
 var app = express();
 
@@ -49,6 +50,7 @@ app.use('/job', job);
 app.use('/user', user);
 app.use('/connection', connection);
 app.use('/follower', follower);
+app.use('/analytics', analytics);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
