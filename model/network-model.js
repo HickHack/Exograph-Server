@@ -113,6 +113,13 @@ Network.prototype.getDegreeDistribution = function (callback) {
     });
 };
 
+Network.prototype.getSummary = function (callback) {
+    graph.getSummary(this, function (err, result) {
+        if (err) return callback(err, null);
+        return callback(null, result);
+    });
+};
+
 Network.get = function (id, user, callback) {
     var query = [
         'MATCH (network:Network)',
@@ -256,7 +263,7 @@ Network.prototype.getContainingRootId = function(label, callback) {
             return callback(null, result[0]['root']._id);
         }
 
-        var msg = 'Connection not found where userId = ' + userId + ' and networkId = ' + networkId;
+        var msg = 'Not found where userId = ' + userId + ' and networkId = ' + networkId;
         var error = new errors.NodeNotFoundError(msg);
         console.log(error);
 

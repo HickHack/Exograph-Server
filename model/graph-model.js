@@ -50,15 +50,32 @@ Graph.getDegree = function (network, callback) {
     }
 };
 
-function getDegree(network, label, rel, callback) {
+Graph.getSummary = function (network, callback) {
+    if (network.isLinkedIn) {
+        getSummary(network, 'Connection', 'CONNECTED_TO', function (err, model) {
+            callback(err, model);
+        });
+    } else if (network.isTwitter) {
+        getSummary(network, 'Follower', 'IS_FOLLOWING', function (err, model) {
+            callback(err, model);
+        });
+    }
+};
+
+function getSummary(network, label, rel, callback) {
+    var selector = 'b';
+    if (network.isLinkedIn) {
+        selector = 'a'
+    }
+
     var query = [
         'MATCH (head:' + label + ')',
         'WHERE id(head) = {rootId}',
         'CALL apoc.path.expandConfig(head, {config}) YIELD path',
         'WITH LAST(NODES(path)) as a',
         'MATCH (a)-[r]->(b)',
-        'WITH a as nodes, COUNT(DISTINCT r) as degree',
-        'RETURN [degree, COUNT(nodes)] as data'
+        'WITH COUNT(DISTINCT '+ selector +') as total_nodes, COUNT(DISTINCT r) as total_edges',
+        'RETURN total_nodes, total_edges'
     ].join('\n');
 
     network.getContainingRootId(label, function (err, result) {
@@ -75,9 +92,49 @@ function getDegree(network, label, rel, callback) {
         }, function (err, result) {
             if (err) return callback(err);
 
-            var data = [["No. nodes", "Degree"]];
+            if (!result.length) {
+                var error = new Error("No results found");
+                return callback(error, null);
+            }
+
+            return callback(null, result[0]);
+        });
+    })
+}
+
+function getDegree(network, label, rel, callback) {
+    var selector = 'b';
+    if (network.isLinkedIn) {
+        selector = 'a'
+    }
+
+    var query = [
+        'MATCH (head:' + label + ')',
+        'WHERE id(head) = {rootId}',
+        'CALL apoc.path.expandConfig(head, {config}) YIELD path',
+        'WITH LAST(NODES(path)) as a',
+        'MATCH (a)-[r]->(b)',
+        'WITH '+ selector +' as nodes, COUNT(DISTINCT r) as degree',
+        'RETURN degree, COUNT(nodes) as nodes ORDER BY degree ASC'
+    ].join('\n');
+
+    network.getContainingRootId(label, function (err, result) {
+        if(err) return callback(err);
+
+        var params = {
+            rootId: result,
+            config: {relationshipFilter:rel, uniqueness:'NODE_GLOBAL', bfs: true}
+        };
+
+        neo4j.run({
+            query: query,
+            params: params
+        }, function (err, result) {
+            if (err) return callback(err);
+
+            var data = [["Degree", "No. Nodes"]];
             for (var i = 0; i < result.length; i++) {
-                data.push([result[i].data[0], result[i].data[1]]);
+                data.push([result[i].degree, result[i].nodes]);
             }
 
             return callback(null, data);
