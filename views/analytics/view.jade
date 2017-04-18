@@ -2,7 +2,8 @@ doctype html
 
 head
     include ../layout/head
-    script(type='text/javascript', src='/js/multi-action-grid.js')
+    script(type='text/javascript', src='https://www.gstatic.com/charts/loader.js')
+    script(type='text/javascript', src='/js/analytics/core-charts.js')
     link(href='/css/trash.css', rel='stylesheet', type='text/css')
 
     title #{title}
@@ -17,18 +18,41 @@ body
                 include ../layout/pageHeader
 
                 .row
-                    .col-lg-12
+                    .col-lg-4
                         .panel.panel-default
                             .panel-heading
-                                i.fa.fa-bar-chart
-                                | Degree Distribution
-                            .degree-dist(data-endpoint=degreeEndpoint)
+                                | Overview
+                            table.table.table-striped.table-bordered.table-responsive.text-center
+                                tbody
+                                    tr
+                                        td
+                                            i Name
+                                        td #{summary.name}
+                                    tr
+                                        td
+                                            i Total Nodes
+                                        td #{summary.nodes}
+                                    tr
+                                        td
+                                            i Total Edges
+                                        td #{summary.edges}
+                                    tr
+                                        td
+                                            i Mean Closeness
+                                        td 0.223
+                                    tr
+                                        td
+                                            i Mean Degree
+                                        td #{summary.mean_degree}
+                                    tr
+                                        td
+                                            i Mean Betweenness
+                                        td 0.223
 
-                            br
-                            br
-                            br
-                            br
-                            br
-                            br
-
+                    .col-lg-8
+                        .panel.panel-default
+                            .panel-heading
+                                i.fa.fa-line-chart
+                                | Node Degree Distribution
+                            .degree-viz#degree-dist(data-endpoint=degreeEndpoint)
 
