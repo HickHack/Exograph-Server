@@ -30,16 +30,16 @@ body
                                                 label Firstname
                                                 input.form-control(placeholder='Firstname', name='firstname', type='text', autofocus='', value=user.firstname, required)
 
+                                            .form-group
                                                 label Surname
                                                 input.form-control(placeholder='Surname', name='surname', type='text', value=user.surname, required)
 
                                             .form-group
                                                 label Company
                                                 input.form-control(placeholder='Company', name='company', type='text', value=user.company, required)
-
+                                            .form-group
                                                 label Country
                                                 input.form-control(placeholder='Country', name='country', type='text', value=user.country, required)
-
 
                                             .form-group
                                                 label Email
@@ -48,18 +48,38 @@ body
                                         // Change this to a button or input when using this as a form
                                         button.btn.btn-md.btn-primary.btn-block(type='submit') Update
                         .col-md-6
-                            .panel.panel-default
-                                .panel-heading
-                                    h4.panel-title Account Settings
-                                .panel-body
-                                    form(action='/user/update' role='form', method='POST')
-                                        fieldset
-                                            .form-group.checkbox-inline
-                                                input.checkbox(type="checkbox")
-                                                label Receive email notification of import completion
+                            .row-fluid
+                                .col-lg-12
+                                    .panel.panel-default
+                                        .panel-heading
+                                            h4.panel-title Account Settings
+                                        .panel-body
+                                            form(action='/user/update' role='form', method='POST')
+                                                fieldset
+                                                    .form-group.checkbox-inline
+                                                        input.checkbox(type="checkbox")
+                                                        label Receive email notification of import completion
 
+                                                // Change this to a button or input when using this as a form
+                                                button.btn.btn-md.btn-primary.btn-block(type='submit') Change Settings
 
+                                .col-lg-12
+                                    .panel.panel-default
+                                        .panel-heading
+                                            h4.panel-title Password Reset
+                                        .panel-body
+                                            form.user-password-reset(action='/user/update/password' role='form', method='POST')
+                                                fieldset
+                                                    .form-group
+                                                        label Old Password
+                                                        input.form-control(name='old-pwd', type='password', autofocus='', required)
 
+                                                    .form-group
+                                                        label New Password
+                                                        input.form-control(name='new-pwd', type='password', required)
 
-                                        // Change this to a button or input when using this as a form
-                                        button.btn.btn-md.btn-primary.btn-block(type='submit') Change Settings
+                                                    .form-group
+                                                        label New Password Confirm
+                                                        input.form-control(name='new-pwd-confirm', type='password', required)
+                                                // Change this to a button or input when using this as a form
+                                                button.btn.btn-md.btn-primary.btn-block(type='submit') Reset
