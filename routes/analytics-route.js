@@ -14,8 +14,11 @@ router.get('/:id(\\d+)', auth.checkAuth, function(req, res, next) {
 });
 
 router.get('/data/degree/:id(\\d+)', auth.checkAuth, function(req, res, next) {
-    controller.getDegreeDistribution(req, res);
+    controller.getDegreeData(req, res);
 });
 
+router.get('/data/location/:id(\\d+)', auth.checkAuth, function(req, res, next) {
+    controller.getLocationData(req, res);
+});
 
 module.exports = router;

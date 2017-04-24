@@ -16,6 +16,7 @@
 
 var db = require('./../helper/db');
 var connection =  require('./connection-model');
+var utils = require('../util/conversion-util');
 
 var neo4j = new db();
 
@@ -45,6 +46,18 @@ Graph.getDegree = function (network, callback) {
         });
     } else if (network.isTwitter) {
         getDegree(network, 'Follower', 'IS_FOLLOWING', function (err, model) {
+            callback(err, model);
+        });
+    }
+};
+
+Graph.getLocations = function (network, callback) {
+    if (network.isLinkedIn) {
+        getLocation(network, 'Connection', 'CONNECTED_TO', function (err, model) {
+            callback(err, model);
+        });
+    } else if (network.isTwitter) {
+        getLocation(network, 'Follower', 'IS_FOLLOWING', function (err, model) {
             callback(err, model);
         });
     }
@@ -98,6 +111,56 @@ function getSummary(network, label, rel, callback) {
             }
 
             return callback(null, result[0]);
+        });
+    })
+}
+
+function getLocation(network, label, rel, callback) {
+
+    var query = [
+        'MATCH (head:' + label + ')',
+        'WHERE id(head) = {rootId}',
+        'CALL apoc.path.expandConfig(head, {config}) YIELD path',
+        'WITH LAST(NODES(path)) as a',
+        'MATCH (a)-[r]->(b)',
+        'WITH b.location as location',
+        'RETURN location, COUNT(location) as count ORDER BY count DESC'
+    ].join('\n');
+
+    network.getContainingRootId(label, function (err, result) {
+        if(err) return callback(err);
+
+        var params = {
+            rootId: result,
+            config: {relationshipFilter:rel, uniqueness:'NODE_GLOBAL', bfs: true}
+        };
+
+        neo4j.run({
+            query: query,
+            params: params
+        }, function (err, result) {
+            if (err) return callback(err);
+
+            var data = [["Location", "Frequency"]];
+
+            var count = 0;
+            var limit = 6;
+            while (count < limit) {
+                var location = result[count + 1].location;
+
+                if(network.isTwitter) {
+                    location = utils.base64Decode(location);
+                }
+
+                if(location != '' && location != ' ') {
+                    data.push([location, result[count + 1].count]);
+                } else {
+                    limit++;
+                }
+                count++;
+            }
+
+            return callback(null, data);
         });
     })
 }
