@@ -96,8 +96,10 @@
 
         if (isVisible) {
             $('.graph').show();
+            $('.nav-side-panel-container').show();
         } else {
             $('.graph').hide();
+            $('.nav-side-panel-container').hide();
         }
     }
 

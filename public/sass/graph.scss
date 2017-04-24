@@ -8,6 +8,32 @@
             padding: 0;
         }
 
+        .nav-side-panel-container {
+            display: none;
+
+            .sidebar {
+                padding-bottom: 20px;
+                display: none;
+                -webkit-box-shadow: 2px 17px 79px -6px rgba(0,0,0,0.75);
+                -moz-box-shadow: 2px 17px 79px -6px rgba(0,0,0,0.75);
+                box-shadow: 2px 17px 79px -6px rgba(0,0,0,0.75);
+            }
+
+            .expand-collapse-nav {
+                margin-top: 100px;
+                position: absolute;
+
+                button {
+                    z-index: 100;
+                    position: absolute;
+
+                    &:focus {
+                        outline: none;
+                    }
+                }
+            }
+        }
+
         .graph {
             overflow: hidden;
             height: 600px;
