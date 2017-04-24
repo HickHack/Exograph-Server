@@ -7,7 +7,7 @@ head
     title #{title}
 body
     #wrapper
-        include ../layout/navigation
+        include ../layout/navigation-complex
 
         #page-wrapper
             .container-fluid
@@ -22,7 +22,8 @@ body
 
                             .panel.panel-default
                                 .panel-heading
-                                    h4.panel-title Account Details
+                                    i.fa.fa-pencil-square-o
+                                    | Update Details
                                 .panel-body
                                     form.user-details-form(action='/user/update' role='form', method='POST')
                                         fieldset
@@ -52,7 +53,8 @@ body
                                 .col-lg-12
                                     .panel.panel-default
                                         .panel-heading
-                                            h4.panel-title Account Settings
+                                            i.fa.fa-cogs
+                                            | Change Preferences
                                         .panel-body
                                             form(action='/user/update' role='form', method='POST')
                                                 fieldset
@@ -66,7 +68,8 @@ body
                                 .col-lg-12
                                     .panel.panel-default
                                         .panel-heading
-                                            h4.panel-title Password Reset
+                                            i.fa.fa-key
+                                            | Password Reset
                                         .panel-body
                                             form.user-password-reset(action='/user/update/password' role='form', method='POST')
                                                 fieldset

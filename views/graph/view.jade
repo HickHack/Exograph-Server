@@ -6,7 +6,8 @@ head
     link(href='/css/graph.css', rel='stylesheet', type='text/css')
     script(src='https://d3js.org/d3.v3.min.js')
     script(src='/js/graph-render.js')
-    script(src='/js/graph-side-panel.js')
+    script(src='/js/graph-info-panel.js')
+    script(src='/js/graph-nav-sidebar.js')
 
     title #{title}
 
@@ -31,6 +32,13 @@ body
 
 
                 .col-lg-12
+                    .nav-side-panel-container
+                        .nav-side-panel
+                                include ../layout/navigation-sidepanel
+                        .expand-collapse-nav
+                            button.btn.btn-primary
+                                i.fa.fa-caret-right.fa-2x
+
                     .graph(endpoint='#{graphEndpoint}')
 
 
