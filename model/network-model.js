@@ -113,6 +113,13 @@ Network.prototype.getDegreeDistribution = function (callback) {
     });
 };
 
+Network.prototype.getLocations = function (callback) {
+    graph.getLocations(this, function (err, result) {
+        if (err) return callback(err, null);
+        return callback(null, result);
+    });
+};
+
 Network.prototype.getSummary = function (callback) {
     graph.getSummary(this, function (err, result) {
         if (err) return callback(err, null);

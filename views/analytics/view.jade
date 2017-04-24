@@ -18,6 +18,12 @@ body
                 include ../layout/pageHeader
 
                 .row
+                    .col-lg-8
+                        .panel.panel-default
+                            .panel-heading
+                                i.fa.fa-line-chart
+                                | Node Degree Distribution
+                            .degree-viz#degree-dist(data-endpoint=degreeEndpoint)
                     .col-lg-4
                         .panel.panel-default
                             .panel-heading
@@ -38,21 +44,12 @@ body
                                         td #{summary.edges}
                                     tr
                                         td
-                                            i Mean Closeness
-                                        td 0.223
-                                    tr
-                                        td
                                             i Mean Degree
                                         td #{summary.mean_degree}
-                                    tr
-                                        td
-                                            i Mean Betweenness
-                                        td 0.223
-
-                    .col-lg-8
+                .row
+                    .col-lg-6
                         .panel.panel-default
                             .panel-heading
-                                i.fa.fa-line-chart
-                                | Node Degree Distribution
-                            .degree-viz#degree-dist(data-endpoint=degreeEndpoint)
-
+                                i.fa.fa-globe
+                                | Top 6 Locations
+                            .location-viz#location-pie(data-endpoint=locationEndpoint)
