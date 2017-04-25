@@ -210,6 +210,7 @@
         setZoomListener();
         setTickListener();
         setResizeListener();
+        setDownloadImageListener();
     }
 
     function setDoubleClickZoomListener() {
@@ -338,6 +339,47 @@
     
     function setResizeListener() {
         d3.select(window).on("resize", resize).on("keydown", bindKeyCode);
+    }
+
+    function setDownloadImageListener() {
+        d3.select("#downloadImage").on("submit", function () {
+            var form = $("#downloadImage");
+            var height = parseInt(form.find("#width").val());
+            var width = parseInt(form.find("#height").val());
+
+            d3.event.preventDefault();
+            generateImage(height, width);
+            $('#exportModal').modal('hide');
+        });
+    }
+
+    function generateImage(height, width) {
+        var html = null;
+
+        try {
+            !!new Blob();
+        } catch (e) {
+            alert("Conversion to SVG not supported");
+        }
+
+        if (height == 0 && width == 0) {
+            html = d3.select("svg")
+                .attr("title", "test2")
+                .attr("version", 1.1)
+                .attr("xmlns", "http://www.w3.org/2000/svg")
+                .node().parentNode.innerHTML;
+        } else {
+            html = d3.select("svg")
+                .attr("version", 1.1)
+                .attr("height", height)
+                .attr("width", width)
+                .attr("xmlns", "http://www.w3.org/2000/svg")
+                .node().parentNode.innerHTML;
+        }
+
+        var blob = new Blob([html], {type: "image/svg+xml"});
+        saveAs(blob, "graph.svg");
+
     }
 
     function resize() {

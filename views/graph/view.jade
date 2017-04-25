@@ -7,7 +7,7 @@ head
     script(src='https://d3js.org/d3.v3.min.js')
     script(src='/js/graph-render.js')
     script(src='/js/graph-info-panel.js')
-    script(src='/js/graph-nav-sidebar.js')
+    script(src='/js/graph-extra-options.js')
 
     title #{title}
 
@@ -18,8 +18,36 @@ body
 
     #wrapper
         .container-fluid.graph-container
+            #exportModal.modal.fade(role='dialog')
+                .modal-dialog
+                    // Modal content
+                    .modal-content
+                        .modal-header
+                            button.close(type='button', data-dismiss='modal') ×
+                            h4.modal-title Export Graph to Image
+                        .modal-body
+                            .container-fluid
+                                .row
+                                    .col-lg-8.col-lg-offset-2
+                                        form.form-horizontal#downloadImage(role='form')
+                                            .form-group
+                                                p.form-control-static
+                                                    | To download graph based on what is currently displayed,
+                                                    | zoom to the desired position and set the height and width
+                                                    | values to 0.
+                                            .form-group
+                                                label.control-label(for='width') Width (px)
+                                                input#width.form-control(type='number', name='width', required)
+                                            .form-group
+                                                label.control-label(for='height') Height (px)
+                                                input#height.form-control(type='number', name='height', required)
+                                            .text-center
+                                                button.btn.btn-primary(type='submit') Download
+
+
             .row
                 .graph-info-container
+
                     .container-fluid
                         .row
                             .col-lg-12.top-container
@@ -29,8 +57,6 @@ body
                         .row
                             .col-lg-12.info-items
 
-
-
                 .col-lg-12
                     .nav-side-panel-container
                         .nav-side-panel
@@ -38,6 +64,9 @@ body
                         .expand-collapse-nav
                             button.btn.btn-primary
                                 i.fa.fa-caret-right.fa-2x
+                        .export-to-image
+                            button.btn.btn-primary
+                                i.fa.fa-picture-o.fa-1x
 
                     .graph(endpoint='#{graphEndpoint}')
 

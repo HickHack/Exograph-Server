@@ -1,6 +1,8 @@
 @import "color";
 @import "loading";
 
+$actionButtonOpacity: 0.5;
+
 #wrapper {
 
     .graph-container {
@@ -22,14 +24,42 @@
             .expand-collapse-nav {
                 margin-top: 100px;
                 position: absolute;
+                opacity: $actionButtonOpacity;
+
+                &:hover {
+                    opacity: 1;
+                }
 
                 button {
                     z-index: 100;
                     position: absolute;
                     display: inherit;
+                    border-top-left-radius: 0;
+                    border-bottom-left-radius: 0;
 
                     &:focus {
                         outline: none;
+                        opacity: 1;
+                    }
+                }
+            }
+
+            .export-to-image {
+                margin:0 0 0 50% !important;
+                position: absolute;
+                opacity: $actionButtonOpacity;
+
+                &:hover {
+                    opacity: 1;
+                }
+
+                button {
+                    border-top-left-radius: 0;
+                    border-top-right-radius: 0;
+
+                    &:focus {
+                        outline: none;
+                        opacity: 1;
                     }
                 }
             }
@@ -93,11 +123,14 @@
                 padding-top: 20px;
 
                 .info-img-container {
-                    min-height: 200px;
-                    min-width: 200px;
-                    max-height: 200px;
-                    max-width: 200px;
                     margin: auto;
+
+                    img {
+                        min-height: 200px;
+                        min-width: 200px;
+                        max-height: 200px;
+                        max-width: 200px;
+                    }
                 }
             }
 
