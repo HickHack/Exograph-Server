@@ -123,7 +123,8 @@ function getLocation(network, label, rel, callback) {
         'CALL apoc.path.expandConfig(head, {config}) YIELD path',
         'WITH LAST(NODES(path)) as a',
         'MATCH (a)-[r]->(b)',
-        'WITH b.location as location',
+        'WITH DISTINCT b as nodes',
+        'WITH nodes.location as location',
         'RETURN location, COUNT(location) as count ORDER BY count DESC'
     ].join('\n');
 
@@ -146,14 +147,14 @@ function getLocation(network, label, rel, callback) {
             var count = 0;
             var limit = 6;
             while (count < limit) {
-                var location = result[count + 1].location;
+                var location = result[count].location;
 
                 if(network.isTwitter) {
                     location = utils.base64Decode(location);
                 }
 
                 if(location != '' && location != ' ') {
-                    data.push([location, result[count + 1].count]);
+                    data.push([location, result[count].count]);
                 } else {
                     limit++;
                 }

@@ -26,11 +26,18 @@
                 button {
                     z-index: 100;
                     position: absolute;
+                    display: inherit;
 
                     &:focus {
                         outline: none;
                     }
                 }
+            }
+        }
+
+        @media screen and (max-width: 756px) {
+            .expand-collapse-nav {
+                display: none;
             }
         }
 
