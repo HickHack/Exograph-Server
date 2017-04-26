@@ -59,7 +59,7 @@ describe('Auth middleware tests', function () {
             extractor.__set__('getRequest', stubbedGetRequest);
 
             obtainToken(function (err) {
-                console.log('');
+                console.log(err);
             });
 
             done();
