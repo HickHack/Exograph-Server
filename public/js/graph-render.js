@@ -156,8 +156,17 @@
     }
 
     function unleashTheForce(nodes, links) {
+        var min = 0;
+        var max = 1000;
+
+        for(var i = 0; i < nodes.length; i++) {
+            nodes[i].x = Math.floor(Math.random() * (max - min + 1)) + min;
+            nodes[i].y = Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
         force.nodes(nodes)
             .links(links)
+            .alpha(0)
             .start();
     }
 
