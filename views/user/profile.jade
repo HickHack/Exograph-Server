@@ -3,6 +3,7 @@ doctype html
 head
     include ../layout/head
     link(href='/css/profile.css', rel='stylesheet', type='text/css')
+    script(src="/js/image-upload.js" type="text/javascript")
 
     title #{title}
 body
@@ -18,6 +19,34 @@ body
                         .row
                             .col-md-3.image-container
                                 img.img-responsive.img-thumbnail.img-circle(src='/img/person-placeholder.jpg')
+                                .upload
+                                    .change-image.text-center
+                                        button(onclick="$('#uploadModal').modal('show');").btn.btn-default
+                                            | Change Image
+                                    #uploadModal.modal.fade(role='dialog')
+                                        .modal-dialog
+                                            // Modal content
+                                            .modal-content
+                                                .modal-header
+                                                    button.close(type='button', data-dismiss='modal') ×
+                                                    h4.modal-title Upload Profile Image
+                                                .modal-body
+                                                    .container-fluid.text-center
+                                                        .row
+                                                            .col-lg-10.col-lg-offset-1
+                                                                center
+                                                                    form.form-horizontal#uploadImage(role='form', action='/user/profile/upload', method="POST", enctype="application/x-www-form-urlencoded")
+                                                                        .form-group
+                                                                            .image-preview
+                                                                                img.img-responsive#previewing(src="http://seowagon.com/theme/simpleX/img/no-image.jpg")
+
+                                                                        .form-group
+                                                                            label Select an Image
+                                                                            input.btn.btn-default(type="file", name="file", id="file", required)
+                                                                        .form-group
+                                                                            #message
+                                                                        .form-group
+                                                                            input.btn.btn-primary(type='submit', value='Upload')
 
                             .col-md-8.col-md-offset-1.details-container
                                 .row
