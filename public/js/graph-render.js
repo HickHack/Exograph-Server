@@ -17,7 +17,7 @@
     var maxStroke = 4.5;
     var maxBaseNodeSize = 36;
     var minZoom = 0.1;
-    var maxZoom = 7;
+    var maxZoom = 10;
     var minScore = 0;
     var maxScore = 1;
     var highlightTrans = 0.1;
