@@ -97,6 +97,19 @@ Object.defineProperties(User.prototype, {
         get: function () {
             return this._node.properties['password'];
         }
+    },
+    'hasProfileImage': {
+        set: function (hasProfileImage) {
+            this._node.properties['hasProfileImage'] = hasProfileImage;
+        },
+        get: function () {
+            return this._node.properties['hasProfileImage'];
+        }
+    },
+    'profileImagePath': {
+        get: function () {
+            return '/img/profile/' + this._node._id + '.png';
+        }
     }
 });
 
@@ -210,6 +223,27 @@ User.prototype.patch = function (props, callback) {
         self._node = results[0]['user'];
 
         callback(null);
+    });
+};
+
+User.prototype.patch = function (callback) {
+    var query = [
+        'MATCH (user:User {email: {email}})',
+        'SET user += {props}',
+        'RETURN user',
+    ].join('\n');
+
+    var params = {
+        email: this.email,
+        props: this._node.properties
+    };
+
+    neo4j.run({
+        query: query,
+        params: params
+    }, function (err, results) {
+        if(err) return callback(err);
+        return callback(null);
     });
 };
 
@@ -399,6 +433,6 @@ User.isPasswordValid = function (password, pass, callback) {
 //Should be done as a schema migration script
 // neo4j.createConstraint('User', 'email', function (err) {
 //     if (err) {
-//         console.warn(err.message);
+//         consol
+// });e.warn(err.message);
 //     }
-// });

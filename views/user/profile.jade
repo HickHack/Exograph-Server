@@ -18,7 +18,10 @@ body
                     .col-md-12
                         .row
                             .col-md-3.image-container
-                                img.img-responsive.img-thumbnail.img-circle(src='/img/person-placeholder.jpg')
+                                - var path = '/img/person-placeholder.jpg'
+                                if (user.hasProfileImage)
+                                    - path = user.profileImagePath
+                                img.img-responsive.img-thumbnail.img-circle(src=path)
                                 .upload
                                     .change-image.text-center
                                         button(onclick="$('#uploadModal').modal('show');").btn.btn-default
@@ -35,18 +38,15 @@ body
                                                         .row
                                                             .col-lg-10.col-lg-offset-1
                                                                 center
-                                                                    form.form-horizontal#uploadImage(role='form', action='/user/profile/upload', method="POST", enctype="application/x-www-form-urlencoded")
+                                                                    .alert.alert-danger.text-center#message
+                                                                    form.form-horizontal#uploadImage(action='/user/profile/upload', method="POST", enctype="multipart/form-data")
                                                                         .form-group
                                                                             .image-preview
                                                                                 img.img-responsive#previewing(src="http://seowagon.com/theme/simpleX/img/no-image.jpg")
-
-                                                                        .form-group
                                                                             label Select an Image
-                                                                            input.btn.btn-default(type="file", name="file", id="file", required)
+                                                                            input.btn.btn-default(type="file", name="image", id="file", required)
                                                                         .form-group
-                                                                            #message
-                                                                        .form-group
-                                                                            input.btn.btn-primary(type='submit', value='Upload')
+                                                                            button.btn.btn-primary(type='submit') Upload
 
                             .col-md-8.col-md-offset-1.details-container
                                 .row

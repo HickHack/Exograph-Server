@@ -4,8 +4,9 @@
 
 var fs = require('fs');
 var util = require('util');
+var path = require('path');
 
-var config = {}
+var config = {};
 
 config.global = {
     NEO4J_URL: 'http://neo4j:neo4j@localhost:7474',
@@ -21,6 +22,9 @@ config.global = {
         },
         url: '',
         body: ''
+    },
+    PATHS: {
+        PROFILE_IMG_DIR: path.resolve(__dirname) + '/public/img/profile/'
     }
 };
 
