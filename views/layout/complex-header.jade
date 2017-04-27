@@ -35,10 +35,12 @@ nav.navbar.navbar-default.navbar-static-top(role='navigation', style='margin-bot
                 i.fa.fa-bell.fa-fw
                 i.fa.fa-caret-down
             ul.dropdown-menu.dropdown-alerts
-        li.dropdown
+        li.dropdown.profile-img
             a.dropdown-toggle(data-toggle='dropdown', href='#')
-                i.fa.fa-user.fa-fw
-                i.fa.fa-caret-down
+                - var path = '/img/person-placeholder.jpg'
+                if (user.hasProfileImage)
+                    - path = user.profileImagePath
+                img(src=path)
             ul.dropdown-menu.dropdown-user
                 li
                     a(href='/user/profile')
@@ -55,5 +57,3 @@ nav.navbar.navbar-default.navbar-static-top(role='navigation', style='margin-bot
                         |  Logout
             // /.dropdown-user
         // /.dropdown
-        li.dropdown
-            p.text-center #{user.firstname}

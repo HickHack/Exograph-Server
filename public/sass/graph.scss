@@ -3,6 +3,10 @@
 
 $actionButtonOpacity: 0.5;
 
+html, body {
+    overflow-y: hidden;
+}
+
 #wrapper {
 
     .graph-container {

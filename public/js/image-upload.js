@@ -1,24 +1,29 @@
-(function () {
+$(document).ready(function () {
     var form = $("#uploadImage");
     var message = $("#message");
 
-    form.on('submit', (function (e) {
-        e.preventDefault();
+    form.submit(function (event) {
+        event.preventDefault();
         message.empty();
 
         $.ajax({
             url: form.attr('action'),
             type: form.attr('method'),
             data: new FormData(this),
+            dataType: 'json',
             contentType: false,
             cache: false,
             processData: false,
             success: function (data) {
-                loading.hide();
-                message.html(data);
+                if (data.message == 'success') {
+                    window.location.reload(true);
+                } else {
+                    message.text(data.message);
+                    message.show();
+                }
             }
         });
-    }));
+    });
 
     // Function to preview image after validation
     $(function () {
@@ -32,6 +37,7 @@
             if (type != match[0]) {
                 $('#previewing').attr('src', 'http://seowagon.com/theme/simpleX/img/no-image.jpg');
                 $("#message").text("Only png format accepted");
+                $("#message").show();
 
                 return false;
             } else {
@@ -46,6 +52,6 @@
         $("#file").css("color", "green");
         $('#image_preview').css("display", "block");
         $('#previewing').attr('src', e.target.result);
+        message.hide();
     }
-
-}).call(this);
+});

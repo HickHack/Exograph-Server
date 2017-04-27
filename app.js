@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var flash = require('connect-flash');
 var passport = require('passport')
 var session = require('express-session');
+var fileUpload = require('express-fileupload');
 process.conf = require('./config');
 
 //Routes
@@ -39,6 +40,7 @@ app.use(session({ secret: process.conf.global.SESSION_SECRET }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
+app.use(fileUpload());
 
 require('./routes/login-route')(app, passport);
 require('./routes/registration-route')(app, passport);

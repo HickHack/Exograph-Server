@@ -13,6 +13,10 @@ router.get('/profile', auth.checkAuth, function (req, res, next) {
     controller.getProfile(req, res, next);
 });
 
+router.post('/profile/upload', auth.checkAuth, function (req, res, next) {
+    controller.uploadImage(req, res, next);
+});
+
 router.post('/update', auth.checkAuth, function (req, res, next) {
     controller.updateAccount(req, res, next);
 });

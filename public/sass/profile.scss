@@ -3,17 +3,22 @@
 .profile {
     margin-top: 40px;
 
-    .upload {
+    .image-container {
+        .upload {
 
-        .change-image {
-            margin-top: 10px;
+            .change-image {
+                margin-top: 10px;
+            }
+
+            .image-preview {
+                max-width: 250px;
+                max-height: 250px;
+            }
         }
+    }
 
-        .image-preview {
-            max-width: 250px;
-            max-height: 250px;
-        }
-
+    #message {
+        display: none;
     }
 
     .details-container {
