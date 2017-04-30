@@ -44,7 +44,7 @@ module.exports = function (passport) {
 
                 if (!User.isPasswordValid(password, user.password)) {
                     //Store email to reset form
-                    req.session.emailField = email
+                    req.session.emailField = email;
 
                     return done(null, false, req.flash(
                         'loginMessage', 'Incorrect Password'

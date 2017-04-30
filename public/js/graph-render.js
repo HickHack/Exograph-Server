@@ -17,7 +17,7 @@
     var maxStroke = 4.5;
     var maxBaseNodeSize = 36;
     var minZoom = 0.1;
-    var maxZoom = 10;
+    var maxZoom = 100;
     var minScore = 0;
     var maxScore = 1;
     var highlightTrans = 0.1;
@@ -236,6 +236,7 @@
         nodes.on("mouseover", function (d) {
             hoverFocusNode = d;
             addHighlight(d);
+            triggerSidePanel();
         });
     }
 
@@ -465,9 +466,6 @@
         switch (d3.event.keyCode) {
             case 32:
                 force.stop();
-                break;
-            case 13:
-                triggerSidePanel();
                 break;
         }
     }

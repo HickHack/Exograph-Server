@@ -167,10 +167,6 @@ function getLocation(network, label, rel, callback) {
 }
 
 function getDegree(network, label, rel, callback) {
-    var selector = 'b';
-    if (network.isLinkedIn) {
-        selector = 'a'
-    }
 
     var query = [
         'MATCH (head:' + label + ')',
@@ -178,9 +174,9 @@ function getDegree(network, label, rel, callback) {
         'CALL apoc.path.expandConfig(head, {config}) YIELD path',
         'WITH LAST(NODES(path)) as a',
         'MATCH (a)-[r]->(b)',
-        'WITH '+ selector +' as nodes, COUNT(DISTINCT r) as degree',
+        'WITH a as nodes, COUNT(DISTINCT r) as degree',
         'RETURN degree, COUNT(nodes) as nodes ORDER BY degree ASC'
-    ].join('\n');
+    ].join(' ');
 
     network.getContainingRootId(label, function (err, result) {
         if(err) return callback(err);

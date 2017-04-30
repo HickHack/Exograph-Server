@@ -61,6 +61,10 @@ User.UPDATE_VALIDATION_INFO = {
     'country': User.CREATE_VALIDATION_INFO.country
 };
 
+User.UPDATE_PASSWORD_VALIDATION_INFO = {
+    'newPassword': User.CREATE_VALIDATION_INFO.password
+};
+
 // Public instance properties
 Object.defineProperties(User.prototype, {
     'id': {
@@ -94,6 +98,9 @@ Object.defineProperties(User.prototype, {
         }
     },
     'password': {
+        set: function (password) {
+            this._node.properties['password'] = hashUtil.generateBcryptKey(password);
+        },
         get: function () {
             return this._node.properties['password'];
         }
@@ -183,6 +190,29 @@ function isConstraintViolation(err) {
 }
 
 // Public instance methods:
+
+User.prototype.updatePassword = function(passwords, callback) {
+    if (!User.isPasswordValid(passwords.oldPassword)){
+        return callback(new Error('Old password does not match.'));
+    } else if (passwords.newPassword != passwords.newPasswordConfirm) {
+        return callback(new Error('Password confirmation does not match.'));
+    }
+
+    validate({
+        newPassword: passwords.newPassword
+    }, User.UPDATE_PASSWORD_VALIDATION_INFO, function (err, props) {
+        if (err) {
+            callback(err);
+        }
+
+        this.password = passwords.newPassword;
+        this.patch(function (err) {
+            if (err) return callback(new Error('Failed to update password'));
+            callback(null);
+        })
+
+    });
+};
 
 // Atomically updates this user, both locally and remotely in the db, with the
 // given property updates.

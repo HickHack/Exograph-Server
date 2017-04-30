@@ -21,4 +21,8 @@ router.post('/update', auth.checkAuth, function (req, res, next) {
     controller.updateAccount(req, res, next);
 });
 
+router.post('/update/password', auth.checkAuth, function (req, res, next) {
+    controller.updatePassword(req, res, next);
+});
+
 module.exports = router;
