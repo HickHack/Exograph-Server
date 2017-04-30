@@ -3,6 +3,8 @@ doctype html
 head
     include ../layout/head
     script(src='/js/user-details-form.js', type='text/javascript')
+    script(src='/js/update-password.js', type='text/javascript')
+    link(href='/css/account.css', rel='stylesheet', type='text/css')
 
     title #{title}
 body
@@ -15,9 +17,7 @@ body
 
                 .row
                     .col-md-12
-                        .message-panel
-                            .alert.text-center
-                                ul#messages
+                        .alert.text-center#message
                         .col-md-6
 
                             .panel.panel-default
@@ -71,18 +71,18 @@ body
                                             i.fa.fa-key
                                             | Password Reset
                                         .panel-body
-                                            form.user-password-reset(action='/user/update/password' role='form', method='POST')
+                                            form.user-password-reset#passwordReset(action='/user/update/password' role='form', method='POST')
                                                 fieldset
                                                     .form-group
                                                         label Old Password
-                                                        input.form-control(name='old-pwd', type='password', autofocus='', required)
+                                                        input.form-control(name='old-password', type='password', autofocus='', required)
 
                                                     .form-group
                                                         label New Password
-                                                        input.form-control(name='new-pwd', type='password', required)
+                                                        input.form-control(name='new-password', type='password', required)
 
                                                     .form-group
                                                         label New Password Confirm
-                                                        input.form-control(name='new-pwd-confirm', type='password', required)
+                                                        input.form-control(name='new-password-confirm', type='password', required)
                                                 // Change this to a button or input when using this as a form
                                                 button.btn.btn-md.btn-primary.btn-block(type='submit') Reset

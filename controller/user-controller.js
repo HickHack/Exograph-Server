@@ -63,3 +63,32 @@ UserController.prototype.updateAccount = function (req, res, next) {
     }
 };
 
+UserController.prototype.updatePassword = function (req, res, next) {
+    var oldPassword = req.body['old-password'];
+    var newPassword = req.body['new-password'];
+    var newPasswordConfirm = req.body['new-password-confirm'];
+    var response = {
+        message: '',
+        type: 'danger'
+    };
+
+    if (oldPassword && newPassword && newPasswordConfirm) {
+        req.user.updatePassword({
+            oldPassword: oldPassword,
+            newPassword: newPassword,
+            newPasswordConfirm: newPasswordConfirm
+        }, function (err) {
+            if (err) {
+                response.message = err;
+                res.json(response).send();
+            } else {
+                response.message = 'Successfully updated password.';
+                response.type = 'success';
+                res.json(response);
+            }
+        });
+    } else {
+        response.message = 'Invalid parameters supplied.';
+        res.json(response);
+    }
+};

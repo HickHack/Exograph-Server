@@ -8,28 +8,6 @@ nav.navbar.navbar-default.navbar-static-top(role='navigation', style='margin-bot
         a.navbar-brand(href='/') #{title}
     // /.navbar-header
     ul.nav.navbar-top-links.navbar-right
-        // /.dropdown
-        li.dropdown
-            a.dropdown-toggle(data-toggle='dropdown', href='#')
-                i.fa.fa-tasks.fa-fw
-                i.fa.fa-caret-down
-            ul.dropdown-menu.dropdown-tasks
-                li
-                    a(href='#')
-                        div
-                            p
-                                strong Task 4
-                                span.pull-right.text-muted 80% Complete
-                            .progress.progress-striped.active
-                                .progress-bar.progress-bar-danger(role='progressbar', aria-valuenow='80', aria-valuemin='0', aria-valuemax='100', style='width: 80%')
-                                    span.sr-only 80% Complete (danger)
-                li.divider
-                li
-                    a.text-center(href='#')
-                        strong See All Tasks
-                        i.fa.fa-angle-right
-            // /.dropdown-tasks
-        // /.dropdown
         li.dropdown.job-alerts-container
             a.dropdown-toggle.job-alerts-trigger(data-toggle='dropdown')
                 i.fa.fa-bell.fa-fw
@@ -41,6 +19,7 @@ nav.navbar.navbar-default.navbar-static-top(role='navigation', style='margin-bot
                 if (user.hasProfileImage)
                     - path = user.profileImagePath
                 img(src=path)
+                i.fa.fa-caret-down
             ul.dropdown-menu.dropdown-user
                 li
                     a(href='/user/profile')

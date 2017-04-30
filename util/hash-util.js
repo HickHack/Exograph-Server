@@ -17,4 +17,4 @@ hash.generateBcryptKey = function (password, callback) {
 
 hash.bcryptCompare = function(password, pass) {
     return bcrypt.compareSync(password, pass);
-}
+};
