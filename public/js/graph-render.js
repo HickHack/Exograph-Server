@@ -214,7 +214,6 @@
         setDoubleClickZoomListener();
         setMouseOverListener();
         setMouseOutListener();
-        setMouseUpListener();
         setMouseDownListener();
         setZoomListener();
         setTickListener();
@@ -247,8 +246,28 @@
         });
     }
 
-    function setMouseUpListener() {
-        d3.select(window).on("mouseup", function () {
+    function setMouseDownListener() {
+        nodes.on("mousedown", function (node) {
+            d3.event.stopPropagation();
+            if (node.fixed == 6) {
+                d3.select(this).classed("fixed", node.fixed = true);
+            } else {
+                d3.select(this).classed("fixed", node.fixed = false);
+            }
+
+            toggleFocusNeighbouringNodes(true, node);
+        });
+    }
+
+    function toggleFocusNeighbouringNodes(isToggled, node) {
+        if (isToggled && node) {
+            clickFocusNode = node;
+            setFocus(node);
+
+            if (highlight_node === null) {
+                addHighlight(node);
+            }
+        } else {
             if (clickFocusNode !== null) {
                 clickFocusNode = null;
                 if (highlightTrans < 1) {
@@ -260,20 +279,7 @@
             }
 
             if (highlight_node === null) removeHighlight();
-        });
-    }
-
-    function setMouseDownListener() {
-        nodes.on("mousedown", function (d) {
-            d3.event.stopPropagation();
-            clickFocusNode = d;
-            setFocus(d);
-
-            if (highlight_node === null) {
-                addHighlight(d);
-            }
-
-        });
+        }
     }
 
     function setZoomListener() {
@@ -464,9 +470,14 @@
 
     function bindKeyCode() {
         switch (d3.event.keyCode) {
-            case 32:
+            case 32: // Space bar
                 force.stop();
                 break;
+            case 13: // Enter
+                triggerSidePanel();
+                break;
+            case 67: // C
+                toggleFocusNeighbouringNodes(false);
         }
     }
 
