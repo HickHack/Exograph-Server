@@ -4,8 +4,8 @@
     var textCenter = false;
     var outline = false;
 
-    var highlightColor = "blue";
-    var defaultNodeColor = "#337ab7";
+    var highlightColor = "#CCFF00";
+    var defaultNodeColor = "#587498";
     var defaultLinkColor = "#888";
     var toColor = "fill";
     var toWhite = "stroke";
@@ -39,6 +39,8 @@
 
     var linkedByIndex = {};
 
+    var isPaused = false;
+
     $(document).ready(function () {
         initialize();
         loadGraph(function () {
@@ -66,8 +68,7 @@
         zoom = d3.behavior.zoom().scaleExtent([minZoom, maxZoom]);
         graph = svg.append("g");
         color = d3.scale.linear()
-            .domain([minScore, (minScore + maxScore) / 2, maxScore])
-            .range(["lime", "yellow", "red"]);
+            .domain([minScore, (minScore + maxScore) / 2, maxScore]);
         size = d3.scale.pow().exponent(1)
             .domain([1, 100])
             .range([8, 24]);
@@ -96,10 +97,10 @@
 
         if (isVisible) {
             $('.graph').show();
-            $('.nav-side-panel-container').show();
+            $('.overlay-container').show();
         } else {
             $('.graph').hide();
-            $('.nav-side-panel-container').hide();
+            $('.overlay-container').hide();
         }
     }
 
@@ -149,6 +150,9 @@
             .data(data)
             .enter().append("g")
             .attr("class", "node")
+            .attr("id", function (d) {
+                return d.id;
+            })
             .call(force.drag);
 
         setCircles();
@@ -159,7 +163,7 @@
         var min = 0;
         var max = 1000;
 
-        for(var i = 0; i < nodes.length; i++) {
+        for (var i = 0; i < nodes.length; i++) {
             nodes[i].x = Math.floor(Math.random() * (max - min + 1)) + min;
             nodes[i].y = Math.floor(Math.random() * (max - min + 1)) + min;
         }
@@ -219,6 +223,10 @@
         setTickListener();
         setResizeListener();
         setDownloadImageListener();
+        setPauseButtonListener();
+        setFocusButtonListener();
+        setLockButtonListener();
+        setInfoButtonListener();
     }
 
     function setDoubleClickZoomListener() {
@@ -235,7 +243,6 @@
         nodes.on("mouseover", function (d) {
             hoverFocusNode = d;
             addHighlight(d);
-            triggerSidePanel();
         });
     }
 
@@ -249,37 +256,41 @@
     function setMouseDownListener() {
         nodes.on("mousedown", function (node) {
             d3.event.stopPropagation();
-            if (node.fixed == 6) {
-                d3.select(this).classed("fixed", node.fixed = true);
-            } else {
-                d3.select(this).classed("fixed", node.fixed = false);
-            }
 
-            toggleFocusNeighbouringNodes(true, node);
+            setFocusNode(node);
+
+            if (!clickFocusNode.isFixed) toggleStickyNode();
+            if (isPaused) togglePause();
+
+            ButtonOptions.toggleLockIcon(clickFocusNode.isFixed);
         });
     }
 
-    function toggleFocusNeighbouringNodes(isToggled, node) {
-        if (isToggled && node) {
-            clickFocusNode = node;
-            setFocus(node);
+    function toggleFocusNeighbouringNodes() {
+        if (clickFocusNode != null) {
+            if (!clickFocusNode.isFocused) {
+                clickFocusNode.isFocused = true;
+                setFocus(clickFocusNode);
 
-            if (highlight_node === null) {
-                addHighlight(node);
-            }
-        } else {
-            if (clickFocusNode !== null) {
-                clickFocusNode = null;
+                if (highlight_node === null) {
+                    addHighlight(clickFocusNode);
+                }
+
+            } else {
+                clickFocusNode.isFocused = false;
+
                 if (highlightTrans < 1) {
 
                     circle.style("opacity", 1);
                     text.style("opacity", 1);
                     links.style("opacity", 1);
                 }
-            }
 
-            if (highlight_node === null) removeHighlight();
+                removeHighlight();
+            }
         }
+
+        ButtonOptions.toggleFocusIcon(clickFocusNode.isFocused);
     }
 
     function setZoomListener() {
@@ -352,7 +363,7 @@
                 });
         });
     }
-    
+
     function setResizeListener() {
         d3.select(window).on("resize", resize).on("keydown", bindKeyCode);
     }
@@ -367,6 +378,63 @@
             generateImage(height, width);
             $('#exportModal').modal('hide');
         });
+    }
+
+    function setPauseButtonListener() {
+        d3.select(".pause-viz button").on("click", function () {
+            togglePause();
+        });
+    }
+
+    function setFocusButtonListener() {
+        d3.select(".focus-highlight button").on("click", function () {
+            toggleFocusNeighbouringNodes();
+        });
+    }
+
+    function setLockButtonListener() {
+        d3.select(".lock-node button").on("click", function () {
+            toggleStickyNode();
+        });
+    }
+
+    function setInfoButtonListener() {
+        d3.select(".node-info button").on("click", function () {
+            triggerSidePanel();
+        });
+    }
+
+    function togglePause() {
+        if (isPaused) {
+            force.start();
+            isPaused = false;
+        } else {
+            force.stop();
+            isPaused = true;
+        }
+
+        ButtonOptions.togglePauseIcon(isPaused);
+    }
+
+    function toggleStickyNode() {
+        if (clickFocusNode != null) {
+            var element = d3.select("id", clickFocusNode.id);
+            var domElement = $("[id=" + clickFocusNode.id + "]");
+
+            if (!clickFocusNode.isFixed) {
+                element.classed("fixed", clickFocusNode.fixed = true);
+                domElement.addClass("fixed");
+
+                clickFocusNode.isFixed = true;
+            } else {
+                element.classed("fixed", clickFocusNode.fixed = false);
+                domElement.removeClass("fixed");
+
+                clickFocusNode.isFixed = false;
+            }
+
+            ButtonOptions.toggleLockIcon(clickFocusNode.isFixed);
+        }
     }
 
     function generateImage(height, width) {
@@ -409,39 +477,47 @@
 
     function addHighlight(d) {
         svg.style("cursor", "pointer");
-        if (clickFocusNode !== null) d = clickFocusNode;
         highlight_node = d;
 
         if (highlightColor != "white") {
             circle.style(toWhite, function (o) {
                 return isConnected(d, o) ? highlightColor : "white";
-            });
+            }).style("z-index", 1000);
             text.style("font-weight", function (o) {
                 return isConnected(d, o) ? "bold" : "normal";
             });
             links.style("stroke", function (o) {
                 return o.source.index == d.index || o.target.index == d.index ? highlightColor : ((isNumber(o.score) && o.score >= 0) ? color(o.score) : defaultLinkColor);
-
-            });
+            }).style("z-index", 1000);
         }
     }
 
     function removeHighlight() {
         highlight_node = null;
 
-        if (clickFocusNode === null) {
-            svg.style("cursor", "move");
+        svg.style("cursor", "move");
 
-            if (highlightColor != "white") {
+        if (highlightColor != "white") {
 
-                circle.style(toWhite, "white");
-                text.style("font-weight", "normal");
-                links.style("stroke", function (o) {
-                    return isNumber(o.score) && o.score >= 0 ? color(o.score) : defaultLinkColor
-                });
-            }
-
+            circle.style(toWhite, "white")
+                .style("z-index", 0);
+            text.style("font-weight", "normal");
+            links.style("stroke", function (o) {
+                return isNumber(o.score) && o.score >= 0 ? color(o.score) : defaultLinkColor
+            })
+            .style("z-index", 0);
         }
+    }
+
+    function setFocusNode(node) {
+
+        if (clickFocusNode != null) {
+            $("[id=" + clickFocusNode.id + "]").removeClass("focus-node");
+            clickFocusNode.isFocused = false;
+        }
+
+        clickFocusNode = node;
+        $("[id=" + clickFocusNode.id + "]").addClass("focus-node");
     }
 
     function setFocus(d) {
@@ -471,19 +547,21 @@
     function bindKeyCode() {
         switch (d3.event.keyCode) {
             case 32: // Space bar
-                force.stop();
+                togglePause();
                 break;
             case 13: // Enter
-                triggerSidePanel();
+                triggerSidePanel(hoverFocusNode);
                 break;
             case 67: // C
-                toggleFocusNeighbouringNodes(false);
+                toggleFocusNeighbouringNodes();
         }
     }
 
-    function triggerSidePanel() {
-        if (hoverFocusNode != null) {
-            graphInfoWidget = new GraphInfoWidget(hoverFocusNode.endpoint);
+    function triggerSidePanel(node) {
+        if (node != null) {
+            graphInfoWidget = new GraphInfoWidget(node.endpoint);
+        } else if (clickFocusNode != null) {
+            graphInfoWidget = new GraphInfoWidget(clickFocusNode.endpoint);
         }
     }
 

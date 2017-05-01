@@ -2,8 +2,6 @@ $(document).ready(function () {
     var isNavVisible = false;
     var expandCollapseContainer = $('.expand-collapse-nav');
     var expandCollapseBtn = $('.expand-collapse-nav button');
-    var exportImageContainer = $('.export-to-image');
-    var exportImageBtn = $('.export-to-image button');
     var caretIcon = $('.expand-collapse-nav button i');
     var sidebar = $('.sidebar');
 
@@ -11,9 +9,7 @@ $(document).ready(function () {
     var caretLeft = 'fa-caret-left';
 
     layoutSidebarButton();
-    layoutImageExportButton();
     setupSidebarButtonClickHandler();
-    setupExportButtonClickHandler();
 
     function setupSidebarButtonClickHandler() {
         expandCollapseBtn.click(function () {
@@ -25,12 +21,6 @@ $(document).ready(function () {
 
             isNavVisible = !isNavVisible;
             layoutSidebarButton();
-        });
-    }
-
-    function setupExportButtonClickHandler() {
-        exportImageBtn.click(function () {
-            $('#exportModal').modal('show');
         });
     }
 
@@ -47,8 +37,42 @@ $(document).ready(function () {
             caretIcon.addClass(caretRight);
         }
     }
-    
-    function layoutImageExportButton() {
-        exportImageContainer.css("margin-left", $(window).width() / 2 - exportImageContainer.width());
-    }
+
 });
+
+var ButtonOptions = {
+
+    togglePauseIcon: function (isPaused) {
+        var icon = $(".pause-viz button").find("i");
+
+        if (isPaused) {
+            icon.removeClass("fa-pause");
+            icon.addClass("fa-play");
+        } else {
+            icon.removeClass("fa-play");
+            icon.addClass("fa-pause");
+        }
+    },
+    toggleFocusIcon: function (isFocused) {
+        var icon = $(".focus-highlight button").find("i");
+
+        if (isFocused) {
+            icon.removeClass("fa-dot-circle-o");
+            icon.addClass("fa-times-circle-o");
+        } else {
+            icon.removeClass("fa-times-circle-o");
+            icon.addClass("fa-dot-circle-o");
+        }
+    },
+    toggleLockIcon: function (isLocked) {
+        var icon = $(".lock-node button").find("i");
+
+        if (isLocked) {
+            icon.removeClass("fa-lock");
+            icon.addClass("fa-unlock");
+        } else {
+            icon.removeClass("fa-unlock");
+            icon.addClass("fa-lock");
+        }
+    }
+};

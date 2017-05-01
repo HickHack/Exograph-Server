@@ -7,7 +7,7 @@ head
     script(src='https://d3js.org/d3.v3.min.js')
     script(src='/js/graph-render.js')
     script(src='/js/graph-info-panel.js')
-    script(src='/js/graph-extra-options.js')
+    script(src='/js/graph-buttons.js')
 
     title #{title}
 
@@ -58,20 +58,38 @@ body
                             .col-lg-12.info-items
 
                 .col-lg-12
-                    .nav-side-panel-container
+                    .overlay-container
                         .nav-side-panel
                                 include ../layout/navigation-sidepanel
                         .expand-collapse-nav
                             button.btn.btn-primary
                                 i.fa.fa-caret-right.fa-2x
-                        .export-to-image
-                            button.btn.btn-primary
-                                i.fa.fa-picture-o.fa-1x
+                        .toolbar-container
+                            .toolbar
+                                ul
+                                    li.pause-viz
+                                        button.btn.btn-primary
+                                            i.fa.fa-pause.fa-1x
+                                    li.focus-highlight
+                                        button.btn.btn-primary
+                                            i.fa.fa-dot-circle-o.fa-1x
+                                    li.lock-node
+                                        button.btn.btn-primary
+                                            i.fa.fa-lock.fa-1x
+                                    li.node-info
+                                        button.btn.btn-primary
+                                            i.fa.fa-info-circle.fa-1x
+                                    li.search
+                                        button.btn.btn-primary
+                                            i.fa.fa-search.fa-1x
+                                    li
+                                        button.btn.btn-primary
+                                            i.fa.fa-question-circle.fa-1x
+                                    li.export-to-image
+                                        button(onclick="$('#exportModal').modal('show');").btn.btn-primary
+                                            i.fa.fa-picture-o.fa-1x
 
                     .graph(endpoint='#{graphEndpoint}')
-
-
-
 
 
 
