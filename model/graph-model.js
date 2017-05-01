@@ -243,7 +243,9 @@ function parseGraph(results, callback) {
                     id: n._id,
                     type: 'circle',
                     size: 60,
-                    score: 1,
+                    score: 10,
+                    isFocused: false,
+                    isFixed: false,
                     label: n.labels[0],
                     name: n.properties.name,
                     endpoint: '/'+ n.labels[0].toLowerCase() +'/' + n._id
