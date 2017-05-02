@@ -2,8 +2,6 @@
  * Tests relating to server setup
  */
 
-process.env.NODE_ENV = 'test';
-
 var mocha = require('mocha');
 var chai = require('chai');
 var sinon = require('sinon');
@@ -21,28 +19,25 @@ describe('Auth middleware tests', function () {
         // Use Rewire to access private method
         var parseJSONResponse = extractor.__get__('parseJSONResponse');
 
-        it('should return an valid object if content type correct', function (done) {
+        it('should return an valid object if content type correct', function () {
             var res = {body: '{"someKey": 1}', headers: {'content-type': 'application/json'}};
-            var callback = sinon.spy();
 
-            json = parseJSONResponse(res, callback);
-
-
-            chai.assert(callback.calledWith(null, JSON.parse(res.body)));
-
-            done();
+            return parseJSONResponse(res)
+                .then(resOjb => {
+                    chai.expect(resOjb).to.be.an('object');
+                    chai.expect(resOjb).to.have.property('someKey');
+                    chai.expect(resOjb.someKey).to.equal(1);
+                });
         });
 
-        it('should fail if content type is not JSON', function (done) {
+        it('should fail if content type is not JSON', function () {
             var res = {body: '', headers: {'content-type': 'text/html'}};
-            var callback = sinon.spy();
 
-            json = parseJSONResponse(res, callback);
-
-            chai.assert(!res.body.called);
-            chai.assert(callback.calledWith(Error()));
-
-            done();
+            return parseJSONResponse(res)
+                .then(resOjb => {
+                }).catch(err => {
+                    chai.expect(err).to.be.an('Error');
+                })
         });
     });
 

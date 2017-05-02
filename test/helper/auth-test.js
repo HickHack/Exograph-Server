@@ -1,8 +1,6 @@
 /**
- * Tests relating to server setup
+ * Tests for authentication
  */
-
-process.env.NODE_ENV = 'test';
 
 var mocha = require('mocha');
 var chai = require('chai');
