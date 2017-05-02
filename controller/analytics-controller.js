@@ -1,8 +1,6 @@
 var errors = require('../helper/errors');
 
-var AnalyticsController = module.exports = function GraphController() {};
-
-AnalyticsController.prototype.getView = function (req, res) {
+exports.getView = function (req, res) {
     req.user.getNetwork(req.params['id'])
         .then(network => {
             network.getSummary(function (err, data) {
@@ -35,7 +33,7 @@ AnalyticsController.prototype.getView = function (req, res) {
         });
 };
 
-AnalyticsController.prototype.getDegreeData = function (req, res) {
+exports.getDegreeData = function (req, res) {
     req.user.getNetwork(req.params['id'])
         .then(network => {
             network.getDegreeDistribution(function (err, data) {
@@ -56,7 +54,7 @@ AnalyticsController.prototype.getDegreeData = function (req, res) {
         });
 };
 
-AnalyticsController.prototype.getLocationData = function (req, res) {
+exports.getLocationData = function (req, res) {
     req.user.getNetwork(req.params['id'])
         .then(network => {
             network.getLocations(function (err, data) {
