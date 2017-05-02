@@ -3,11 +3,8 @@
  */
 
 var job = require('../model/job-model');
-var errors = require('../helper/errors');
 
-var JobController = module.exports = function JobController() {};
-
-JobController.prototype.getJobsAlert = function(req, res, next) {
+exports.getJobsAlert = function(req, res, next) {
 
     job.getJobsForUser(req.user.id, 5, function (err, jobs) {
         var response = {};
@@ -18,42 +15,28 @@ JobController.prototype.getJobsAlert = function(req, res, next) {
             response = getResponse(jobs, '');
         }
 
-        res.send(response);
+        res.json(response);
     });
 };
 
-JobController.prototype.getJob = function (req, res, next) {
+exports.getJob = function (req, res, next) {
     var id = req.params['id'];
 
     job.getById(id, function (err, job) {
        if (err) {
-           res.send({error: err.message});
+           res.json({error: err.message});
        } else {
-            res.send(job)
+            res.json(job)
        }
 
     });
 };
 
-JobController.prototype.getJob = function (req, res, next) {
-    var id = req.params['id'];
-
-    job.getById(id, function (err, job) {
-        if (err) {
-            res.send({error: err.message});
-        } else {
-            res.send(job)
-        }
-
-    });
-};
-
-JobController.prototype.getJobs = function (req, res, next) {
+exports.getJobs = function (req, res, next) {
 
     job.getJobsForUser(req.user.id, -1, function (err, jobs) {
         if (err) {
-            // TODO: Add error widget response
-            throw new Error('Get All jobs failed');
+            res.status(404).send();
         } else {
             res.render('jobs/all', {
                 title: process.conf.app.NAME,

@@ -68,7 +68,7 @@ describe('Test getting the root page', function () {
         assert.notCalled(res.render);
 
         done();
-    })
+    });
 
     it('should render the dashboard page', function (done) {
         var req = getReq();
