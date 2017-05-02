@@ -89,7 +89,7 @@ Follower.prototype.toJSON = function () {
                     type: 'text'
                 }
             },
-            name: {
+            screenName: {
                 key: 'Screen Name',
                 value: this.screenName,
                 attr: {
