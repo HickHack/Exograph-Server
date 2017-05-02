@@ -6,6 +6,8 @@ var mocha = require('mocha');
 var chai = require('chai');
 var sinon = require('sinon');
 var config = require('../../config');
+process.conf = config;
+
 var UserController = require('../../controller/user-controller');
 
 var describe = mocha.describe;
@@ -13,7 +15,6 @@ var it = mocha.it;
 var assert = chai.assert;
 var controller = new UserController();
 
-process.conf = config;
 
 describe('Pages should be rendered', function () {
     it('should render the account page', function (done) {
@@ -134,24 +135,7 @@ describe('Testing user profile image upload', function () {
         done();
     });
 
-    it('should fail because user patching fails', function (done) {
-        var req = getReq();
-        var res = getRes();
-
-        var path  = config.global.PATHS.PROFILE_IMG_DIR + req.user.id + '.png';
-        req.files.image.mv.callsArgWith(1, null, path);
-        req.user.patch.callsArgWith(0, {});
-
-        controller.uploadImage(req, res);
-
-        assert(res.json.calledWith(
-            {message: 'Something went wrong'}
-        ));
-
-        done();
-    });
-
-    it('should fail because user patching fails', function (done) {
+    it('should pass', function (done) {
         var req = getReq();
         var res = getRes();
 

@@ -11,9 +11,10 @@
 
 var neo4j = require('neo4j');
 var errors = require('./errors');
+var config = require('../config');
 
 var Database = module.exports = function Database() {
-    this._db = new neo4j.GraphDatabase(process.conf.global.NEO4J_URL);
+    this._db = new neo4j.GraphDatabase(config.global.NEO4J_URL);
 };
 
 Database.prototype.createConstraint = function (label, property, next) {

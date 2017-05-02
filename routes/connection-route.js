@@ -5,10 +5,9 @@
 
 var express = require('express');
 var auth = require('../helper/auth');
-var ConnectionController = require('../controller/connection-controller');
+var controller = require('../controller/connection-controller');
 
 var router = express.Router();
-var controller = new ConnectionController();
 
 router.get('/:id', auth.checkAuth, function(req, res, next) {
     controller.getConnection(req, res);
