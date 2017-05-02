@@ -11,7 +11,7 @@ var assert = chai.assert;
 
 var mockFollowerModel = {};
 
-describe('Getting a connection', function () {
+describe('Getting a follower', function () {
 
     function getReq() {
         return {
