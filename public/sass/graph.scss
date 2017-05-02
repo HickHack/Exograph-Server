@@ -24,6 +24,20 @@ html, body {
                 -webkit-box-shadow: 2px 17px 79px -6px rgba(0,0,0,0.75);
                 -moz-box-shadow: 2px 17px 79px -6px rgba(0,0,0,0.75);
                 box-shadow: 2px 17px 79px -6px rgba(0,0,0,0.75);
+
+                form {
+                    input:focus {
+                        -webkit-transition: all 0.30s ease-in-out;
+                        -moz-transition: all 0.30s ease-in-out;
+                        -ms-transition: all 0.30s ease-in-out;
+                        -o-transition: all 0.30s ease-in-out;
+                        outline: none;
+                        border: 1px solid #DDDDDD;
+                        box-shadow: 0 0 5px rgba(81, 203, 238, 1);
+                        padding: 3px 0 3px 3px;
+                        margin: 5px 1px 3px 0;
+                    }
+                }
             }
 
             .expand-collapse-nav {
@@ -120,6 +134,12 @@ html, body {
             .focus-node {
                 path {
                     fill: #587058 !important;
+                }
+            }
+
+            .search-focus-node {
+                path {
+                    fill: #CCFF00 !important;
                 }
             }
 

@@ -31,6 +31,7 @@
     var clickFocusNode = null;
     var hoverFocusNode = null;
     var highlight_node = null;
+    var searchFocusNodes = [];
     var links = null;
     var nodes = null;
     var text = null;
@@ -227,6 +228,7 @@
         setFocusButtonListener();
         setLockButtonListener();
         setInfoButtonListener();
+        setSearchFormButtomClickListener();
     }
 
     function setDoubleClickZoomListener() {
@@ -258,6 +260,7 @@
             d3.event.stopPropagation();
 
             setFocusNode(node);
+            setSearchFocusNodesStyle(false);
 
             if (!clickFocusNode.isFixed) toggleStickyNode();
             if (isPaused) togglePause();
@@ -404,6 +407,18 @@
         });
     }
 
+    function setSearchFormButtomClickListener() {
+        d3.select('.custom-search-form').on('submit', function () {
+            d3.event.preventDefault();
+            var query = $('.custom-search-form input').val();
+
+            if (query && query != '') {
+                populateSearchFocusNodes(query.toLowerCase());
+                setSearchFocusNodesStyle(true);
+            }
+        });
+    }
+
     function togglePause() {
         if (isPaused) {
             force.start();
@@ -505,7 +520,39 @@
             links.style("stroke", function (o) {
                 return isNumber(o.score) && o.score >= 0 ? color(o.score) : defaultLinkColor
             })
-            .style("z-index", 0);
+                .style("z-index", 0);
+        }
+    }
+
+    function populateSearchFocusNodes(query) {
+
+        d3.selectAll('g.node')
+            .each(function (d) {
+                var name = d.name.toLowerCase();
+                if (name.includes(query) || name == query) {
+                    searchFocusNodes.push(this);
+                }
+            });
+    }
+
+    function setSearchFocusNodesStyle(isFocused) {
+
+        searchFocusNodes.forEach(function (node) {
+            applySearchFocusStyling(isFocused, node);
+        });
+
+        if (!isFocused) {
+            searchFocusNodes = [];
+        }
+    }
+    
+    function applySearchFocusStyling(isApplied, node) {
+        var nodeDOM = $("[id=" + node.id + "]");
+
+        if (isApplied) {
+            nodeDOM.addClass('search-focus-node');
+        } else {
+            nodeDOM.removeClass('search-focus-node');
         }
     }
 

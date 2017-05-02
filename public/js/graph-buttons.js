@@ -2,6 +2,7 @@ $(document).ready(function () {
     var isNavVisible = false;
     var expandCollapseContainer = $('.expand-collapse-nav');
     var expandCollapseBtn = $('.expand-collapse-nav button');
+    var searchBtn = $('.node-search button');
     var caretIcon = $('.expand-collapse-nav button i');
     var sidebar = $('.sidebar');
 
@@ -10,18 +11,33 @@ $(document).ready(function () {
 
     layoutSidebarButton();
     setupSidebarButtonClickHandler();
+    setupToolbarBarSearchClick();
 
     function setupSidebarButtonClickHandler() {
         expandCollapseBtn.click(function () {
-            if (isNavVisible) {
-                $('.sidebar').hide();
-            } else {
-                $('.sidebar').show();
-            }
-
-            isNavVisible = !isNavVisible;
-            layoutSidebarButton();
+            toggleSidePanel();
         });
+    }
+
+    function setupToolbarBarSearchClick() {
+        searchBtn.click(function () {
+            setTimeout(function(){
+                $('input[name="query"]').focus();
+            }, 1);
+
+            toggleSidePanel();
+        });
+    }
+
+    function toggleSidePanel() {
+        if (isNavVisible) {
+            sidebar.hide();
+        } else {
+            sidebar.show();
+        }
+
+        isNavVisible = !isNavVisible;
+        layoutSidebarButton();
     }
 
     function layoutSidebarButton() {
@@ -37,6 +53,7 @@ $(document).ready(function () {
             caretIcon.addClass(caretRight);
         }
     }
+
 
 });
 
