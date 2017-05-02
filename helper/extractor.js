@@ -200,7 +200,7 @@ function parseJSONResponse(res) {
         if (res.headers['content-type'] == 'application/json') {
             resolve(JSON.parse(res.body));
         } else {
-            var err = new Error('Unable to parse response, body is not json')
+            var err = new Error('Unable to parse response, body is not json');
             reject(err);
         }
     });

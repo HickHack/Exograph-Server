@@ -23,7 +23,7 @@ UserController.prototype.getProfile = function (req, res, next) {
 
 UserController.prototype.uploadImage = function (req, res, next) {
     var acceptedFormats = ['image/png'];
-    if (req.files.image) {
+    if (req.files && req.files.image) {
         var image = req.files.image;
         var relativePath = process.conf.global.PATHS.PROFILE_IMG_DIR + req.user.id + '.png';
 
@@ -35,8 +35,7 @@ UserController.prototype.uploadImage = function (req, res, next) {
                 } else {
                     req.user.hasProfileImage = true;
                     req.user.patch(function (err) {
-                       if (err) {
-                           res.json({message: 'Something went wrong'});
+                       if (err) {res.json({message: 'Something went wrong'});
                        } else {
                            res.json({message: 'success'});
                        }
