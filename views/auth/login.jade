@@ -24,11 +24,11 @@ html(lang='en')
                             form(action='/login' role='form', method='POST')
                                 fieldset
                                     .form-group
-                                        input.form-control(placeholder='E-mail', name='email', type='email', autofocus='', value=email, required)
+                                        input.form-control.username(placeholder='E-mail', name='email', type='email', autofocus='', value=email, required)
                                     .form-group
-                                        input.form-control(placeholder='Password', name='password', type='password', value='', required)
+                                        input.form-control.password(placeholder='Password', name='password', type='password', value='', required)
 
-                                    button.btn.btn-lg.btn-success.btn-block(type='submit') Login
+                                    button.btn.btn-lg.btn-success.btn-block#submit(type='submit') Login
 
                                     p.text-center.existingLink Don't have an account?&nbsp
                                         a(href='/register') Sign up

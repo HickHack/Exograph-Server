@@ -6,7 +6,9 @@
     "test": "mocha --timeout 15000 --ui bdd --recursive ./test",
     "build-css": "node-sass public/scss/test.scss public/css/test.css",
     "startdev": "nodemon bin/www",
-    "assets": "node-sass ~/Exograph-Server/public/sass -o ~/Exograph-Server/public/css"
+    "assets": "node-sass ~/Exograph-Server/public/sass -o ~/Exograph-Server/public/css",
+    "start-selenium": "java -jar -Dwebdriver.gecko.driver=./test/webdriverio-test/drivers/geckodriver -Dwebdriver.chrome.driver=./test/webdriverio-test/drivers/chromedriver test/webdriverio-test/drivers/selenium-server-standalone-3.0.1.jar",
+    "run-wdio": "node_modules/.bin/wdio wdio.conf.js "
   },
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
@@ -36,6 +38,9 @@
     "nodemon": "^1.11.0",
     "proxyquire": "^1.7.11",
     "rewire": "^2.5.2",
-    "sinon": "~1.17.7"
+    "sinon": "~1.17.7",
+    "wdio-mocha-framework": "^0.5.10",
+    "webdriverio": "^4.8.0",
+    "chai-spies": "latest"
   }
 }
