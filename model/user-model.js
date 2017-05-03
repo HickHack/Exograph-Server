@@ -220,7 +220,7 @@ User.prototype.patch = function (props, callback) {
 
     var safeProps = validate(props, User.UPDATE_VALIDATION_INFO, function (err, props) {
         if (err) {
-            callback(err.message);
+            return callback(err.message);
         }
 
         return props;
@@ -277,49 +277,6 @@ User.prototype.patch = function (callback) {
     });
 };
 
-User.prototype.del = function (callback) {
-    // Use a Cypher query to delete both this user and his/her following
-    // relationships in one query and one network request:
-    // (Note that this'll still fail if there are any relationships attached
-    // of any other types, which is good because we don't expect any.)
-    var query = [
-        'MATCH (user:User {username: {username}})',
-        'OPTIONAL MATCH (user) -[rel:follows]- (other)',
-        'DELETE user, rel',
-    ].join('\n')
-
-    var params = {
-        username: this.username,
-    };
-
-    neo4j.run({
-        query: query,
-        params: params
-    }, function (err) {
-        callback(err);
-    });
-};
-
-User.prototype.follow = function (other, callback) {
-    var query = [
-        'MATCH (user:User {username: {thisUsername}})',
-        'MATCH (other:User {username: {otherUsername}})',
-        'MERGE (user) -[rel:follows]-> (other)',
-    ].join('\n')
-
-    var params = {
-        thisUsername: this.username,
-        otherUsername: other.username,
-    };
-
-    neo4j.run({
-        query: query,
-        params: params
-    }, function (err) {
-        callback(err);
-    });
-};
-
 User.prototype.getNetworks = function (next) {
     network.getAllByUser(this, function (err, networks) {
         if (err) return next(err);
@@ -345,7 +302,7 @@ User.get = function (id, callback) {
         'MATCH (user:User)',
         'WHERE id(user) = {id}',
         'RETURN user'
-    ].join('\n')
+    ].join('\n');
 
     var params = {
         id: parseInt(id),
