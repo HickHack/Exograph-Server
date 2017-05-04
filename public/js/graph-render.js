@@ -216,6 +216,12 @@
     }
 
     function setEventListeners() {
+        setMouseListeners();
+        setButtonListeners();
+
+    }
+
+    function setMouseListeners() {
         setDoubleClickZoomListener();
         setMouseOverListener();
         setMouseOutListener();
@@ -223,12 +229,16 @@
         setZoomListener();
         setTickListener();
         setResizeListener();
+    }
+
+    function setButtonListeners() {
         setDownloadImageListener();
         setPauseButtonListener();
         setFocusButtonListener();
         setLockButtonListener();
         setInfoButtonListener();
         setSearchFormButtomClickListener();
+        setLinkClickSearchListener();
     }
 
     function setDoubleClickZoomListener() {
@@ -263,7 +273,7 @@
             setSearchFocusNodesStyle(false);
 
             if (!clickFocusNode.isFixed) toggleStickyNode();
-            if (isPaused) togglePause();
+            if (isPaused) force.stop();
 
             ButtonOptions.toggleLockIcon(clickFocusNode.isFixed);
         });
@@ -293,7 +303,9 @@
             }
         }
 
-        ButtonOptions.toggleFocusIcon(clickFocusNode.isFocused);
+        if (clickFocusNode != null) {
+            ButtonOptions.toggleFocusIcon(clickFocusNode.isFocused);
+        }
     }
 
     function setZoomListener() {
@@ -403,20 +415,39 @@
 
     function setInfoButtonListener() {
         d3.select(".node-info button").on("click", function () {
-            triggerSidePanel();
+            if (graphInfoWidget != null && graphInfoWidget.isVisible()) {
+                graphInfoWidget.setVisible(false);
+            } else {
+                triggerSidePanel();
+            }
         });
     }
 
     function setSearchFormButtomClickListener() {
         d3.select('.custom-search-form').on('submit', function () {
-            d3.event.preventDefault();
             var query = $('.custom-search-form input').val();
-
-            if (query && query != '') {
-                populateSearchFocusNodes(query.toLowerCase());
-                setSearchFocusNodesStyle(true);
-            }
+            
+            d3.event.preventDefault();
+            performSearch(query);
         });
+    }
+
+    function setLinkClickSearchListener() {
+        $(document).on('click', '.widget-search', function(){
+            var query = $(event.target).attr('data-query');
+            event.preventDefault();
+
+            performSearch(query);
+        });
+    }
+
+    function performSearch(query) {
+        setSearchFocusNodesStyle(false);
+
+        if (query && query != '') {
+            populateSearchFocusNodes(query.toLowerCase());
+            setSearchFocusNodesStyle(true);
+        }
     }
 
     function togglePause() {
@@ -601,6 +632,10 @@
                 break;
             case 67: // C
                 toggleFocusNeighbouringNodes();
+                break;
+            case 83: // S
+                toggleStickyNode();
+                break;
         }
     }
 

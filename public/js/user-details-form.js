@@ -74,27 +74,22 @@ $(document).ready(function () {
                     encode: true
                 }).done(function (data) {
                     if (data) {
-                        processMessages(data.messages, 'alert-success');
+                        processMessages(data.message, 'alert-success');
                     }
                 });
             }
         });
     }
 
-    function processMessages(messages, alertType) {
-        var items = [];
-
-        for(var message in messages) {
-            var item = '<li>' + messages[message] + '</li>';
-            items.push(item);
-        }
+    function processMessages(message, alertType) {
+        var item = $("<p/>").text(message);
 
         var container = $('.message-panel');
-        var child = $('#messages');
+        var child = $('#message');
         child.empty();
-        child.append(items.join(''));
+        child.append(item);
 
-        container.find('.alert').addClass(alertType);
+        container.find('.alert').removeClass("alert-danger").addClass(alertType);
         container.show();
     }
 });

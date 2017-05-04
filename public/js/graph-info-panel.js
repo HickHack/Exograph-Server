@@ -4,7 +4,8 @@ function GraphInfoWidget(dataEndpoint) {
     this.graphContainer = $('.graph');
     this.container = $('.graph-info-container');
     this.imgContainer = $('.info-img-container');
-    this.itemsContainer = $('.info-items');
+    this.infoItemsContainer = $('.info-items');
+    this.friendItemsContainer = $('.friend-items');
     this.model = {};
     graphInfoWidget = this;
 
@@ -19,11 +20,11 @@ function GraphInfoWidget(dataEndpoint) {
 
 GraphInfoWidget.prototype.setupEventHandlers = function () {
     $('.close-btn').on('click', function () {
-        graphInfoWidget.setVisibility(false);
+        graphInfoWidget.setVisible(false);
     });
 };
 
-GraphInfoWidget.prototype.setVisibility = function (isVisible) {
+GraphInfoWidget.prototype.setVisible = function (isVisible) {
     if (isVisible) {
         this.container.show();
     } else {
@@ -35,16 +36,20 @@ GraphInfoWidget.prototype.isVisible = function () {
     return this.container.is(":visible");
 };
 
-GraphInfoWidget.prototype.layout = function() {
+GraphInfoWidget.prototype.layout = function () {
     var width = this.graphContainer.width();
     var height = this.graphContainer.height();
 
-    this.container.width(width / 3);
+    var containerWidth = width / 3;
+    this.container.width(containerWidth);
     this.container.height(height);
+    this.infoItemsContainer.width(containerWidth - 20);
+    this.friendItemsContainer.width(containerWidth - 20);
 
     this.renderImage();
-    this.populateItems();
-    this.setVisibility(true);
+    this.populateInfoItems();
+    this.populateFriendItems(this.model.friends);
+    this.setVisible(true);
 };
 
 GraphInfoWidget.prototype.renderImage = function () {
@@ -54,34 +59,83 @@ GraphInfoWidget.prototype.renderImage = function () {
         $('<img/>', {
             'src': this.model.profileImageUrl.value,
             'class': 'img-responsive img-thumbnail center-block'
-        }).appendTo(link);
+        })
+            .attr('onError', 'imgError(this)')
+            .appendTo(link);
 
         link.appendTo(this.imgContainer);
     }
 };
 
-GraphInfoWidget.prototype.populateItems = function () {
+GraphInfoWidget.prototype.populateInfoItems = function () {
+    var excluded = ['friends'];
+
     if (this.model) {
         var table = $('<table/>', {
-            'class': 'table table-bordered'
+            'class': 'table table-bordered table-striped table-responsive'
         });
 
+        var tbody = $("<tbody/>");
         for (var prop in this.model) {
-            if (this.model[prop].attr.type == 'text' && (this.model[prop].value != '' || this.model[prop].value != " ")) {
+            if (excluded.includes(prop)) {
+                continue
+            }
+
+            if (this.model[prop].attr.type == 'text' && (this.model[prop].value)) {
                 var row = $('<tr/>');
-                var key = $('<td/>').text(this.model[prop].key).addClass('text-right');
+                var key = $('<td/>').text(this.model[prop].key).addClass('text-center');
                 var value = $('<td/>').text(this.model[prop].value).addClass('text-center');
 
                 row.append(key).append(value);
-                table.append(row);
+                tbody.append(row);
             }
         }
 
-        table.appendTo(this.itemsContainer);
+        table.append(tbody).appendTo(this.infoItemsContainer);
     }
 };
 
-GraphInfoWidget.prototype.loadData = function(endpoint, callback) {
+GraphInfoWidget.prototype.populateFriendItems = function (friends) {
+
+    if (friends.length > 0) {
+        var friendsCount = friends.length ? friends.length : false;
+
+        var table = $('<table/>', {
+            'class': 'table table-bordered table-responsive text-center'
+        });
+
+        var th = $("<tr/>")
+            .append($("<th/>", {'class': 'text-center'}).text("Friends (" + friendsCount + ")").attr('colspan', 2));
+        table.append($("<thead/>").append(th));
+
+        var count = 1;
+        var tbody = $("<tbody/>");
+        var row = $('<tr/>');
+        for (var friend in friends) {
+            var name = friends[friend].node.name.value;
+            var td = $('<td/>');
+            var a = $("<a/>", {'class': 'widget-search'})
+                .attr('href', '#')
+                .attr('data-query', name)
+                .text(name);
+
+            td.append(a);
+            if (count % 2 == 0 && count != 0 || (friendsCount == 1)) {
+                tbody.append(row.append(td));
+                row = $('<tr/>');
+            } else {
+                row.append(td);
+            }
+
+            count++;
+        }
+
+        table.append(tbody);
+        table.appendTo(this.friendItemsContainer);
+    }
+};
+
+GraphInfoWidget.prototype.loadData = function (endpoint, callback) {
     $.getJSON(endpoint, function (response) {
         return callback(response.node);
     });
@@ -89,5 +143,12 @@ GraphInfoWidget.prototype.loadData = function(endpoint, callback) {
 
 GraphInfoWidget.prototype.clean = function () {
     this.imgContainer.empty();
-    this.itemsContainer.empty();
+    this.infoItemsContainer.empty();
+    this.friendItemsContainer.empty();
 };
+
+function imgError(image) {
+    image.onError = "";
+    image.src = "/img/person-placeholder.jpg";
+    return true;
+}

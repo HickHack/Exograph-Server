@@ -17,6 +17,114 @@ body
     .loading
 
     #wrapper
+        .help.modal.fade(role='dialog' id="helpModal")
+            .modal-dialog
+                // Modal content
+                .modal-content
+                    .modal-header
+                        button.close(type='button', data-dismiss='modal') ×
+                        h4.modal-title Help
+                    .modal-body
+                        .container-fluid
+                            .row.text-center.thumbnail
+                                h4.section-title Special Node Types
+                                hr
+
+                                .col-lg-4
+                                    p.title Focus Node
+                                    .standout
+                                        .node.focus-node
+                                    p Click a node to focus it then use the toolbar toolbar
+                                        | to perform an action on it.
+
+                                .col-lg-4
+                                    p.title Search Focus Node
+                                    .standout
+                                        .node.search-focus-node
+                                    p After performing a search, nodes matching the query
+                                        | will appear highlighted.
+                                .col-lg-4
+                                    p.title Sticky Node
+                                    .standout
+                                        .node.sticky-node
+                                    p Stick nodes are activated when you click a node. They become
+                                        | locked in place.
+
+                            .row.text-center.thumbnail
+                                h4.section-title Node Actions
+                                hr
+
+                                .row
+                                    .col-lg-4
+                                        p.title Target Focus
+                                        .standout
+                                            .button-item
+                                                i.fa.fa-dot-circle-o.fa-2x
+                                        p Focuses a node and its immediate connections.
+                                        p
+                                            i Shortcut: C Key
+
+                                    .col-lg-4
+                                        p.title Toggle Sticky Node
+                                        .standout
+                                            .button-item
+                                                i.fa.fa-lock.fa-2x
+                                        p Locks a node in place. Can be used to split a graph.
+                                        p
+                                            i Shortcut: S Key
+
+                                    .col-lg-4
+                                        p.title Node Information
+                                        .standout
+                                            .button-item
+                                                i.fa.fa-info-circle.fa-2x
+                                        p View extra information associated with a node.
+                                        p
+                                            i Shortcut: Enter Key
+
+
+                                .row.buffer
+                                    .col-lg-4
+                                        p.title Node Search
+                                        .standout
+                                            .button-item
+                                                i.fa.fa-search.fa-2x
+                                        p Search for a node by name
+                                        p
+                                            i Shortcut: F Key
+
+                                    .col-lg-4
+                                        p.title Pause Nodes
+                                        .standout
+                                            .button-item
+                                                i.fa.fa-pause.fa-2x
+                                        p Pause the visualisation
+                                        p
+                                            i Shortcut: Space bar Key
+
+                            .row.text-center.thumbnail
+                                h4.section-title Misc Actions
+                                hr
+
+                                .row
+                                    .col-lg-4
+                                        p.title Navigation Toggle
+                                        .standout
+                                            .button-item
+                                                i.fa.fa-caret-right.fa-2x
+                                        p Toggle left side navigation pane.
+
+                                    .col-lg-4
+                                        p.title Export to Image
+                                        .standout
+                                            .button-item
+                                                i.fa.fa-picture-o.fa-2x
+                                        p Export the current visualisation as an image.
+
+
+                    .modal-footer
+
+
         .container-fluid.graph-container
             #exportModal.modal.fade(role='dialog')
                 .modal-dialog
@@ -54,8 +162,11 @@ body
                                 button.close-btn
                                     i.fa.fa-close
                                 .info-img-container
-                        .row
+                        .row.padded
                             .col-lg-12.info-items
+                        .row.padded
+                            .col-lg-12.friend-items
+
 
                 .col-lg-12
                     .overlay-container
@@ -82,7 +193,7 @@ body
                                     li.node-search
                                         button.btn.btn-primary(type='button')
                                             i.fa.fa-search.fa-1x
-                                    li
+                                    li.help
                                         button.btn.btn-primary
                                             i.fa.fa-question-circle.fa-1x
                                     li.export-to-image

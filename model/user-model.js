@@ -216,7 +216,7 @@ User.prototype.updatePassword = function(passwords, callback) {
 
 // Atomically updates this user, both locally and remotely in the db, with the
 // given property updates.
-User.prototype.patch = function (props, callback) {
+User.prototype.patchWithProps = function (props, callback) {
 
     var safeProps = validate(props, User.UPDATE_VALIDATION_INFO, function (err, props) {
         if (err) {
@@ -328,7 +328,7 @@ User.getBy = function (field, value, callback) {
         'MATCH (user:User)',
         'WHERE ' + field + ' = {value}',
         'RETURN user'
-    ].join('\n')
+    ].join('\n');
 
     var params = {
         value: value
@@ -395,11 +395,6 @@ User.create = function (props, callback) {
         params: params
     }, function (err, results) {
         if (err != null && isConstraintViolation(err)) {
-            // TODO: This assumes username is the only relevant constraint.
-            // We could parse the constraint property out of the error message,
-            // but it'd be nicer if Neo4j returned this data semantically.
-            // Alternately, we could tweak our query to explicitly check first
-            // whether the username is taken or not.
             err = new errors.ValidationError(
                 'The email ‘' + props.email + '’ is taken.');
         }

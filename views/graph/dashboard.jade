@@ -120,7 +120,7 @@ body
                                                                 li
                                                                     a.trash-button(href='#') Send to Trash
                                                                         form.trash-form(action='/graph/trash', method='PATCH')
-                                                                            input(type='hidden', value='#{network.id}')
+                                                                            input(type='hidden', id='dashboard-trigger', value='#{network.id}')
                                                                 li.divider
                                                                 li
                                                                     a.job-details(href='/job/#{network.jobId}') Import Details
