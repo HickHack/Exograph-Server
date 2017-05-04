@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "test": "mocha --timeout 15000 --ui bdd --recursive ./test/unit",
-    "build-css": "node-sass public/scss/test.scss public/css/test.css",
+    "build-css": "node-sass -w ./public/sass -o public/css",
     "startdev": "nodemon bin/www",
     "assets": "node-sass ~/Exograph-Server/public/sass -o ~/Exograph-Server/public/css",
     "start-selenium": "java -jar -Dwebdriver.gecko.driver=./test/selenium/drivers/geckodriver -Dwebdriver.chrome.driver=./test/selenium/drivers/chromedriver test/selenium/drivers/selenium-server-standalone-3.1.0.jar",
