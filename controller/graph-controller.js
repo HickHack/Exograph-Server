@@ -109,7 +109,7 @@ GraphController.prototype.getTrashView = function (req, res) {
 
 GraphController.prototype.postTrashNetwork = function (req, res) {
     var ids = req.body.ids;
-
+    
     if (ids && ids.constructor === Array) {
         var fn = function asyncGetNetworks(id) {
             return new Promise((resolve, reject) => {

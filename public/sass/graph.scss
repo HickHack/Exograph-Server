@@ -4,11 +4,85 @@
 $actionButtonOpacity: 0.5;
 $minToolbarHeight: 40px;
 $toolbarPaddingHorizontal: 50px;
+$fixedNodeColor: #E86850;
+$focusNodeColor: #587058;
+$searchFocusNodeColor: #CCFF00;
+$standoutItemHeight: 60px;
+$standoutItemWidth: 60px;
+$standoutItemMargin: 0 auto;
+
 html, body {
     overflow-y: hidden;
 }
 
 #wrapper {
+
+    .help {
+        /* Important part */
+        .modal-dialog{
+            overflow-y: initial !important
+        }
+
+        .modal-body{
+            height: 350px;
+            overflow-y: auto;
+
+            .title {
+                font-size: 16px !important;
+            }
+
+            .section-title {
+                margin: 10px 0;
+                padding: 0;
+            }
+
+            p {
+                font-size: 13px;
+            }
+
+            .buffer {
+                padding-top: 20px;
+            }
+
+            .standout {
+                margin-bottom: 10px !important;
+
+                .node {
+                    border-radius: 100px;
+                    height: $standoutItemHeight;
+                    width: $standoutItemWidth;
+                    margin: $standoutItemMargin;
+                }
+
+                .focus-node {
+                    background-color: $focusNodeColor;
+                }
+
+                .sticky-node {
+                    background-color: $fixedNodeColor;
+                }
+
+                .search-focus-node {
+                    background-color: $searchFocusNodeColor;
+                }
+
+                .button-item {
+                    background-color: #337ab7;
+                    border: 1px #2e6da4;
+                    border-radius: 5px;
+                    height: $standoutItemHeight;
+                    width: $standoutItemWidth;
+                    margin: $standoutItemMargin;
+
+                    i {
+                        top: 25%;
+                        color: #FFFFFF;
+                        position: relative;
+                    }
+                }
+            }
+        }
+    }
 
     .graph-container {
         [class^="col-"] {
@@ -127,13 +201,13 @@ html, body {
 
             .fixed {
                 path {
-                    fill: #E86850 !important;
+                    fill: $fixedNodeColor !important;
                 }
             }
 
             .focus-node {
                 path {
-                    fill: #587058 !important;
+                    fill: $focusNodeColor !important;
                 }
             }
 
@@ -155,7 +229,11 @@ html, body {
             display: none;
             z-index: 50;
             border-left: 1px solid $border-color;
-            overflow-y: scroll;
+            overflow-y: auto;
+
+            -webkit-box-shadow: -8px 2px 52px -5px rgba(0,0,0,0.75);
+            -moz-box-shadow: -8px 2px 52px -5px rgba(0,0,0,0.75);
+            box-shadow: -8px 2px 52px -5px rgba(0,0,0,0.75);
 
             .close-btn {
                 border: none;
@@ -185,8 +263,11 @@ html, body {
             }
 
             .info-items {
-                margin-top: 20px;
-                max-height: inherit;
+                margin:20px 4px 0 4px;
+            }
+
+            .friends-items {
+                margin:15px 4px 0 4px;
             }
         }
 

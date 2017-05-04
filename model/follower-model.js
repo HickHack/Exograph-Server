@@ -17,6 +17,7 @@ var neo4j = new db();
 
 var Follower = module.exports = function Follower(node) {
     this._node = node;
+    this._friends = [];
 };
 
 // Public instance properties
@@ -75,6 +76,14 @@ Object.defineProperties(Follower.prototype, {
     description: {
         get: function () {
             return converter.base64Decode(this._node.properties['description'])
+        }
+    },
+    friends: {
+        set: function (friends) {
+            this._friends = friends;
+        },
+        get: function () {
+            return this._friends;
         }
     }
 });
@@ -138,7 +147,8 @@ Follower.prototype.toJSON = function () {
                 attr: {
                     type: 'text'
                 }
-            }
+            },
+            friends: this.friends
         }
     };
 
@@ -148,10 +158,10 @@ Follower.prototype.toJSON = function () {
 
 Follower.get = function (id, callback) {
     var query = [
-        'MATCH (follower:Follower)',
+        'MATCH (follower:Follower)-[:IS_FOLLOWING]-(friend:Follower)',
         'WHERE id(follower) = {id}',
-        'RETURN follower'
-    ].join('\n')
+        'RETURN follower, friend'
+    ].join('\n');
 
     var params = {
         id: parseInt(id),
@@ -167,8 +177,22 @@ Follower.get = function (id, callback) {
             return callback(err);
         }
 
-        var node = new Follower(results[0]['follower']);
-        callback(null, node);
+        var follower = new Follower(results[0]['follower']);
+        var friends = [];
+        var ids = [];
+
+        results.forEach(function (row) {
+            var friend = row.friend;
+            var id = friend._id;
+
+            if (!ids.includes(id)) {
+                friends.push(new Follower(friend));
+                ids.push(id);
+            }
+        });
+
+        follower.friends = friends;
+        callback(null, follower);
     });
 };
 

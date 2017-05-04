@@ -13,6 +13,7 @@ var neo4j = new db();
 
 var Connection = module.exports = function Connection(node) {
     this._node = node;
+    this._connections = [];
 };
 
 // Public instance properties
@@ -76,6 +77,14 @@ Object.defineProperties(Connection.prototype, {
     location: {
         get: function () {
             return this._node.properties['location'];
+        }
+    },
+    connections: {
+        set: function (connections) {
+            this._connections = connections;
+        },
+        get: function () {
+            return this._connections;
         }
     }
 });
@@ -147,7 +156,8 @@ Connection.prototype.toJSON = function () {
                 attr: {
                     type: 'text'
                 }
-            }
+            },
+            friends: this.connections
         }
     };
 
@@ -156,9 +166,9 @@ Connection.prototype.toJSON = function () {
 
 Connection.get = function (id, callback) {
     var query = [
-        'MATCH (connection:Connection)',
+        'MATCH (connection:Connection)-[:CONNECTED_TO]-(friend:Connection)',
         'WHERE id(connection) = {id}',
-        'RETURN connection'
+        'RETURN connection, friend'
     ].join('\n')
 
     var params = {
@@ -175,8 +185,14 @@ Connection.get = function (id, callback) {
             return callback(err);
         }
 
-        var node = new Connection(results[0]['connection']);
-        callback(null, node);
+        var connection = new Connection(results[0]['connection']);
+        var friends = [];
+        results.forEach(function (row) {
+            friends.push(new Connection(row.friend));
+        });
+
+        connection.connections = friends;
+        return callback(null, connection);
     });
 };
 

@@ -52,11 +52,11 @@ UserController.prototype.uploadImage = function (req, res, next) {
 
 UserController.prototype.updateAccount = function (req, res, next) {
     if (req.body) {
-        req.user.patch(req.body, function (err) {
+        req.user.patchWithProps(req.body, function (err) {
             if (err) {
-                res.json({messages: [err]}).send();
+                res.json({message: err.message}).send();
             } else {
-                res.json({messages: ['Account Update Successful']});
+                res.json({message: 'Account Update Successful'});
             }
         });
     }

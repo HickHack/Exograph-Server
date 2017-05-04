@@ -35,7 +35,7 @@ $(document).ready(function(){
     });
     
     function submitMultiActionForm(form, ids) {
-
+        var isDashboardTrigger = form.find("input").is("#dashboard-trigger");
         if (ids.length > 0) {
             var payload = {ids: ids};
 
@@ -45,7 +45,11 @@ $(document).ready(function(){
                 contentType: 'application/json',
                 data: JSON.stringify(payload),
                 success: function (data) {
-                    window.location = data;
+                    if (isDashboardTrigger) {
+                        window.location.reload();
+                    } else {
+                        window.location = data;
+                    }
                 },
                 error: function (error) {
                     console.log(error.responseJSON.error);
