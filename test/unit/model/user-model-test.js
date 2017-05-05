@@ -3,7 +3,7 @@ var chai = require('chai');
 var sinon = require('sinon');
 var chaiSpy = require('chai-spies');
 var rewire = require('rewire');
-var model = rewire('../../model/user-model');
+var model = rewire('../../../model/user-model');
 
 var describe = mocha.describe;
 var before = mocha.before;

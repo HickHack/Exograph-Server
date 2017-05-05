@@ -5,9 +5,9 @@
 var mocha = require('mocha');
 var chai = require('chai');
 var sinon = require('sinon');
-var config = require('../../config');
+var config = require('../../../config');
 var rewire = require('rewire');
-var controller = rewire('../../controller/job-controller');
+var controller = rewire('../../../controller/job-controller');
 
 var describe = mocha.describe;
 var before = mocha.before;
