@@ -21,16 +21,16 @@ nav.navbar.navbar-default.navbar-static-top(role='navigation', style='margin-bot
                 img(src=path)
                 i.fa.fa-caret-down
             ul.dropdown-menu.dropdown-user
-                li
+                li(id='profile')
                     a(href='/user/profile')
                         i.fa.fa-user.fa-fw
                         |  Profile
-                li
+                li(id='account')
                     a(href='/user/account/')
                         i.fa.fa-gear.fa-fw
                         |  Account
                 li.divider
-                li
+                li(id='logout')
                     a(href='/logout')
                         i.fa.fa-sign-out.fa-fw
                         |  Logout
