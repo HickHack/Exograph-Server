@@ -9,3 +9,5 @@ public/css/
 public/img/
 
 log/*
+
+test/selenium/drivers
