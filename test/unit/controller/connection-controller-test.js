@@ -2,16 +2,16 @@ var mocha = require('mocha');
 var chai = require('chai');
 var sinon = require('sinon');
 var rewire = require('rewire');
-var controller = rewire('../../controller/follower-controller');
+var controller = rewire('../../../controller/connection-controller');
 
 var describe = mocha.describe;
 var before = mocha.before;
 var it = mocha.it;
 var assert = chai.assert;
 
-var mockFollowerModel = {};
+var mockConnectionModel = {};
 
-describe('Getting a follower', function () {
+describe('Getting a connection', function () {
 
     function getReq() {
         return {
@@ -25,18 +25,18 @@ describe('Getting a follower', function () {
 
     before(function(){
         controller.__set__({
-            'follower': mockFollowerModel
+            'connection': mockConnectionModel
         });
     });
 
-    it('should fail because follower read failed', function () {
+    it('should fail because connection read failed', function () {
         var req = getReq();
         var res = getRes();
-        var expected = {message: 'Failed to load Follower'};
-        mockFollowerModel.get = sinon.stub();
-        mockFollowerModel.get.callsArgWith(1, {}, null);
+        var expected = {message: 'Failed to load Connection'};
+        mockConnectionModel.get = sinon.stub();
+        mockConnectionModel.get.callsArgWith(1, {}, null);
 
-        controller.getFollower(req, res);
+        controller.getConnection(req, res);
 
         assert(res.json.calledWith(expected));
     });
@@ -45,10 +45,10 @@ describe('Getting a follower', function () {
         var req = getReq();
         var res = getRes();
         var expected = {results: []};
-        mockFollowerModel.get = sinon.stub();
-        mockFollowerModel.get.callsArgWith(1, null, expected);
+        mockConnectionModel.get = sinon.stub();
+        mockConnectionModel.get.callsArgWith(1, null, expected);
 
-        controller.getFollower(req, res);
+        controller.getConnection(req, res);
 
         assert(res.json.calledWith(expected));
     });

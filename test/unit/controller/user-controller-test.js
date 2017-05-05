@@ -5,10 +5,10 @@
 var mocha = require('mocha');
 var chai = require('chai');
 var sinon = require('sinon');
-var config = require('../../config');
+var config = require('../../../config');
 process.conf = config;
 
-var UserController = require('../../controller/user-controller');
+var UserController = require('../../../controller/user-controller');
 
 var describe = mocha.describe;
 var it = mocha.it;
