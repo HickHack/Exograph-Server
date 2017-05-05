@@ -10,7 +10,7 @@ exports.config = {
     // directory is where your package.json resides, so `wdio` will be called from there.
     //
     specs: [
-        './test/webdriverio-test/specs/**/*.js'
+        './test/selenium/specs/**/*.js'
     ],
     // Patterns to exclude.
     exclude: [
@@ -44,7 +44,7 @@ exports.config = {
         // 5 instances get started at a time.
         maxInstances: 1,
         //
-        browserName: 'firefox',
+        browserName: 'chrome',
         chromeOptions: {
             args: ['--window-size=1400,800'] // THIS!
         }
