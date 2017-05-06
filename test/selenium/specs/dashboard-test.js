@@ -1,20 +1,35 @@
 var chai = require("chai");
 var DashboardPage = require('../pages/dashboard-page');
+var LoginPage = require('../pages/login-page');
 var assert = chai.assert;
+var expect = chai.expect;
 
-// describe("Dashboard tests", function () {
-//
-//     describe("elements on the page should be visible", function () {
-//
-//         it('should check the standout components are visible', function () {
-//             DashboardPage.login(function () {
-//                 var standouts = DashboardPage.standouts;
-//
-//                 assert(standouts.networks.get().isVisible());
-//                 assert(standouts.running_jobs.get().isVisible());
-//                 assert(standouts.trash_count.get().isVisible());
-//                 assert(standouts.warnings.get().isVisible());
-//             });
-//         });
-//     });
-// });
+describe("Dashboard tests", function () {
+
+    before(function () {
+        DashboardPage.open(function () {
+            if (!DashboardPage.isVisible()) {
+                LoginPage.login(process.env.USERNAME, process.env.PASSWORD, function () {
+                    assert(DashboardPage.networks.isVisible());
+                });
+            }
+        });
+    });
+
+    describe("elements on the page should be visible", function () {
+        it('should check the standout components are visible and title is correct', function () {
+            assert(DashboardPage.networks.isVisible());
+            assert(DashboardPage.running_jobs.isVisible());
+            assert(DashboardPage.trash_count.isVisible());
+            assert(DashboardPage.warnings.isVisible());
+            expect(DashboardPage.title.getText()).to.equal("Dashboard");
+        });
+
+        it('t', function () {
+            var listing = DashboardPage.networkListing;
+
+            assert(listing.get().isVisible());
+        });
+    });
+
+});
