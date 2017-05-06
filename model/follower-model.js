@@ -1,17 +1,13 @@
 /**
- * Created by graham on 12/04/17.
- */
-
-/**
  * @author Graham Murray
- * @date 13/02/17
+ * @date 13/03/17
  *
  * This model represents a Follower node
  */
 
 var db = require('./../helper/db');
 var converter = require('../util/conversion-util');
-var errors = require('../helper/errors')
+var errors = require('../helper/errors');
 
 var neo4j = new db();
 
@@ -44,13 +40,15 @@ Object.defineProperties(Follower.prototype, {
     },
     profileImageUrl: {
         get: function () {
-            var url = this._node.properties['profile_image_url'];
+            var url = converter.base64Decode(
+                this._node.properties['profile_image_url']
+            );
 
-            if (url == '') {
+            if (url == '' || url == ' ') {
                 return '/img/person-placeholder.jpg'
             }
 
-            return converter.base64Decode(url);
+            return url;
         }
     },
     friendsCount: {
