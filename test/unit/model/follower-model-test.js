@@ -3,20 +3,18 @@ var chai = require('chai');
 var sinon = require('sinon');
 var chaiSpy = require('chai-spies');
 var rewire = require('rewire');
-var model = rewire('../../../model/connection-model');
+var model = rewire('../../../model/follower-model');
 
 var describe = mocha.describe;
 var before = mocha.before;
 var it = mocha.it;
-var assert = chai.assert;
 var expect = chai.expect;
 
 var mockNeo4j = {};
-var mockConnection = {};
 
 chai.use(chaiSpy);
 
-describe('Connection model', function () {
+describe('Follower model', function () {
 
     before(function(){
         model.__set__({
@@ -26,24 +24,22 @@ describe('Connection model', function () {
 
     function getMockNeo4jResult() {
         return {
-            connection: {
+            follower: {
                 _id: 1,
                 properties: {
                     'name': 'John',
                     'profile_image_url': 'a url',
-                    'profile_url': 'a profile url',
-                    'phone': '1234',
-                    'email': 'an email',
-                    'company': 'a company',
-                    'title': 'a title',
-                    'location': 'a location',
-
+                    'friends_count': 22,
+                    'followers_count': 1223,
+                    'screen_name': 'John',
+                    'description': 'YSBkZXNjcmlwdGlvbg==',
+                    'location': 'YSBsb2NhdGlvbg=='
                 }
             }
         }
     }
 
-    describe("testing get() for connection model", function () {
+    describe("testing get()", function () {
         it('should return a return an error if query fails', function () {
             var error = 'an error';
             var callback = chai.spy();
@@ -70,28 +66,27 @@ describe('Connection model', function () {
             });
         });
 
-        it('Should return a connection model if query successful', function (done) {
+        it('Should return a follower model if query successful', function (done) {
             var mockResult = getMockNeo4jResult();
-            mockResult.connections = getMockNeo4jResult();
+            mockResult.friend = getMockNeo4jResult();
 
             mockNeo4j.run = sinon.stub();
             mockNeo4j.run.callsArgWith(1, null, [mockResult, mockResult]);
 
             model.get(1, function (err, result) {
-                var mockProps = mockResult.connection.properties;
+                var mockProps = mockResult.follower.properties;
 
                 expect(err).to.be.equal(null);
                 expect(result).to.be.an.instanceof(model);
-
-                expect(result.id).to.be.equal(mockResult.connection._id);
+                expect(result.id).to.be.equal(mockResult.follower._id);
                 expect(result.name).to.be.equal(mockProps.name);
-                expect(result.phone).to.be.equal(mockProps.phone);
-                expect(result.email).to.be.equal(mockProps.email);
-                expect(result.company).to.be.equal(mockProps.company);
-                expect(result.title).to.be.equal(mockProps.title);
-                expect(result.location).to.be.equal(mockProps.location);
-                expect(result.connections).to.be.an.instanceof(Array);
-                expect(result.connections).to.have.a.lengthOf(2);
+                expect(result.friendsCount).to.be.equal(mockProps['friends_count']);
+                expect(result.followersCount).to.be.equal(mockProps['followers_count']);
+                expect(result.screenName).to.be.equal("@" + mockProps['screen_name']);
+                expect(result.description).to.be.equal('a description');
+                expect(result.location).to.be.equal('a location');
+                expect(result.friends).to.be.an.instanceof(Array);
+                expect(result.friends).to.have.a.lengthOf(1);
 
                 done();
             });
