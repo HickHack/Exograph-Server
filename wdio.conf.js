@@ -1,3 +1,5 @@
+process.env.USERNAME = "graham.murr@yahoo.ie";
+process.env.PASSWORD = "Pa55w0rd!";
 exports.config = {
     
     //

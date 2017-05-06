@@ -105,7 +105,7 @@ describe('User model testing', function () {
             subject.getNetwork(1)
                 .then(res => {
                     expect(res).to.have.property('network');
-                    expect(res.network).to.equal('a network');
+                    expect(res.network).to.equal(results.network);
                 });
         });
 
@@ -119,7 +119,7 @@ describe('User model testing', function () {
             subject.getNetwork(1)
                 .catch(err => {
                     expect(err).to.have.property('message');
-                    expect(err.message).to.equal('a message');
+                    expect(err.message).to.equal(error.message);
                 });
         });
     });

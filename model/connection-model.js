@@ -169,7 +169,7 @@ Connection.get = function (id, callback) {
         'MATCH (connection:Connection)-[:CONNECTED_TO]-(friend:Connection)',
         'WHERE id(connection) = {id}',
         'RETURN connection, friend'
-    ].join('\n')
+    ].join('\n');
 
     var params = {
         id: parseInt(id),

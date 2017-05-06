@@ -51,7 +51,6 @@ describe('Pages should be rendered', function () {
 });
 
 describe('Testing user profile image upload', function () {
-
     function getRes() {
         return {json: sinon.spy()};
     }
