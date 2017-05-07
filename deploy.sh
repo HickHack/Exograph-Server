@@ -9,6 +9,7 @@ function init() {
 }
 
 function setupExograph() {
+    sudo npm install
 	sudo npm install -g node-sass
 	npm install
 }
