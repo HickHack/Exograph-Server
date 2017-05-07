@@ -21,7 +21,7 @@ triggerExograph() {
 function fetchExtractor() {
      rm -rf ~/Extractor-API
 	 git clone -b finalDeployment https://github.com/HickHack/Extractor-API.git
-	 pip3 install --upgrade -r requirements.txt
+	 pip3 install --upgrade -r ~/Extractor-API/requirements.txt
 }
 
 triggerExtractor() {
