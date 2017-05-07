@@ -26,7 +26,7 @@ function fetchExtractor() {
 
 triggerExtractor() {
     chmod +x ~/Extractor-API/*.sh
-    ./deploy.sh
+    ~/Extractor-API/deploy.sh
 }
 
 init
