@@ -1,0 +1,32 @@
+- if(networks && networks.length > 0)
+    each network in networks
+        - if (!network.isTrash)
+            - if (network.type == 'LINKEDIN')
+                - var icon = 'fa fa-linkedin'
+            -else if (network.type == 'TWITTER')
+                - var icon = 'fa fa-twitter'
+
+            .col-lg-4.network-panel
+                .panel.panel-default
+                    .panel-heading
+                        i(class='#{icon}')
+                        | #{network.name}
+                        .pull-right
+                            .btn-group
+                                button.btn.btn-default.btn-xs.dropdown-toggle(type='button', data-toggle='dropdown')
+                                    | Actions &nbsp
+                                    span.caret
+                                ul.dropdown-menu.pull-right(role='menu')
+                                    li
+                                        a(href='/graph/view/#{network.id}') View
+                                    li
+                                        a(href='/analytics/#{network.id}') Analytics
+                                    li
+                                        a.trash-button(href='#') Send to Trash
+                                            form.trash-form(action='/graph/trash', method='PATCH')
+                                                input(type='hidden', id='dashboard-trigger', value='#{network.id}')
+                                    li.divider
+                                    li
+                                        a.job-details(href='/job/#{network.jobId}') Import Details
+                    .panel-body
+                        img.img-thumbnail(src='/img/graph/#{network.imageRef}')
