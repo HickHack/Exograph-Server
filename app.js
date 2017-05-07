@@ -18,6 +18,7 @@ var job = require('./routes/job-route');
 var connection = require('./routes/connection-route');
 var follower = require('./routes/follower-route');
 var analytics = require('./routes/analytics-route');
+var search = require('./routes/search-route');
 
 var app = express();
 
@@ -53,6 +54,7 @@ app.use('/user', user);
 app.use('/connection', connection);
 app.use('/follower', follower);
 app.use('/analytics', analytics);
+app.use('/search', search);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
