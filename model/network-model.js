@@ -184,6 +184,37 @@ Network.getAllByUser = function (user, callback) {
     });
 };
 
+Network.getAllByQuery = function (user, searchQuery, callback) {
+    var query = [
+        'MATCH (user:User)-[:OWNS]-(network:Network) ',
+        "WHERE id(user) = {id} AND network.name =~ '(?i).*"+ searchQuery.toLowerCase() +".*' ",
+        'RETURN DISTINCT network'
+    ].join('\n');
+
+    var params = {
+        id: user.id
+    };
+
+    neo4j.run({
+        query: query,
+        params: params
+    }, function (err, result) {
+        if (err) return callback(err);
+
+        if (!result.length > 0) {
+            return callback(null, null);
+        } else {
+            var networks = [];
+
+            result.forEach(function (element) {
+                networks.push(new Network(element['network'], user));
+            });
+
+            return callback(null, networks);
+        }
+    });
+};
+
 Network.prototype.patch = function () {
     return new Promise((resolve, reject) => {
         var query = [

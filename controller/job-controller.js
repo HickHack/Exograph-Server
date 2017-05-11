@@ -35,6 +35,7 @@ exports.getJob = function (req, res, next) {
 exports.getJobs = function (req, res, next) {
 
     job.getJobsForUser(req.user.id, -1, function (err, jobs) {
+
         if (err) {
             res.status(404).send();
         } else {
@@ -42,7 +43,7 @@ exports.getJobs = function (req, res, next) {
                 title: process.conf.app.NAME,
                 user: req.user,
                 pageName: 'Jobs',
-                jobs: jobs
+                jobs: jobs.reverse()
             });
         }
 

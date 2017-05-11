@@ -284,6 +284,13 @@ User.prototype.getNetworks = function (next) {
     });
 };
 
+User.prototype.getNetworksByQuery = function (query, next) {
+    network.getAllByQuery(this, query, function (err, networks) {
+        if (err) return next(err);
+        return next(null, networks);
+    });
+};
+
 User.prototype.getNetwork = function (id) {
     return new Promise((resolve, reject) => {
         network.get(id, this, function (err, network) {
