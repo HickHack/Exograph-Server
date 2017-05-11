@@ -2,7 +2,7 @@ doctype html
 
 head
     include ../layout/head
-    link(href='/css/dashboard.css', rel='stylesheet', type='text/css')
+    link(href='/css/network-listing.css', rel='stylesheet', type='text/css')
     script(type='text/javascript', src='/js/multi-action-grid.js')
     script(type='text/javascript', src='/js/job-details.js')
 
@@ -29,17 +29,7 @@ body
             .container-fluid
 
                 include ../layout/pageHeader
-                #jobModal.modal.fade(role='dialog')
-                    .modal-dialog
-                        // Modal content
-                        .modal-content
-                            .modal-header
-                                button.close(type='button', data-dismiss='modal') ×
-                                h4.modal-title Import Details
-                            .modal-body
-                                ul#job_details
-                            .modal-footer
-                                button.btn.btn-default(type='button', data-dismiss='modal') Close
+                include ../fragments/job-modal
 
 
                 .row
@@ -95,7 +85,7 @@ body
                             hr
 
                             - if(networks && networks.length > 0)
-                                include ../fragments/network-listings
+                                include ../fragments/network-listing
                             - else
                                 p.text-center You dont have any networks.
                                     a(href='/graph/import') Try import one

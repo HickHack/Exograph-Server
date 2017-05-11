@@ -1,0 +1,30 @@
+doctype html
+
+head
+    include ../layout/head
+    link(href='/css/network-listing.css', rel='stylesheet', type='text/css')
+    script(type='text/javascript', src='/js/multi-action-grid.js')
+    script(type='text/javascript', src='/js/job-details.js')
+
+    title #{title}
+body
+    #wrapper
+        include ../layout/navigation-complex
+
+        #page-wrapper
+            .container-fluid
+
+                include ../layout/pageHeader
+                include ../fragments/job-modal
+
+                .containter
+                    .row
+                        .col-lg-12.nework-listing.thumbnail
+
+                            - if(networks && networks.length > 0)
+                                h3.text-center Networks #{networks.length}
+                                hr
+
+                                include ../fragments/network-listing
+                            - else
+                                p.text-center 0 networks found for query.
