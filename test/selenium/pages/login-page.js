@@ -1,4 +1,5 @@
 var Page = require('./page');
+var DashboardPage = require("./dashboard-page");
 
 var LoginPage = Object.create(Page, {
 

@@ -24,12 +24,6 @@ describe("Dashboard tests", function () {
             assert(DashboardPage.warnings.isVisible());
             expect(DashboardPage.title.getText()).to.equal("Dashboard");
         });
-
-        it('t', function () {
-            var listing = DashboardPage.networkListing;
-
-            assert(listing.get().isVisible());
-        });
     });
 
 });

@@ -273,7 +273,7 @@
             setSearchFocusNodesStyle(false);
 
             if (!clickFocusNode.isFixed) toggleStickyNode();
-            if (isPaused) force.stop();
+            checkPause();
 
             ButtonOptions.toggleLockIcon(clickFocusNode.isFixed);
         });
@@ -513,12 +513,20 @@
     }
 
     function resize() {
+        checkPause();
+
         var width = window.innerWidth, height = window.innerHeight;
         svg.attr("width", width).attr("height", height);
 
         force.size([force.size()[0] + (width - windowWidth) / zoom.scale(), force.size()[1] + (height - windowHeight) / zoom.scale()]).resume();
         windowWidth = width;
         windowHeight = height;
+    }
+
+    function checkPause() {
+        if (isPaused) {
+            force.stop();
+        }
     }
 
     function addHighlight(d) {
