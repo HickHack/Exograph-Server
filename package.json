@@ -6,9 +6,9 @@
     "test": "mocha --timeout 15000 --ui bdd --recursive ./test/unit",
     "run-prod": "pm2 start www",
     "build-css": "node-sass ./public/sass -o public/css",
-    "startdev": "nodemon bin/www",
+    "start-dev": "nodemon bin/www",
     "assets": "node-sass ~/Exograph-Server/public/sass -o ~/Exograph-Server/public/css",
-    "start-selenium": "java -jar -Dwebdriver.gecko.driver=./test/selenium/drivers/geckodriver -Dwebdriver.chrome.driver=./test/selenium/drivers/chromedriver test/selenium/drivers/selenium-server-standalone-3.1.0.jar",
+    "start-selenium": "java -jar -Dwebdriver.chrome.driver=../drivers/chromedriver ../drivers/selenium-server-standalone-3.1.0.jar",
     "run-wdio": "node_modules/.bin/wdio wdio.conf.js "
   },
   "dependencies": {
