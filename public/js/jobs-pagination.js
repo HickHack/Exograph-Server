@@ -46,11 +46,33 @@ $(document).ready(function () {
             },
             populate: {
                 value: function (data) {
-                    populateHead();
-                    populateBody(data.jobs);
+
+                    if (data.pagination['total'] < 1) {
+                        this.container.find("table").hide();
+                        showEmptyMessage(true);
+                    } else {
+                        populateHead();
+                        populateBody(data.jobs);
+                        showEmptyMessage(false);
+                        this.container.find("table").show();
+                    }
                 }
-            }
+            },
         });
+
+        function showEmptyMessage(isVisible) {
+            if (isVisible) {
+                table.container.remove("p .message");
+                table.container.append(
+                    $("<p/>", {'class': 'text-center message'})
+                        .text("You dont have any jobs. Try import a graph")
+                );
+
+                table.container.find("p .message").show();
+            } else {
+                table.container.find("p .message").hide();
+            }
+        }
 
         function populateHead() {
 
@@ -78,9 +100,9 @@ $(document).ready(function () {
 
                     tbody.append(
                         $("<tr/>").append(
-                                $("<td/>").append(
-                                    $("<i>", {'class': getIconType(job.type)}
-                                    ).addClass("text-center")))
+                            $("<td/>").append(
+                                $("<i>", {'class': getIconType(job.type)}
+                                ).addClass("text-center")))
                             .append($("<td/>").text(job.name))
                             .append($("<td/>").text(job.startTime))
                             .append($("<td/>").text(job.totalTime))
@@ -91,7 +113,7 @@ $(document).ready(function () {
                 }
             }
         }
-        
+
         function getIconType(type) {
             if (type == 'LINKEDIN') {
                 return 'fa fa-linkedin fa-1x'
