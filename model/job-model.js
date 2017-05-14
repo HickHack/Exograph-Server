@@ -116,3 +116,15 @@ Job.getById = function(id, next) {
             return next(err);
         });
 };
+
+Job.paginateByUser = function(userId, page, next) {
+    extractor.getJobsForUserByPage(userId, page, function (err, result) {
+        if (err) return next(err, null);
+
+        for (var job in result.jobs) {
+            result.jobs[job] = new Job(result.jobs[job]);
+        }
+
+        return next(null, result);
+    });
+};

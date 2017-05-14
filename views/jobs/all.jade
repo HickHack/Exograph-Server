@@ -15,32 +15,9 @@ body
 
                 include ../layout/pageHeader
 
-                .row.jobs-panel
-                    .col-lg-12
-                        - if (jobs && jobs.length > 0)
-                            table.table.table-striped.table-bordered.table-responsive.text-center
-                                thead
-                                    tr
-                                        th.text-center Type
-                                        th.text-center Name
-                                        th.text-center Started
-                                        th.text-center Total Time
-                                        th.text-center Status
-                                        th.text-center Success
-                                        th.text-center Complete
+                .row
+                    .col-lg-12.jobs-panel
 
-                                tbody
-                                    each job in jobs
-                                        tr
-                                            td.text-center
-                                                - if (job.type == 'LINKEDIN')
-                                                    i.fa.fa-linkedin.fa-1x
-                                                - else
-                                                    i.fa.fa-twitter.fa-1x
-
-                                            td #{job.name}
-                                            td #{job.startTime}
-                                            td #{job.totalTime}
-                                            td #{job.status}
-                                            td #{job.isSuccess}
-                                            td #{job.isComplete}
+                    .col-sm-6.col-sm-offset-3.col-md-6.col-md-offset-3.col-lg-6.col-lg-offset-3
+                        nav.center-block(aria-label="Page navigation" data-total-pages="#{totalPages}")
+                            ul.pagination(id="pagination")
