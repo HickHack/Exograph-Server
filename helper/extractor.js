@@ -73,6 +73,20 @@ Extractor.prototype.getJobsForUser = function (userId, count, next) {
         });
 };
 
+Extractor.prototype.getJobsForUserByPage = function (userId, page, next) {
+    var url = endpoints['job_by_user_id'] + userId + '?page=' + page;
+    var req = getRequest(url, 'GET');
+
+    performRequest(req)
+        .then(jobs => {
+            return next(null, jobs);
+        })
+        .catch(() => {
+            var error = new Error('Problem loading jobs');
+            return next(error);
+        });
+};
+
 Extractor.prototype.getJob = function (id) {
     var url = endpoints['job_by_id'].replace('<id>', id);
     var req = getRequest(url, 'GET');

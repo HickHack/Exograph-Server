@@ -14,7 +14,11 @@ router.get('/:id(\\d+)', auth.checkAuth, function(req, res, next) {
 });
 
 router.get('/all', auth.checkAuth, function(req, res, next) {
-    controller.getJobs(req, res, next);
+    controller.getJobsView(req, res, next);
+});
+
+router.get('/page/:pageNum(\\d+)', auth.checkAuth, function(req, res, next) {
+    controller.paginateJobs(req, res, next);
 });
 
 module.exports = router;
