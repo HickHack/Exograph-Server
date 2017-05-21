@@ -22,7 +22,7 @@ body
 
                            - var trash = []
                            each network in networks
-                               - if (network.isTrash)
+                               - if (network.isTrash && !network.isDeleted)
                                     - trash.push(network)
 
                            - if (trash.length > 0)
@@ -77,4 +77,4 @@ body
                             li.divider
                             li
                                 a.delete-button(href='') Delete
-                                form.trash-form(action='/graph/delete', method='DELETE')
+                                form.trash-form(action='/graph/trash', method='DELETE')

@@ -1,6 +1,6 @@
 - if(networks && networks.length > 0)
     each network in networks
-        - if (!network.isTrash)
+        - if (!network.isTrash && !network.isDeleted)
             - if (network.type == 'LINKEDIN')
                 - var icon = 'fa fa-linkedin'
             -else if (network.type == 'TWITTER')
