@@ -5,8 +5,7 @@ var errors = require('../helper/errors');
 
 var extractor = new Extractor();
 
-var GraphController = module.exports = function GraphController() {
-};
+var GraphController = module.exports = function GraphController() {};
 
 GraphController.prototype.getImportView = function (req, res) {
     res.render('graph/import', {
