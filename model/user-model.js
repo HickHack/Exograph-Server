@@ -99,7 +99,7 @@ Object.defineProperties(User.prototype, {
     },
     'password': {
         set: function (password) {
-            this._node.properties['password'] = hashUtil.generateBcryptKey(password);
+            this._node.properties['password'] = password;
         },
         get: function () {
             return this._node.properties['password'];
@@ -192,7 +192,7 @@ function isConstraintViolation(err) {
 // Public instance methods:
 
 User.prototype.updatePassword = function(passwords, callback) {
-    if (!User.isPasswordValid(passwords.oldPassword)){
+    if (!User.isPasswordValid(passwords.oldPassword, this.password)){
         return callback(new Error('Old password does not match.'));
     } else if (passwords.newPassword != passwords.newPasswordConfirm) {
         return callback(new Error('Password confirmation does not match.'));
@@ -205,7 +205,7 @@ User.prototype.updatePassword = function(passwords, callback) {
             callback(err);
         }
 
-        this.password = passwords.newPassword;
+        this.password = hashUtil.generateBcryptKey(passwords.newPassword);
         this.patch(function (err) {
             if (err) return callback(new Error('Failed to update password'));
             callback(null);
