@@ -64,6 +64,14 @@ Object.defineProperties(Network.prototype, {
         },
         configurable: true
     },
+    isDeleted: {
+        get: function () {
+            return this._node.properties['is_deleted'];
+        },
+        set: function (isDeleted) {
+            this._node.properties['is_deleted'] = isDeleted;
+        }
+    },
     owner: {
         get: function () { return this._owner }
     },
@@ -88,7 +96,8 @@ Network.prototype.toJSON = function () {
         type: this.type,
         createdTime: this.createdTime,
         imageRef: this.imageRef,
-        isTrash: this.isTrash
+        isTrash: this.isTrash,
+        isDeleted: this.isDeleted
     };
 
     return network;

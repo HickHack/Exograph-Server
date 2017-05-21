@@ -57,7 +57,7 @@ router.patch('/trash/', auth.checkAuth, function (req, res, next) {
  * Permanently delete a graph
  */
 router.delete('/trash/', auth.checkAuth, function (req, res, next) {
-    controller.postDeleteNetwork(req, res);
+    controller.deleteNetwork(req, res);
 });
 
 module.exports = router;

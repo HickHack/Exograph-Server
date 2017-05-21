@@ -1,7 +1,3 @@
-/**
- * Created by graham on 10/02/17.
- */
-
 var Extractor = require('./../helper/extractor');
 var connection = require('../model/connection-model');
 var converter = require('../util/conversion-util');
@@ -151,7 +147,7 @@ GraphController.prototype.postTrashNetwork = function (req, res) {
     }
 };
 
-GraphController.prototype.postDeleteNetwork = function (req, res) {
+GraphController.prototype.deleteNetwork = function (req, res) {
     var ids = req.body.ids;
 
     if (ids && ids.constructor === Array) {
@@ -174,7 +170,7 @@ GraphController.prototype.postDeleteNetwork = function (req, res) {
                 var promises = [];
 
                 networks.forEach(network => {
-                    network.isTrash = !network.isTrash;
+                    network.isDeleted = true;
                     promises.push(network.patch());
                 });
 
