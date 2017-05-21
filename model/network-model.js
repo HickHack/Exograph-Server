@@ -88,7 +88,7 @@ Object.defineProperties(Network.prototype, {
 });
 
 Network.prototype.toJSON = function () {
-    var network = {
+    return {
         id: this.id,
         numConnections: this.numConnections,
         jobId: this.jobId,
@@ -99,8 +99,6 @@ Network.prototype.toJSON = function () {
         isTrash: this.isTrash,
         isDeleted: this.isDeleted
     };
-
-    return network;
 };
 
 Network.prototype.getGraph = function () {

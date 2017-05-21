@@ -1,7 +1,3 @@
-/**
- * Created by graham on 04/04/17.
- */
-
 var UserController = module.exports = function UserController() {};
 
 UserController.prototype.getAccount = function (req, res, next) {
